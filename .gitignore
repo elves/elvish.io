@@ -1,0 +1,4 @@
+/src/*.html
+/src/*/*.html
+/dst
+!/dst/assets

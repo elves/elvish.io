@@ -1,0 +1,17 @@
+#!/bin/sh
+in=$1
+out=$2
+opts=
+
+has() {
+    head -n1 $in | grep "$@" >/dev/null
+}
+
+has toc && {
+    opts="$opts --toc --template=toc-and-body"
+}
+has number-sections && {
+    opts="$opts --number-sections"
+}
+
+pandoc $1 -f markdown-markdown_in_html_blocks -o $2 $opts

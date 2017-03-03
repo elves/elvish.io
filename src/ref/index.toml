@@ -1,0 +1,13 @@
+# prelude = "prelude"
+
+[[articles]]
+name = "lang"
+title = "The Language"
+
+[[articles]]
+name = "stdlib"
+title = "The Standard Library"
+
+[[articles]]
+name = "philosophy"
+title = "The Philosophy"

@@ -1,0 +1,19 @@
+title = "Elvish the Shell"
+author = "Qi Xiao"
+feedPosts = 10
+
+[index]
+name = "home"
+title = "Home"
+
+[[categories]]
+name = "blog"
+title = "Blog"
+
+[[categories]]
+name = "learn"
+title = "Learn"
+
+[[categories]]
+name = "ref"
+title = "Reference"
