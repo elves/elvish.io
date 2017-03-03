@@ -14,4 +14,4 @@ has number-sections && {
     opts="$opts --number-sections"
 }
 
-pandoc $1 -f markdown-markdown_in_html_blocks -o $2 $opts
+pandoc -f markdown-markdown_in_html_blocks --data-dir=./pandoc-data $1 -o $2 $opts
