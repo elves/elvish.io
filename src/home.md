@@ -6,9 +6,9 @@ img.macos {
 }
 
 .demo {
-  margin: 16px 5%;
+  margin: 16px 0;
   padding: 16px;
-  background: #ffe;
+  background: #113;
 }
 
 .end-demo  {
