@@ -11,10 +11,6 @@ img.macos {
   background: #113;
 }
 
-.end-demo  {
-  clear: both;
-}
-
 .demo-col {
   width: 100%;
   float: left;
@@ -26,29 +22,28 @@ img.macos {
 }
 
 .demo-description {
-  padding: 16px 0 0 0;
+  margin: 16px 5% 0;
 }
 
-@media screen and (min-width: 700px) {
+@media screen and (min-width: 800px) {
   .demo-col {
     width: 50%;
   }
-
   .demo-description {
-    padding: 0 16px;
+    margin: 0 5%;
   }
 }
 
 .demo-title {
   font-size: 1.3em;
-  margin-bottom: 16px;
 }
 
 .demo-col p {
+  margin-top: 16px;
   margin-bottom: 0;
 }
 
-.clear {
+.slider {
   clear: both
 }
 </style>
@@ -86,7 +81,7 @@ TODO: Slideshow
     </p>
   </div> </div>
 
-  <div class="clear"></div>
+  <div class="slider"></div>
 
 </div>
 
@@ -107,7 +102,7 @@ TODO: Slideshow
     </p>
   </div> </div>
 
-  <div class="clear"></div>
+  <div class="slider"></div>
 </div>
 
 
@@ -128,7 +123,7 @@ TODO: Slideshow
     </p>
   </div> </div>
 
-  <div class="clear"></div>
+  <div class="slider"></div>
 </div>
 
 
@@ -148,7 +143,7 @@ TODO: Slideshow
     </p>
   </div> </div>
 
-  <div class="clear"></div>
+  <div class="slider"></div>
 </div>
 
 
@@ -168,7 +163,7 @@ TODO: Slideshow
     </p>
   </div> </div>
 
-  <div class="clear"></div>
+  <div class="slider"></div>
 </div>
 
 
