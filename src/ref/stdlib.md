@@ -8,7 +8,7 @@ Some builtin functions like `count` and `each` can take input in two ways:
 
 1. From pipe:
 
-    ```sh
+    ```elvish
     ~> put lorem ipsum | count
     2
     ~> put 10 100 | each { + 1 $0 }
@@ -18,14 +18,14 @@ Some builtin functions like `count` and `each` can take input in two ways:
 
     Byte pipes are also possible; one line becomes one input:
 
-    ```sh
+    ```elvish
     ~> echo "a\nb\nc" | count
     ▶ 3
     ```
 
 1. From argument:
 
-    ```sh
+    ```elvish
     ~> count [lorem ipsum]
     2
     ~> each { + 1 $0 } [10 100]
@@ -35,7 +35,7 @@ Some builtin functions like `count` and `each` can take input in two ways:
 
     Strings, and in future, other sequence types are also possible:
 
-    ```sh
+    ```elvish
     ~> count lorem
     ▶ 5
     ```
@@ -103,7 +103,7 @@ each f input-list?
 
 Calls `f` on all inputs. Examples:
 
-```sh
+```elvish
 ~> range 5 8 | each [x]{ ^ $x 2 }
 ▶ 25
 ▶ 36
@@ -113,7 +113,8 @@ Calls `f` on all inputs. Examples:
 ▶ ips
 ```
 
-Etymology: Various functional programming languages.
+Etymology: Various languages, as `for each`.
+
 
 ## echo
 
@@ -125,7 +126,7 @@ Print all arguments and a newline. Arguments are separated by a space when print
 
 Examples:
 
-```sh
+```elvish
 ~> echo Hello   elvish
 Hello elvish
 ~> echo "Hello   elvish"
@@ -134,13 +135,135 @@ Hello   elvish
 
 Notes: The `echo` builtin does not treat `-e` or `-n` specially. For instance, `echo -n` just prints `-n`. Use double-quoted strings to print special characters, and `print` to not have a newline.
 
-Etymology: sh.
+Etymology: Bourne sh.
+
+
+## from-json
+
+Takes bytes stdin, parses it as JSON and puts the result on structured stdout.
+
+Examples:
+
+```elvish
+~> echo '"a"' | from-json
+▶ a
+~> echo '["lorem", "ipsum"]' | from-json
+▶ [lorem ipsum]
+~> echo '{"lorem": "ipsum"}' | from-json
+▶ [&lorem=ipsum]
+```
+
+
+## nop
+
+Accepts arbitrary arguments and options and does exactly nothing.
+
+Examples:
+
+```elvish
+~> nop
+~> nop a b c
+~> nop &k=v
+```
+
+Etymology: Various languages, especially assembly languages.
+
+
+## peach
+
+Like `each`, but may run the function in parallel.
+
+Example:
+
+```elvish
+~> range 1 7 | peach { + $0 10 }
+▶ 12
+▶ 11
+▶ 13
+▶ 16
+▶ 15
+▶ 14
+```
+
+
+## put
+
+Takes arbitrary arguments and write them to the structured stdout.
+
+Examples:
+
+```
+~> put a
+▶ a
+~> put lorem ipsum [a b] { ls }
+▶ lorem
+▶ ipsum
+▶ [a b]
+▶ <closure 0xc4202607e0>
+```
+
+Etymology: Various languages, in particular C and Ruby as `puts`.
+
 
 ## print
 
 Like `echo`, just without the newline.
 
-Etymology: Perl and zsh.
+Etymology: Various languages, in particular Perl and zsh.
+
+
+## repr
+
+Like `echo`, but writes the representation instead of stringification.
+
+Etymology: Python.
+
+
+## slurp
+
+Reads bytes input into a single string, and put this string on structured
+stdout.
+
+Example:
+
+```elvish
+~> echo "a\nb" | slurp
+▶ "a\nb\n"
+```
+
+Etymology: Perl, as `File::Slurp`.
+
+
+## to-json
+
+Takes structured stdin, convert it to JSON and puts the result on bytes
+stdout.
+
+```elvish
+~> put a | to-json
+"a"
+~> put [lorem ipsum] | to-json
+["lorem","ipsum"]
+~> put [&lorem=ipsum] | to-json
+{"lorem":"ipsum"}
+```
+
+## unpack
+
+Takes one list and puts all its values on the structured stdout. Like
+`flatten` in functional languages. Equivalent to `[li]{ put $@li }`.
+
+Example:
+
+```elvish
+~> unpack [a b [x]]
+▶ a
+▶ b
+▶ [x]
+```
+
+Etymology: English.
+
 
 ## $false
 
