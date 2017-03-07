@@ -173,7 +173,7 @@ Etymology: Various languages, especially assembly languages.
 
 Like `each`, but may run the function in parallel.
 
-Example:
+Example (your output will differ):
 
 ```elvish
 ~> range 1 7 | peach { + $0 10 }
