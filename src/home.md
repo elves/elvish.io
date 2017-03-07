@@ -1,3 +1,31 @@
+**UNDER CONSTRUCTION, DO NOT SHARE YET**
+
+This site is under heavy construction. In addition to watching for safety,
+the author asks you to **not** post it on Hacker News or Reddit.
+
+<hr>
+
+**Elvish** is a friendly and expressive shell for Linux, macOS and BSD.
+
+## Getting Elvish
+
+*   [Prebuilt binaries](https://dl.elvish.io) for Linux and macOS (x64).
+    Written in Go, elvish comes in a single binary with no dependency.
+
+*   [Source code](https://github.com/elves/elvish) on GitHub.
+
+## Speaking Elvish
+
+*   Follow tutorials in the [learn](learn) section. Start with the [quick
+    introduction](learn/quick-intro.html).
+
+*   Consult the [reference](ref) section for comprehensive treatises on
+    elvish.
+
+*   Keep updated to the [blog](blog).
+
+## Elvish Highlights
+
 <style>
 img.macos {
   border: 1px solid #ddd;
@@ -13,6 +41,7 @@ img.macos {
 
 .demo-col {
   width: 100%;
+  height: 100%;
   float: left;
 }
 
@@ -43,24 +72,21 @@ img.macos {
   margin-bottom: 0;
 }
 
-.slider {
-  clear: both
+.slider:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.slider > ul {
+  display: inline;
+}
+
+.slider > ul > li {
+  list-style: none;
+  display: inline-block;
 }
 </style>
-
-<div>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Under_construction_icon-orange.svg" width="200px">
-
-  <p>(<a href="https://commons.wikimedia.org/wiki/File:Under_construction_icon-orange.svg">picture source</a>, LGPL-licensed)</p>
-
-  <p><b>UNDER CONSTRUCTION, DO NOT SHARE YET</b></p>
-  <p>
-    This site is under heavy construction. In addition to watching for safety,
-    the author asks you to <b>not</b> post it on Hacker News or Reddit.
-  </p>
-</div>
-
-<hr>
 
 TODO: Slideshow
 
@@ -166,22 +192,23 @@ TODO: Slideshow
   <div class="slider"></div>
 </div>
 
+<!--
+<script>
+  var demos = document.getElementsByClassName("demo");
+  var ul = document.createElement("ul");
+  for (var i = 0; i < demos.length; i++) {
+    var demo = demos[i];
+    var li = document.createElement("li");
+    li.textContent = i + 1;
+    ul.appendChild(li);
+  }
 
-**Elvish** is a friendly and expressive shell for Linux, macOS and BSD.
+  console.log(ul);
 
-## Getting Elvish
+  var sliders = document.getElementsByClassName("slider");
+  for (var i = 0; i < sliders.length; i++) {
+    sliders[i].appendChild(ul.cloneNode(true));
+  }
+</script>
+-->
 
-*   [Prebuilt binaries](https://dl.elvish.io) for Linux and macOS (x64).
-    Written in Go, elvish comes in a single binary with no dependency.
-
-*   [Source code](https://github.com/elves/elvish) on GitHub.
-
-## Speaking Elvish
-
-*   Follow tutorials in the [learn](learn) section. Start with the [quick
-    introduction](learn/quick-intro.html).
-
-*   Consult the [reference](ref) section for comprehensive treatises on
-    elvish.
-
-*   Keep updated to the [blog](blog).
