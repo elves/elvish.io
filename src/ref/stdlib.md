@@ -212,6 +212,20 @@ Like `echo`, just without the newline.
 Etymology: Various languages, in particular Perl and zsh.
 
 
+## repeat
+
+Takes a number `n` and a value `v`. Output value `v` for `n` times. Example:
+
+```elvish
+~> repeat 4 foo
+▶ foo
+▶ foo
+▶ foo
+▶ foo
+```
+
+Etymology: Clojure.
+
 ## repr
 
 Like `echo`, but writes the representation instead of stringification.

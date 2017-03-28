@@ -7,16 +7,42 @@ on Hacker News or Reddit.
 
 <style>
 img.macos {
-  /* border: 1px solid #ddd; */
   border-radius: 6px;
   box-shadow: 0 0 10px #ddd;
 }
 
-.demo {
-  margin-bottom: 16px;
-  padding: 16px;
-  /* background: #113; */
+#demo-window {
   background-color: #222;
+  margin-bottom: 16px;
+  overflow: scroll; /* Graceful degrading. */
+}
+
+.overflow-hidden {
+  overflow: hidden !important;
+}
+
+.animated-transition {
+  transition: all 500ms; /* cubic-bezier(0.165, 0.84, 0.44, 1); */
+}
+
+#demo-container {
+  transform: translateX(0);
+  width: 500%;
+}
+
+.demo-wrapper {
+  width: 20%;
+  float: left;
+}
+
+.demo:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.demo {
+  padding: 16px;
 }
 
 .demo-col {
@@ -52,12 +78,6 @@ img.macos {
   margin-bottom: 0;
 }
 
-.demo:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
 ul#demo-switcher {
   display: inline;
   margin: 0;
@@ -82,16 +102,12 @@ ul#demo-switcher > li > a:hover {
   background-color: #333;
   cursor: pointer;
 }
-
-.hidden {
-  display: none;
-}
 </style>
 
-<div id="demo-container">
-  <ul id="demo-switcher"> </ul>
+<ul id="demo-switcher"> </ul>
 
-  <div class="demo">
+<div id="demo-window"> <div id="demo-container" class="animated-transition">
+  <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col">
       <img src="assets/pipeline.png" srcset="assets/pipeline-2x.png 2x" class="macos" alt="Rich pipeline demo in elvish">
     </div>
@@ -105,9 +121,9 @@ ul#demo-switcher > li > a:hover {
         your lists, maps and even functions through the powerful pipeline.
       </p>
     </div> </div>
-  </div>
+  </div> </div>
 
-  <div class="demo hidden">
+  <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col">
       <img src="assets/control.png" srcset="assets/control-2x.png 2x" class="macos" alt="Screenshot of control structures">
     </div>
@@ -121,9 +137,9 @@ ul#demo-switcher > li > a:hover {
         Elvish uses curly braces for control structures.
       </p>
     </div> </div>
-  </div>
+  </div> </div>
 
-  <div class="demo hidden">
+  <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col">
       <img src="assets/location.png" srcset="assets/location-2x.png 2x" class="macos" alt="Screenshot of location mode">
     </div>
@@ -138,9 +154,9 @@ ul#demo-switcher > li > a:hover {
         browser.
       </p>
     </div> </div>
-  </div>
+  </div> </div>
 
-  <div class="demo hidden">
+  <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col">
       <img src="assets/histlist.png" srcset="assets/histlist-2x.png 2x" class="macos" alt="Screenshot of history listing mode">
     </div>
@@ -154,9 +170,9 @@ ul#demo-switcher > li > a:hover {
         key, more features.
       </p>
     </div> </div>
-  </div>
+  </div> </div>
 
-  <div class="demo hidden">
+  <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col">
       <img src="assets/navigation.png" srcset="assets/navigation-2x.png 2x" class="macos" alt="Screenshot of navigation mode">
     </div>
@@ -170,35 +186,101 @@ ul#demo-switcher > li > a:hover {
         files, with full shell power.
       </p>
     </div> </div>
-  </div>
-</div>
+  </div> </div>
+</div> </div>
+
+<div id="touch-debug"></div>
 
 <script>
-  var current;
-  var demos = document.getElementsByClassName("demo");
-  var links = [];
-  var makeOnlyShow = function(toShow) {
-    return function() {
-      current = toShow;
-      for (var i = 0; i < demos.length; i++) {
-        demos[i].className = "demo" + (i == toShow ? "" : " hidden");
-        links[i].className = i == toShow ? "current" : "";
-      }
-    };
-  }
+  var current = 0,
+      demoWindow = document.getElementById("demo-window"),
+      demoContainer = document.getElementById("demo-container"),
+      demoSwitcher = document.getElementById("demo-switcher"),
+      demos = document.getElementsByClassName("demo"),
+      len = demos.length,
+      links = [];
 
-  var demoSwitcher = document.getElementById("demo-switcher");
-  for (var i = 0; i < demos.length; i++) {
-    var li = document.createElement("li");
-    var link = document.createElement("a");
+  var scrollTo = function(to, instant) {
+    if (current != null) {
+      links[current].className = "";
+    }
+    var translate = -demoWindow.offsetWidth * to; 
+    if (instant) {
+      demoContainer.className = "";
+    }
+    demoContainer.style.transform = "translateX(" + translate + "px)";
+    demoContainer.className = "animated-transition";
+    links[to].className = "current";
+    current = to;
+  };
+  var scrollToNext = function() {
+    scrollTo(current < len - 1 ? current + 1 : current);
+  };
+  var scrollToPrev = function() {
+    scrollTo(current > 0 ? current - 1 : current);
+  };
+  var makeScrollTo = function(to) {
+    return function() { scrollTo(to); };
+  };
+
+  /* Build demo switcher. */
+  for (var i = 0; i < len; i++) {
+    var li = document.createElement("li"),
+        link = document.createElement("a");
     link.textContent = i + 1;
-    link.onclick = makeOnlyShow(i)
+    link.onclick = makeScrollTo(i);
+    if (i == 0) {
+      link.className = "current";
+    }
     links.push(link);
-
     li.appendChild(link);
     demoSwitcher.appendChild(li);
   }
-  makeOnlyShow(0)();
+  demoWindow.className = "overflow-hidden";
+
+  /* Resizing breaks sliding, fix it. */
+  window.addEventListener('resize', function() { scrollTo(current, true); });
+
+  /* Support sliding by touch. */
+  var initX, offsetX;
+  demoWindow.addEventListener('touchstart', function(ev) {
+    initX = ev.touches[0].pageX;
+    offsetX = 0;
+    demoContainer.className = "";
+  });
+  demoWindow.addEventListener('touchmove', function(ev) {
+    if (ev.touches.length == 1) {
+      lastX = ev.touches[0].pageX;
+      offsetX = lastX - initX;
+      var translate = offsetX - demoWindow.offsetWidth * current;
+      demoContainer.style.transform = "translateX(" + translate + "px)";
+    }
+  });
+  demoWindow.addEventListener('touchcancel', function(ev) {
+    demoContainer.className = "animated-transition";
+    scrollTo(current);
+  });
+  demoWindow.addEventListener('touchend', function(ev) {
+    demoContainer.className = "animated-transition";
+    var threshold = Math.min(60, demoWindow.offsetWidth / 4);
+    if (offsetX < -threshold) {
+      scrollToNext();
+    } else if (offsetX > threshold) {
+      scrollToPrev();
+    } else {
+      scrollTo(current);
+    }
+  });
+
+  // Keyboard bindings.
+  window.addEventListener('keypress', function(ev) {
+    var char = String.fromCodePoint(ev.keyCode || ev.charCode);
+    if (char == 'h') {
+      scrollToPrev();
+    } else if (char == 'l') {
+      scrollToNext();
+    }
+  });
 </script>
 
 

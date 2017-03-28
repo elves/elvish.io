@@ -18,6 +18,7 @@ tool:
 	cd $(GOPATH)/src/github.com/xiaq/genblog; go generate; go get
 
 publish: gen
-	rsync -aLv --delete ./dst/ ul.elvish.io:elvish.io/
+	rsync -aLv --delete ./dst/ ../published/
+	# rsync -aLv --delete ./dst/ ul.elvish.io:elvish.io/
 
 .PHONY: default gen tool publish clean
