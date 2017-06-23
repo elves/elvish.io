@@ -286,7 +286,7 @@ ul#demo-switcher > li > a:hover {
     if (ev.touches.length == 1) {
       lastX = ev.touches[0].pageX;
       offsetX = lastX - initX;
-      if ((current == 0 && offsetX > 0) || (current == n-1 && offsetX < 0)) {
+      if ((current == 0 && offsetX > 0) || (current == len-1 && offsetX < 0)) {
         return;
       }
       var translate = offsetX - demoWrappers[0].offsetWidth * current;
