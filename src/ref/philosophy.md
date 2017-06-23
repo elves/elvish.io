@@ -2,19 +2,21 @@ The design of elvish is driven by a philosophy consisting of a set of principles
 
 # The language
 
-*   Elvish is a real, expressive programming language.
+*   Elvish should be a real, expressive programming language.
 
-    Shells are often considered domain-specific languages (DSL), but elvish
+    Shells are often considered domain-specific languages (DSL), but Elvish
     does not restrict itself to this notion. It embraces such concepts as
-    package management, first-class functions and exceptions. Whatever you may
-    find in a modern programming language is likely to be found in elvish.
+    namespacing, first-class functions and exceptions. Whatever you may find in
+    a modern general-purpose programming language is likely to be found in
+    elvish.
 
     Elvish is not alone in this respect. There are multiple ongoing efforts;
     [this page](https://github.com/oilshell/oil/wiki/ExternalResources) on
-    oilshell's wiki is a good reference.
+    the wiki of oilshell (which is one of the efforts) is a good reference.
 
-*   Elvish tries to preserve and extend traditional shell programming
-    techniques as much as possible:
+*   Elvish should try to preserve and extend traditional shell programming
+    techniques, as long as they don't conflict with the previous tenet. Some
+    examples are:
 
     *   Barewords are simply strings.
 
@@ -31,6 +33,19 @@ The design of elvish is driven by a philosophy consisting of a set of principles
 
 # The user interface
 
-*   The user interface is usable for most people without any customizations.
+*   The user interface should be usable without any customizations. It should
+    be simple and consistent by default:
 
-*   The user interface is entirely programmable.
+    *   Prefer to extend well-known functionalities in other shell to inventing
+        brand new ones. For instance, in Elvish Ctrl-R summons the "history
+        listing" for searching history, akin to how Ctrl-R works in bash, but
+        more powerful.
+
+    *   When a useful feature has no prior art in other shells, borrow from
+        other programs. For instance, the "navigation mode", summoned by Ctrl-N,
+        mimics [Ranger](http://ranger.nongnu.org); while the "location mode"
+        used for quickly changing location, mimics location bars in GUI
+        browsers (and is summoned by the same key combination Ctrl-L).
+
+*   Customizability should be achieved via progammability, not an enormous
+    inventory of options that interact with each other in obscure ways.

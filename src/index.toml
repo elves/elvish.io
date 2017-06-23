@@ -1,14 +1,15 @@
 title = "Elvish the Shell"
 author = "Qi Xiao"
 feedPosts = 10
+template = "template.html"
 
 [index]
 name = "home"
 title = "Home"
 
 [[categories]]
-name = "blog"
-title = "Blog"
+name = "download"
+title = "Download"
 
 [[categories]]
 name = "learn"
@@ -17,3 +18,7 @@ title = "Learn"
 [[categories]]
 name = "ref"
 title = "Reference"
+
+[[categories]]
+name = "blog"
+title = "Blog"

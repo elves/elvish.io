@@ -1,13 +1,21 @@
 # prelude = "prelude"
 
 [[articles]]
+name = "philosophy"
+title = "The Philosophy"
+
+[[articles]]
 name = "lang"
 title = "The Language"
 
 [[articles]]
-name = "stdlib"
-title = "The Standard Library"
+name = "builtin"
+title = "The Builtin Module"
 
 [[articles]]
-name = "philosophy"
-title = "The Philosophy"
+name = "le"
+title = "The Editor API"
+
+[[articles]]
+name = "bundled"
+title = "The Bundled Modules"

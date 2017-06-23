@@ -1,5 +1,3 @@
-prelude = "prelude"
-
 [[articles]]
 name = "quick-intro"
 title = "Quick Introduction"
