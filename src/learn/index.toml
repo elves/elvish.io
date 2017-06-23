@@ -2,3 +2,8 @@
 name = "quick-intro"
 title = "Quick Introduction"
 timestamp = "2017-02-12"
+
+[[articles]]
+name = "cookbook"
+title = "Cookbook"
+timestamp = "2017-06-23"

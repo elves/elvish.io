@@ -126,13 +126,8 @@ sections of the website, not just the blog.
 
 
 <style>
-img.macos {
-  border-radius: 6px;
-  box-shadow: 0 0 10px #999;
-}
-
 #demo-window {
-  background-color: #eee;
+  background-color: #f0ede2;
   margin-bottom: 16px;
   overflow: scroll; /* Graceful degrading. */
 }
