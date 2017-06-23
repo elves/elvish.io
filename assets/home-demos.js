@@ -4,7 +4,7 @@
       demoContainer = document.getElementById("demo-container"),
       demoSwitcher = document.getElementById("demo-switcher"),
       demoWrappers = document.getElementsByClassName("demo-wrapper"),
-      len = demoWrappers.length,
+      nDemos = demoWrappers.length,
       switcherLinks = [];
 
   var scrollTo = function(to, instant) {
@@ -12,30 +12,24 @@
       switcherLinks[current].className = "";
     }
     var translate = -demoWrappers[0].offsetWidth * to; 
-    if (instant) {
-      demoContainer.className = "";
-    }
+    demoContainer.className = instant ? "" : "animated-transition";
     demoContainer.style.transform = "translateX(" + translate + "px)";
-    demoContainer.className = "animated-transition";
     switcherLinks[to].className = "current";
     current = to;
   };
   var scrollToNext = function() {
-    scrollTo(current < len - 1 ? current + 1 : current);
+    scrollTo(current < nDemos - 1 ? current + 1 : current);
   };
   var scrollToPrev = function() {
     scrollTo(current > 0 ? current - 1 : current);
   };
-  var makeScrollTo = function(to) {
-    return function() { scrollTo(to); };
-  };
 
   /* Build demo switcher. */
-  for (var i = 0; i < len; i++) {
+  for (var i = 0; i < nDemos; i++) {
     var li = document.createElement("li"),
         link = document.createElement("a");
     link.textContent = i + 1;
-    link.onclick = makeScrollTo(i);
+    link.onclick = (function(to) { return function() { scrollTo(to) }; })(i);
     if (i == 0) {
       link.className = "current";
     }
@@ -43,6 +37,8 @@
     li.appendChild(link);
     demoSwitcher.appendChild(li);
   }
+
+  /* Switcher built, hide scrollbar. */
   demoWindow.className = "overflow-hidden";
 
   /* Resizing breaks sliding, fix it. */
@@ -80,7 +76,7 @@
       // No overscrolling.
       var calculatedOffset = offsetX - baseOffset;
       if ((current == 0 && calculatedOffset > 0) ||
-          (current == len-1 && calculatedOffset < 0)) {
+          (current == nDemos-1 && calculatedOffset < 0)) {
         calculatedOffset = 0;
       }
       var translate = calculatedOffset - demoWrappers[0].offsetWidth * current;
@@ -89,14 +85,12 @@
     }
   });
   demoWindow.addEventListener('touchcancel', function(ev) {
-    demoContainer.className = "animated-transition";
     scrollTo(current);
   });
   demoWindow.addEventListener('touchend', function(ev) {
     if (!scrollX) {
       return;
     }
-    demoContainer.className = "animated-transition";
     var threshold = Math.min(60, demoWindow.offsetWidth / 4);
     if (offsetX < -threshold) {
       scrollToNext();

@@ -1,0 +1,11 @@
+/* elvish.io-specific stylings. */
+
+#blog-title {
+    font-family: monospace;
+}
+
+/* macOS screenshots. */
+img.macos {
+  border-radius: 6px;
+  box-shadow: 0 0 10px #999;
+}

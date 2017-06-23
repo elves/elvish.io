@@ -1,6 +1,7 @@
 MDS := $(wildcard src/*.md src/*/*.md)
 HTMLS := $(MDS:.md=.html)
 GENERATED_HTMLS := $(wildcard src/*.html src/*/*.html)
+PUBLISH_DIR := ../published/ # ul.elvish.io:elvish.io/
 
 default: gen
 
@@ -18,7 +19,6 @@ tool:
 	cd $(GOPATH)/src/github.com/xiaq/genblog; go generate; go get
 
 publish: gen
-	rsync -aLv --delete ./dst/ ../published/
-	# rsync -aLv --delete ./dst/ ul.elvish.io:elvish.io/
+	rsync -aLv --delete ./dst/ $(PUBLISH_DIR)
 
 .PHONY: default gen tool publish clean
