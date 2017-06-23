@@ -1,15 +1,25 @@
 <div id="disclaimer">
-<p>
-<b>UNDER CONSTRUCTION, DO NOT SHARE YET</b>
-</p>
-<p>
-This site is under heavy construction; the author asks you to **not** post it
-on Hacker News or Reddit.
-</p>
-<hr>
+  <p>
+    <b>UNDER CONSTRUCTION, DO NOT SHARE YET</b>
+  </p>
+  <p>
+    This site is under heavy construction; the author asks you to **not** post it
+    on Hacker News or Reddit.
+  </p>
+  <hr>
 </div>
+<script>
+  if (location.host == 'draft.elvish.io') {
+    document.getElementById('disclaimer').remove();
+  }
+</script>
 
 **Elvish** is a friendly and expressive shell for Linux, macOS and BSDs.
+
+<!--
+<pre id="demo-debug">
+</pre>
+-->
 
 <ul id="demo-switcher"> </ul>
 
@@ -96,6 +106,8 @@ on Hacker News or Reddit.
   </div> </div>
 </div> </div>
 
+<link href="/assets/home-demos.css" rel="stylesheet">
+<script src="/assets/home-demos.js"></script>
 
 ## Getting Elvish
 
@@ -124,198 +136,3 @@ on Hacker News or Reddit.
 To keep updated, subscribe to the [feed](feed.atom). It contains updates to all
 sections of the website, not just the blog.
 
-
-<style>
-#demo-window {
-  background-color: #f0ede2;
-  margin-bottom: 16px;
-  overflow: scroll; /* Graceful degrading. */
-}
-
-.overflow-hidden {
-  overflow: hidden !important;
-}
-
-.animated-transition {
-  transition: all 500ms; /* cubic-bezier(0.165, 0.84, 0.44, 1); */
-}
-
-#demo-container {
-  transform: translateX(0);
-  width: 500%;
-}
-
-.demo-wrapper {
-  width: 20%;
-  float: left;
-}
-
-.demo:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.demo {
-  padding: 16px;
-}
-
-.demo-col {
-  width: 100%;
-  height: 100%;
-  float: left;
-}
-
-.demo-col img {
-  display: block;
-  margin: 0 auto;
-}
-
-.demo-description {
-  margin: 16px 5% 0;
-}
-
-@media screen and (min-width: 800px) {
-  .demo-col {
-    width: 50%;
-  }
-  .demo-description {
-    margin: 0 5%;
-  }
-}
-
-.demo-title {
-  font-size: 1.3em;
-}
-
-.demo-col p {
-  margin-top: 16px;
-  margin-bottom: 0;
-}
-
-ul#demo-switcher {
-  display: inline;
-  margin: 0;
-}
-
-ul#demo-switcher > li {
-  list-style: none;
-  display: inline-block;
-}
-
-ul#demo-switcher > li > a {
-  color: black;
-  padding: 4px 14px;
-}
-
-ul#demo-switcher > li > a.current , ul#demo-switcher > li > a.current:hover {
-  color: white;
-  background-color: black;
-}
-
-ul#demo-switcher > li > a:hover {
-  background-color: #ccc;
-  cursor: pointer;
-}
-</style>
-
-<script>
-
-  if (location.host == 'draft.elvish.io') {
-    document.getElementById('disclaimer').remove();
-  }
-
-  var current = 0,
-      demoWindow = document.getElementById("demo-window"),
-      demoContainer = document.getElementById("demo-container"),
-      demoSwitcher = document.getElementById("demo-switcher"),
-      demoWrappers = document.getElementsByClassName("demo-wrapper"),
-      demos = document.getElementsByClassName("demo"),
-      len = demoWrappers.length,
-      links = [];
-
-  var scrollTo = function(to, instant) {
-    if (current != null) {
-      links[current].className = "";
-    }
-    var translate = -demoWrappers[0].offsetWidth * to; 
-    if (instant) {
-      demoContainer.className = "";
-    }
-    demoContainer.style.transform = "translateX(" + translate + "px)";
-    demoContainer.className = "animated-transition";
-    links[to].className = "current";
-    current = to;
-  };
-  var scrollToNext = function() {
-    scrollTo(current < len - 1 ? current + 1 : current);
-  };
-  var scrollToPrev = function() {
-    scrollTo(current > 0 ? current - 1 : current);
-  };
-  var makeScrollTo = function(to) {
-    return function() { scrollTo(to); };
-  };
-
-  /* Build demo switcher. */
-  for (var i = 0; i < len; i++) {
-    var li = document.createElement("li"),
-        link = document.createElement("a");
-    link.textContent = i + 1;
-    link.onclick = makeScrollTo(i);
-    if (i == 0) {
-      link.className = "current";
-    }
-    links.push(link);
-    li.appendChild(link);
-    demoSwitcher.appendChild(li);
-  }
-  demoWindow.className = "overflow-hidden";
-
-  /* Resizing breaks sliding, fix it. */
-  window.addEventListener('resize', function() { scrollTo(current, true); });
-
-  /* Support sliding by touch. */
-  var initX, offsetX;
-  demoWindow.addEventListener('touchstart', function(ev) {
-    initX = ev.touches[0].pageX;
-    offsetX = 0;
-    demoContainer.className = "";
-  });
-  demoWindow.addEventListener('touchmove', function(ev) {
-    if (ev.touches.length == 1) {
-      lastX = ev.touches[0].pageX;
-      offsetX = lastX - initX;
-      if ((current == 0 && offsetX > 0) || (current == len-1 && offsetX < 0)) {
-        return;
-      }
-      var translate = offsetX - demoWrappers[0].offsetWidth * current;
-      demoContainer.style.transform = "translateX(" + translate + "px)";
-    }
-  });
-  demoWindow.addEventListener('touchcancel', function(ev) {
-    demoContainer.className = "animated-transition";
-    scrollTo(current);
-  });
-  demoWindow.addEventListener('touchend', function(ev) {
-    demoContainer.className = "animated-transition";
-    var threshold = Math.min(60, demoWindow.offsetWidth / 4);
-    if (offsetX < -threshold) {
-      scrollToNext();
-    } else if (offsetX > threshold) {
-      scrollToPrev();
-    } else {
-      scrollTo(current);
-    }
-  });
-
-  // Keyboard bindings.
-  window.addEventListener('keypress', function(ev) {
-    var char = String.fromCodePoint(ev.keyCode || ev.charCode);
-    if (char == 'h') {
-      scrollToPrev();
-    } else if (char == 'l') {
-      scrollToNext();
-    }
-  });
-</script>
