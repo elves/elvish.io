@@ -26,7 +26,7 @@
 <div id="demo-window"> <div id="demo-container" class="animated-transition">
   <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col">
-      <img src="/assets/pipeline.png" srcset="/assets/pipeline-2x.png 2x" class="macos" alt="Rich pipeline demo in Elvish">
+      $screenshot pipeline Rich pipeline demo in Elvish
     </div>
     <div class="demo-col"> <div class="demo-description">
       <div class="demo-title">Structureful pipelines</div>
@@ -45,7 +45,7 @@
 
   <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col">
-      <img src="/assets/control.png" srcset="/assets/control-2x.png 2x" class="macos" alt="Screenshot of control structures">
+      $screenshot control Screenshot of control structures
     </div>
     <div class="demo-col"> <div class="demo-description">
       <div class="demo-title">C-like control structures</div>
@@ -63,7 +63,7 @@
 
   <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col">
-      <img src="/assets/location.png" srcset="/assets/location-2x.png 2x" class="macos" alt="Screenshot of location mode">
+      $screenshot location Screenshot of location mode
     </div>
     <div class="demo-col"> <div class="demo-description">
       <div class="demo-title">Directory history</div>
@@ -81,7 +81,7 @@
 
   <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col">
-      <img src="/assets/histlist.png" srcset="/assets/histlist-2x.png 2x" class="macos" alt="Screenshot of history listing mode">
+      $screenshot histlist Screenshot of history listing mode
     </div>
     <div class="demo-col"> <div class="demo-description">
       <div class="demo-title">Command history</div>
@@ -100,7 +100,7 @@
 
   <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col">
-      <img src="/assets/navigation.png" srcset="/assets/navigation-2x.png 2x" class="macos" alt="Screenshot of navigation mode">
+      $screenshot navigation Screenshot of navigation mode
     </div>
     <div class="demo-col"> <div class="demo-description">
       <div class="demo-title">Built-in File Manager</div>
