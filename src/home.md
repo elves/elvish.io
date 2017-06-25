@@ -26,7 +26,7 @@
 <div id="demo-window"> <div id="demo-container" class="animated-transition">
   <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col">
-      <img src="assets/pipeline.png" srcset="assets/pipeline-2x.png 2x" class="macos" alt="Rich pipeline demo in Elvish">
+      <img src="/assets/pipeline.png" srcset="/assets/pipeline-2x.png 2x" class="macos" alt="Rich pipeline demo in Elvish">
     </div>
     <div class="demo-col"> <div class="demo-description">
       <div class="demo-title">Structureful pipelines</div>
@@ -45,7 +45,7 @@
 
   <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col">
-      <img src="assets/control.png" srcset="assets/control-2x.png 2x" class="macos" alt="Screenshot of control structures">
+      <img src="/assets/control.png" srcset="/assets/control-2x.png 2x" class="macos" alt="Screenshot of control structures">
     </div>
     <div class="demo-col"> <div class="demo-description">
       <div class="demo-title">C-like control structures</div>
@@ -63,7 +63,7 @@
 
   <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col">
-      <img src="assets/location.png" srcset="assets/location-2x.png 2x" class="macos" alt="Screenshot of location mode">
+      <img src="/assets/location.png" srcset="/assets/location-2x.png 2x" class="macos" alt="Screenshot of location mode">
     </div>
     <div class="demo-col"> <div class="demo-description">
       <div class="demo-title">Directory history</div>
@@ -81,7 +81,7 @@
 
   <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col">
-      <img src="assets/histlist.png" srcset="assets/histlist-2x.png 2x" class="macos" alt="Screenshot of history listing mode">
+      <img src="/assets/histlist.png" srcset="/assets/histlist-2x.png 2x" class="macos" alt="Screenshot of history listing mode">
     </div>
     <div class="demo-col"> <div class="demo-description">
       <div class="demo-title">Command history</div>
@@ -100,7 +100,7 @@
 
   <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col">
-      <img src="assets/navigation.png" srcset="assets/navigation-2x.png 2x" class="macos" alt="Screenshot of navigation mode">
+      <img src="/assets/navigation.png" srcset="/assets/navigation-2x.png 2x" class="macos" alt="Screenshot of navigation mode">
     </div>
     <div class="demo-col"> <div class="demo-description">
       <div class="demo-title">Built-in File Manager</div>
@@ -120,23 +120,26 @@
 
 ## Getting Elvish
 
-*   [Download](download) prebuilt binaries if you are running Linux or macOS on
+*   [Download](/download) prebuilt binaries if you are running Linux or macOS on
     an x86-64 CPU.
 
 *   Source code is available on the [GitHub repository](https://github.com/elves/elvish).
 
 ## Speaking Elvish
 
-*   [Learn](learn) to speak Elvish by following tutorials.
+*   [Learn](/learn) to speak Elvish by following tutorials.
 
-    For basics, read the [quick introduction](learn/quick-intro.html). If you
-    come from other shells, the [cookbook](learn/cookbook.html) can get you
-    started quickly.
+    If you are not experienced with any shell, learn the
+    [basics](/learn/basics.html) first.
+
+    If you come from other shells, read the [cookbook](/learn/cookbook.html)
+    to get started quickly, and learn about Elvish's [unique
+    semantics](learn/semantics-uniqueness.html).
 
 *   [Reference](ref) documents describe Elvish in a more formal and complete way.
 
     Read about the [philosophy](ref/philosophy.html), the
-    [language](ref/lang.html), the [builtin module](ref/builtin.html), and
+    [language](ref/language.html), the [builtin module](ref/builtin.html), and
     more.
 
 *   [The blog](blog) contains news on Elvish.
@@ -147,15 +150,18 @@
 *   [The feed](feed.atom) contains updates to all sections of the website (not
     just the blog).
 
-## Meeting other Elves
+## Meeting Other Elves
 
-*   Discuss by joining the #elvish channel on Freenode, the [Gitter
+*   Join the #elvish channel on Freenode, the [Gitter
     room](https://gitter.im/elves/elvish-public), or the [Telegram
     group](https://telegram.me/elvish).
 
-    The wonderful [fishroom](https://github.com/tuna/fishroom) service connects
-    all of them together, so you can join whichever one suits you best, and you
-    won't miss discussions happening in other channels.
+    The wonderful [fishroom](https://github.com/tuna/fishroom) service
+    connects all of them together. So just join whichever channel suits you
+    best, and you won't miss discussions happening in other channels.
 
 *   Chinese speakers are also welcome on the #elvish-zh channel on
     Freenode and the [Chinese Telegram group](https://telegram.me/elvishzh).
+
+*   The [issue tracker](https://github.com/elves/elvish/issues) is the place
+    for bug reports and feature requests.

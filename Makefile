@@ -1,7 +1,7 @@
 MDS := $(wildcard src/*.md src/*/*.md)
 HTMLS := $(MDS:.md=.html)
 GENERATED_HTMLS := $(wildcard src/*.html src/*/*.html)
-PUBLISH_DIR := ../published/ # ul.elvish.io:elvish.io/
+PUBLISH_DIR := ../published/ # ul.elvish.io:elvish.io/published
 
 default: gen
 

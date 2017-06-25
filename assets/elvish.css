@@ -1,11 +1,32 @@
 /* elvish.io-specific stylings. */
 
 #blog-title {
-    font-family: monospace;
+  font-family: monospace;
+  cursor: default;
+}
+
+#blog-title > a {
+  color: white;
+  text-decoration: none;
+  cursor: default;
+}
+
+#blog-title > a.command {
+  color: #5b5;
 }
 
 /* macOS screenshots. */
 img.macos {
   border-radius: 6px;
   box-shadow: 0 0 10px #999;
+}
+
+/* Keys */
+.key {
+  display: inline-block;
+  border: 1px solid;
+  border-radius: 3px;
+  padding: 1px 2px;
+  margin: 1px;
+  font-size: 85%;
 }
