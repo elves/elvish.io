@@ -1,11 +1,9 @@
-# prelude = "prelude"
-
 [[articles]]
 name = "philosophy"
 title = "The Philosophy"
 
 [[articles]]
-name = "lang"
+name = "language"
 title = "The Language"
 
 [[articles]]

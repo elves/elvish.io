@@ -1,7 +1,6 @@
-The semantics of Elvish is significantly different from other shells in many
-aspects. They can be pleasant or surprising, or both, if you have used other
-shells.
-
+As a result of its [design philosophy](/ref/philosophy.html), the semantics of
+Elvish is significantly different from other shells in many aspects. If you are
+used to other shells, those differences can be surprising.
 
 # Structureful IO
 

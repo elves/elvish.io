@@ -1,20 +1,8 @@
-## Screenshot
-
-Elvish looks like this:
-
-![syntax highlighting](https://raw.githubusercontent.com/elves/images/master/syntax.png)
-
-## Getting Started
-
-**Note**: Elvish is constantly tested under Terminal.app, libvte-based terminals and tmux. Some function keys might not work in other terminals like xterm (#328).
-
-Elvish mimics bash and zsh in a lot of places. The following shows some key differences and highlights, as well as some common tasks:
-
-*   Elvish has builtin
+If you come from other shells, hopefully the following recipes will get you started quickly:
 
 *   Put your startup script in `~/.elvish/rc.elv`. There is no `alias` yet, but you can achieve the goal by defining a function:
 
-    ```sh
+    ```elvish
     fn ls { e:ls --color $@ }
     ```
 
@@ -22,7 +10,7 @@ Elvish mimics bash and zsh in a lot of places. The following shows some key diff
 
 *   The left and right prompts can be customized by assigning functions to `le:prompt` and `le:rprompt`. Their outputs are concatenated (with no spaces in between) before being used as the respective prompts. The following simulates the default prompts but uses fancy Unicode:
 
-    ```sh
+    ```elvish
     # "tilde-abbr" abbreviates home directory to a tilde.
     le:prompt = { tilde-abbr $pwd; put '❱ ' }
     # "constantly" returns a function that always writes the same value(s) to output.
