@@ -66,7 +66,7 @@ Lists and maps are the basic container types in Elvish.
 Lists are surround by square brackets `[ ]`, with elements separated by
 whitespaces. Examples:
 
-```elvish
+```elvish-transcript
 ~> put [lorem ipsum]
 ▶ [lorem ipsum]
 ~> put [lorem
@@ -79,7 +79,7 @@ whitespaces. Examples:
 Note that commas have no special meanings and just represent themselves, so
 don't use them to separate elements:
 
-```elvish
+```elvish-transcript
 ~> li = [a, b]
 ~> put $li
 ▶ [a, b]
@@ -93,7 +93,7 @@ Maps are also surrounded by square brackets; elements are written like
 `&key=value` (think HTTP query parameters) and separated by whitespaces.
 Whitespaces are allowed after `=`, but not before `=`. Examples:
 
-```elvish
+```elvish-transcript
 ~> put [&foo=bar &lorem=ipsum]
 ▶ [&foo=bar &lorem=ipsum]
 ~> put [&a=   10
@@ -115,13 +115,13 @@ You will notice that variable names sometimes have a leading dollar sign, someti
 
 A variable can be assigned by writing its name, followed by `=` and the value to assign. There **must** be spaces both before and after `=`. Example:
 
-```elvish
+```elvish-transcript
 ~> foo = bar
 ```
 
 You can assign multiple values to multiple variables simultaneously, simply by writing several variable names (separated by inline whitespaces) on the left-hand side, and several values on the right-hand side:
 
-```elvish
+```elvish-transcript
 ~> x y = 3 4
 ```
 
@@ -129,7 +129,7 @@ You can assign multiple values to multiple variables simultaneously, simply by w
 
 When using the value of a variable, add a `$` before its name:
 
-```elvish
+```elvish-transcript
 ~> foo = bar
 ~> x y = 3 4
 ~> put $foo
@@ -140,7 +140,7 @@ When using the value of a variable, add a `$` before its name:
 
 Variables must be assigned before use. Attempting to use a variable before assigning will cause a compilation error:
 
-```elvish
+```elvish-transcript
 ~> echo $x
 Compilation error: variable $x not found
   [interactive], line 1:
@@ -155,7 +155,7 @@ Compilation error: variable $x not found
 
 When using a list variable, you can add `@` before the name to get all contained values. This is called **exploding** the variable:
 
-```elvish
+```elvish-transcript
 ~> li = [lorem ipsum foo bar]
 ~> put $li
 ▶ [lorem ipsum foo bar]
@@ -168,8 +168,16 @@ When using a list variable, you can add `@` before the name to get all contained
 
 If the variable is `args` (a special variable for function arguments), you can omit the variable name -- `$@` is equivalent to `$@args`. This is a trick to make `$@` mean roughly the same thing as `"$@"` in POSIX shell. It is most useful when writing wrapper functions: the following code defines an `ll` function that calls `ls` with an additional `-l` flag:
 
-```elvish
-fn ll { ls -l $@ }
+```elvish-transcript
+~> fn ll { ls -l $@ }
+~> ll -a
+total 12
+drwxr-xr-x 3 xiaq xiaq 4096 Jun 20  2016 .
+drwxr-xr-x 8 xiaq xiaq 4096 Jun 25 02:26 ..
+-rw-r--r-- 1 xiaq xiaq    0 Jun 20  2016 a
+-rw-r--r-- 1 xiaq xiaq    0 Jun 20  2016 b
+-rw-r--r-- 1 xiaq xiaq    0 Jun 20  2016 c
+drwx------ 2 root xiaq 4096 Jun 20  2016 x
 ```
 
 A more general construct is the [explode](stdlib.html#explode) builtin, which works on arbitrary values.
@@ -181,7 +189,7 @@ A inverse mechanism to variable explosion exists for variable assignment.
 
 When assigning variables, if you prefix the name of the last variable with `@`, it becomes a list containing all remaining values. That variable is called a **rest variable**. Example:
 
-```elvish
+```elvish-transcript
 ~> a b c @d = (range 10)
 ~> put $a $b $c $d
 ▶ 0
@@ -212,7 +220,7 @@ finishes, whether it has thrown an error or not:
 
 Example:
 
-```elvish
+```elvish-transcript
 ~> x = 1
 ~> x=100 echo $x
 100
@@ -232,7 +240,7 @@ bash-4.4$ x=100 echo $x
 
 You can also prepend ordinary assignments with temporary assignments.
 
-```elvish
+```elvish-transcript
 ~> x=1
 ~> x=100 y = (+ 133 $x)
 ~> put $x $y
@@ -247,7 +255,7 @@ Elvish has lexical scoping, and each block has its own scope.
 
 When you use a variable, Elvish looks for it in the current lexical scope, then its parent lexical scope, until the root scope:
 
-```elvish
+```elvish-transcript
 ~> x = 12
 ~> { echo $x } # $x is in the root scope
 12
@@ -257,7 +265,7 @@ bar
 
 When you assign a variable, Elvish does the same searching; only if no such variable is found, it creates this new variable on the current (innermost) scope:
 
-```elvish
+```elvish-transcript
 ~> x = 12
 ~> { x = 13 } # assigns to x in the root scope
 ~> echo $x
@@ -271,7 +279,7 @@ Compilation error: variable $z not found
 
 This means that Elvish will not shadow your variable in outer scopes. You can force Elvish to create an identically named variable as one on the outer scope, and thus shadowing it, by using the `local:` pseudo-namespace:
 
-```elvish
+```elvish-transcript
 ~> x = 12
 ~> { local:x = 13; echo $x } # force shadowing
 13
@@ -281,7 +289,7 @@ This means that Elvish will not shadow your variable in outer scopes. You can fo
 
 After force shadowing, you can still access the variable in the outer scope using the `up:` pseudo-namespace:
 
-```elvish
+```elvish-transcript
 ~> x = 12
 ~> { local:x = 14; echo $x $up:x }
 14 12
@@ -289,7 +297,7 @@ After force shadowing, you can still access the variable in the outer scope usin
 
 The `local:` and `up:` pseudo-namespaces can also be used on unshadowed variables, although they are not useful in those cases:
 
-```elvish
+```elvish-transcript
 ~> foo = a
 ~> { echo $up:foo } # $up:foo is the same as $foo
 a
@@ -325,7 +333,7 @@ Lambdas can be either **signatureless** of **signatureful**.
 
 Signatureless lambdas are written like `{ command ... }`. Example:
 
-```elvish
+```elvish-transcript
 ~> f = { echo Hi }
 ~> put $f
 ▶ <closure 0xc420450540>
@@ -427,7 +435,7 @@ with any of the following three ways:
 
 Examples:
 
-```elvish
+```elvish-transcript
 ~> li = [lorem ipsum foo bar]
 ~> put $li[0]
 ▶ lorem
@@ -448,7 +456,7 @@ there**.  This is best explained with examples:
 *   In the string `elv`, every codepoint is encoded with only one byte, so 0,
     1, 2 are all valid indices:
 
-    ```elvish
+    ```elvish-transcript
     ~> put elv[0]
     ▶ e
     ~> put elv[1]
@@ -461,7 +469,7 @@ there**.  This is best explained with examples:
     codepoint occupies byte 0 through 2, and the second occupies byte 3 through
     5. Hence valid indicies are 0 and 3:
 
-    ```elvish
+    ```elvish-transcript
     ~> put 世界[0]
     ▶ 世
     ~> put 世界[3]
@@ -477,7 +485,7 @@ This idea of indexing codepoints by their byte positions is stolen from Julia.
 Maps are simply indexed by their keys. There is no slice indexing, and `:` does
 not have a special meaning. Examples:
 
-```elvish
+```elvish-transcript
 ~> map = [&a=lorem &b=ipsum &a:b=haha]
 ~> echo $map[a]
 lorem
@@ -491,7 +499,7 @@ If you put multiple values in the index, you get multiple values: `$li[x y z]`
 is equivalent to `$li[x] $li[y] $li[z]`. This applies to all indexable values.
 Examples:
 
-```elvish
+```elvish-transcript
 ~> put elv[0 2 0:2]
 ▶ e
 ▶ v
@@ -513,7 +521,7 @@ chunk is zero or more commands or pipelines, and will be described later.) It
 redirects the output of the chunk into an internal pipe, and evaluates to all
 the values that have been output.
 
-```elvish
+```elvish-transcript
 ~> + 1 10 100
 ▶ 111
 ~> x = (+ 1 10 100)
@@ -531,7 +539,7 @@ the values that have been output.
 
 If the chunk outputs bytes, Elvish strips the last newline (if any), and split them by newlines, and consider each line to be one string value:
 
-```elvish
+```elvish-transcript
 ~> put (echo "a\nb")
 ▶ a
 ▶ b
@@ -541,7 +549,7 @@ If the chunk outputs both values and bytes, the values of output capture will
 contain both value outputs and lines, but the ordering between value output and
 byte output might not agree with the order in which they happened:
 
-```elvish
+```elvish-transcript
 ~> put (put a; echo b) # value order need not be the same as output order
 ▶ b
 ▶ a
@@ -552,7 +560,7 @@ byte output might not agree with the order in which they happened:
 
 Exception capture is formed by putting `?()` around a code chunk. It runs the chunk and evaluates to the exception it throws.
 
-```elvish
+```elvish-transcript
 ~> fail bad
 Exception: bad
 Traceback:
@@ -564,7 +572,7 @@ Traceback:
 
 If there was no error, it evaluates to the special value `$ok`:
 
-```elvish
+```elvish-transcript
 ~> nop
 ~> put ?(nop)
 ▶ $ok
@@ -573,7 +581,7 @@ If there was no error, it evaluates to the special value `$ok`:
 Exceptions are booleanly false and `$ok` is booleanly true. This is useful in
 `if` (introduced later):
 
-```elvish
+```elvish-transcript
 if ?(test -d ./a) {
   # ./a is a directory
 }
@@ -597,7 +605,7 @@ empty, the current user is assumed.
 
 In the following example, the home directory of the current user is `/home/xiaq`, while that of the root user is `/root`:
 
-```elvish
+```elvish-transcript
 ~> put ~
 ▶ /home/xiaq
 ~> put ~root
@@ -610,14 +618,14 @@ In the following example, the home directory of the current user is `/home/xiaq`
 
 Note that tildes are not special when they appear elsewhere in a word:
 
-```elvish
+```elvish-transcript
 ~> put a~root
 ▶ a~root
 ```
 
 If you need them to be, surround them with braces (the reason this works will be explained later):
 
-```elvish
+```elvish-transcript
 ~> put a{~root}
 ▶ a/root
 ```
@@ -728,7 +736,7 @@ Writing several expressions together with no space in between will concatenate
 them. This creates a **compound expression**, because it mimics the formation
 of compound words in natural languages. Examples:
 
-```elvish
+```elvish-transcript
 ~> put 'a'b"c" # compounding three string literals
 ▶ abc
 ~> v = value
@@ -740,7 +748,7 @@ Many constructs in Elvish can generate multiple values, like indexing with
 multiple indices and output captures. Compounding multiple values with other
 values generates all possible combinations:
 
-```elvish
+```elvish-transcript
 ~> put (put a b)-(put 1 2)
 ▶ a-1
 ▶ a-2
@@ -752,7 +760,7 @@ Note the order of the generated values. The value that comes later changes faste
 
 **NOTE**: There is a perhaps a better way to explain the ordering, but you can think of the previous code as equivalent to this:
 
-```elvish
+```elvish-transcript
 for x [a b] {
   for y [1 2] {
     put $x-$y
@@ -764,7 +772,7 @@ for x [a b] {
 
 In practice, you never have to write `(put a b)`: you can use a braced list `{a,b}`:
 
-```elvish
+```elvish-transcript
 ~> put {a,b}-{1,2}
 ▶ a-1
 ▶ a-2
@@ -774,7 +782,7 @@ In practice, you never have to write `(put a b)`: you can use a braced list `{a,
 
 Elements in braced lists can also be separated with whitespaces, or a combination of comma and whitespaces (the latter not recommended):
 
-```elvish
+```elvish-transcript
 ~> put {a b , c,d}
 ▶ a
 ▶ b
@@ -814,7 +822,7 @@ arguments, options and redirections.
 
 The **head** must appear first. It is an arbitrary word that determines what will be run. Examples:
 
-```elvish
+```elvish-transcript
 ~> ls -l # the string ls is the head
 (output omitted)
 ~> (put ls) -l # (put ls) is the head
@@ -823,7 +831,7 @@ The **head** must appear first. It is an arbitrary word that determines what wil
 
 The head must evaluate to one value. For instance, the following does not work:
 
-```elvish
+```elvish-transcript
 ~> (put ls -l)
 Exception: head of command must be 1 value; got 2
 Traceback:
@@ -834,7 +842,7 @@ Traceback:
 The definition of barewords is relaxed for the head to include `<`, `>`, `*`
 and `^`. These are all names of numeric builtins:
 
-```elvish
+```elvish-transcript
 ~> < 3 5 # less-than
 ▶ $true
 ~> > 3 5 # greater-than
@@ -851,7 +859,7 @@ and `^`. These are all names of numeric builtins:
 to commands. Arguments are arbitrary words, while options have the same
 syntax as map pairs. They are separated by inline whitespaces:
 
-```elvish
+```elvish-transcript
 ~> splits &sep=: /home:/root # &sep=: is an option; /home:/root is an argument
 ▶ /home
 ▶ /root
@@ -888,7 +896,7 @@ Possible redirection operators and their default FDs are:
 
 Examples:
 
-```elvish
+```elvish-transcript
 ~> echo haha > log
 ~> cat log
 haha
@@ -912,7 +920,7 @@ for closing. In this case, the redirection operator only determines the default
 destination FD (and is totally irrevelant if a destination FD is specified).
 Examples:
 
-```elvish
+```elvish-transcript
 ~> ls >&- # close stdout
 /bin/ls: write error: Bad file descriptor
 Exception: ls exited with 2
@@ -925,7 +933,7 @@ Traceback:
 
 If you have multiple related redirections, they are applied in the order they appear. For instance:
 
-```elvish
+```elvish-transcript
 ~> fn f { echo out; echo err >&2 } # echoes "out" on stdout, "err" on stderr
 ~> f >log 2>&1 # use file "log" for stdout, then use (changed) stdout for stderr
 ~> cat log
@@ -949,7 +957,7 @@ syntactically special commands can be treated the same as ordinary commands),
 but have evaluation rules that are custom to each command. To explain this, we
 use the following example:
 
-```elvish
+```elvish-transcript
 ~> or ?(echo x) ?(echo y) ?(echo z)
 x
 ▶ $ok
@@ -976,7 +984,7 @@ value is obtained. When given no arguments, it outpus `$false`.
 
 Syntax:
 
-```elvish
+```elvish-transcript
 if <condition> {
     <body>
 } elif <condition> {
@@ -995,7 +1003,7 @@ The condition part is an expression, not a command like in other shells.
 
 Tip: a combination of `if` and `?()` gives you a semantics close to other shells:
 
-```elvish
+```elvish-transcript
 if ?(test -d .git) {
     # do something
 }
@@ -1009,7 +1017,7 @@ However, for Elvish's builtin predicates that output values instead of throw exc
 
 Syntax:
 
-```elvish
+```elvish-transcript
 while <condition> {
     <body>
 } else {
@@ -1028,7 +1036,7 @@ beginning).
 
 Syntax:
 
-```elvish
+```elvish-transcript
 for <var> <container> {
     <body>
 } else {
@@ -1050,7 +1058,7 @@ exception capture construct `?()` instead.)
 
 Syntax:
 
-```elvish
+```elvish-transcript
 try {
     <try-block>
 } except [except-varname] {
@@ -1103,23 +1111,28 @@ Examples:
 
 Syntax:
 
-```elvish
+```elvish-transcript
 fn <name> <lambda>
 ```
 
 Define a function with a given name. The function behaves in the same way to
 the lambda used to define it, except that it "captures" `return`. In other
-words, `return` exits the innermost functions defined with `fn`:
+words, `return` will fall through lambdas not defined with `fn`, and continues
+until it exits a function defined with `fn`:
 
-```elvish
-fn f {
-    { echo a; return }
-    echo b # not executed
-}
-{
-    f
-    echo c # executed, because f "captures" the return
-}
+```elvish-transcript
+~> fn f {
+     { echo a; return }
+     echo b # will not execute
+   }
+~> f
+a
+~> {
+     f
+     echo c # executed, because f "captures" the return
+   }
+a
+c
 ```
 
 **TODO**: Find a better way to describe this. Hopefully the example is
@@ -1164,8 +1177,10 @@ if one of them is not used.
 Command redirections are applied before the connection happens. For instance,
 the following writes `foo` to `a.txt` instead of the output:
 
-```elvish
-echo foo > a.txt | cat
+```elvish-transcript
+~> echo foo > a.txt | cat
+~> cat a.txt
+foo
 ```
 
 ## Execution Flow

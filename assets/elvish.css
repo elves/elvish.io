@@ -30,3 +30,29 @@ img.macos {
   margin: 1px;
   font-size: 85%;
 }
+
+/* Code highlights. */
+.sgr-1 {
+  font-weight: bold;
+}
+.sgr-31 {
+  color: darkred;
+}
+.sgr-32 {
+  color: green;
+}
+.sgr-33 {
+  color: orange;
+}
+.sgr-34 {
+  color: darkblue;
+}
+.sgr-35 {
+  color: darkmagenta;
+}
+.sgr-36 {
+  color: darkcyan;
+}
+.sgr-37 {
+  color: gray;
+}

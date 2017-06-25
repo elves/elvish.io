@@ -140,7 +140,7 @@ If you come from other shells, hopefully the following recipes will get you star
 
 *   There is no interpolation inside double quotes (yet). Use implicit string concatenation:
 
-    ```elvish
+    ```elvish-transcript
     ~> name = xiaq
     ~> echo "My name is "$name"."
     My name is xiaq.
