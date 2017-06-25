@@ -13,9 +13,9 @@ name = "builtin"
 title = "The Builtin Module"
 
 [[articles]]
-name = "le"
-title = "The Editor API"
+name = "editor"
+title = "The Editor Module"
 
 [[articles]]
-name = "bundled"
-title = "The Bundled Modules"
+name = "embedded"
+title = "Embedded Modules"

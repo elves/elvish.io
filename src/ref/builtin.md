@@ -1,5 +1,9 @@
 <!-- toc number-sections -->
 
+# Introduction and Notation
+
+**THIS DOCUMENT IS NOT YET COMPLETE.**
+
 In function usages, a trailing `?` represents an optional argument.
 
 Some builtin functions like `count` and `each` can take input in two ways:
@@ -44,7 +48,9 @@ Such commands can be recognized in their specifications in that they take a trai
 
 **Rationale**. An alternative way to design this is to make (say) `count` take an arbitrary number of arguments, and count its arguments; when there is 0 argument, count inputs. However, this leads to problems in code like `count *`; the intention is clearly to count the number of files in the current directory, but when the current directory is empty, `count` will wait for inputs. Hence it is required to put the input in a list: `count [*]` unambiguously supplies input in the argument, even if there is no file.
 
-# + - * /
+# Builtin Functions
+
+## + - * /
 
 Basic arithmetic operators for adding, substraction, multiplication and
 division respectively.
@@ -52,7 +58,7 @@ division respectively.
 Note that `/`, when given no argument, is a synonym for `cd /` due to the
 implicit cd feature.
 
-# constantly
+## constantly
 
 ```
 constantly a b c ...
@@ -70,7 +76,7 @@ Takes any number of arguments `a b c ...`, and outputs a function. The function 
 
 Etymology: Clojure.
 
-# count
+## count
 
 ```
 count input-list?
@@ -93,7 +99,7 @@ Examples:
 
 Etymology: English.
 
-# each
+## each
 
 ```
 each f input-list?
@@ -114,7 +120,7 @@ Calls `f` on all inputs. Examples:
 Etymology: Various languages, as `for each`.
 
 
-# echo
+## echo
 
 ```
 echo x y z ...
@@ -136,7 +142,7 @@ Notes: The `echo` builtin does not treat `-e` or `-n` specially. For instance, `
 Etymology: Bourne sh.
 
 
-# explode
+## explode
 
 Takes one list and puts all its values on the structured stdout. Like
 `flatten` in functional languages. Equivalent to `[li]{ put $@li }`.
@@ -153,7 +159,7 @@ Example:
 Etymology: PHP, although they do different things.
 
 
-# from-json
+## from-json
 
 Takes bytes stdin, parses it as JSON and puts the result on structured stdout.
 
@@ -169,7 +175,7 @@ Examples:
 ```
 
 
-# nop
+## nop
 
 Accepts arbitrary arguments and options and does exactly nothing.
 
@@ -184,7 +190,7 @@ Examples:
 Etymology: Various languages, especially assembly languages.
 
 
-# peach
+## peach
 
 Like `each`, but may run the function in parallel.
 
@@ -201,7 +207,7 @@ Example (your output will differ):
 ```
 
 
-# put
+## put
 
 Takes arbitrary arguments and write them to the structured stdout.
 
@@ -220,14 +226,14 @@ Examples:
 Etymology: Various languages, in particular C and Ruby as `puts`.
 
 
-# print
+## print
 
 Like `echo`, just without the newline.
 
 Etymology: Various languages, in particular Perl and zsh.
 
 
-# repeat
+## repeat
 
 Takes a number `n` and a value `v`. Output value `v` for `n` times. Example:
 
@@ -241,14 +247,14 @@ Takes a number `n` and a value `v`. Output value `v` for `n` times. Example:
 
 Etymology: Clojure.
 
-# repr
+## repr
 
 Like `echo`, but writes the representation instead of stringification.
 
 Etymology: Python.
 
 
-# slurp
+## slurp
 
 Reads bytes input into a single string, and put this string on structured
 stdout.
@@ -263,7 +269,7 @@ Example:
 Etymology: Perl, as `File::Slurp`.
 
 
-# to-json
+## to-json
 
 Takes structured stdin, convert it to JSON and puts the result on bytes
 stdout.
@@ -278,20 +284,22 @@ stdout.
 ```
 
 
-# $false
+# Builtin Variables
+
+## $false
 
 Contains the boolean false value.
 
-# $paths
+## $paths
 
 A list of search paths, kept in sync with `$E:PATH`. Users should prefer this
 variable to `$E:PATH`, because it often leads to more readable code.
 
-# $pid
+## $pid
 
 Contains the process ID of the current elvish process.
 
-# $pwd
+## $pwd
 
 The present working directory. Setting this variable has the same effect as
 `cd`. This variable is most useful in temporary assignment.
@@ -299,7 +307,7 @@ The present working directory. Setting this variable has the same effect as
 Example:
 
 ```elvish
-# Updates all git repositories
+## Updates all git repositories
 for x [*/] {
     pwd=$x {
         if ?(test -d .git) {
@@ -311,6 +319,6 @@ for x [*/] {
 
 Etymology: the `pwd` command.
 
-# $true
+## $true
 
 Contains the boolean true value.

@@ -1,4 +1,4 @@
-title = "Elvish the Shell"
+title = "Elvish the Unix Shell"
 author = "Qi Xiao"
 feedPosts = 10
 template = "template.html"
@@ -12,13 +12,13 @@ name = "download"
 title = "Download"
 
 [[categories]]
+name = "blog"
+title = "Blog"
+
+[[categories]]
 name = "learn"
 title = "Learn"
 
 [[categories]]
 name = "ref"
 title = "Reference"
-
-[[categories]]
-name = "blog"
-title = "Blog"

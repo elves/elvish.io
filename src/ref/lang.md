@@ -2,11 +2,23 @@
 
 # Introduction
 
-This is a reference manual for the Elvish programming language. It is written in an informal style, but nonetheless tries to be unambiguous. It is reorganized mostly in terms of syntax constructs.
+**Note to the reader**. This document is a work in progress. Some materials are
+missing, and some are documented in a handwavy way. If you found something that
+should be improved -- even if there is already a "TODO" for it -- please feel
+free to ask on any of the chat channels. The developer will explain to you,
+**and update the document**. Question-driven documentation :)
 
-Some familarity with the language is assumed: examples for one construct might use another construct that has not yet been introduced (only in some basic form, though). If you are completely new to Elvish, please read one of the [tutorials](../learn) first.
+This is a reference manual for the Elvish programming language. It is written
+in a not-so-formal style, but nonetheless tries to be precise.
 
-Some definitions that will be used:
+Examples for one construct might use (the most familiar form of) another
+construct that will be introduced later in the text, so familiarity with the
+language is assumed. If you are new to Elvish, consider reading some of the
+[learning materials](/learn). Also, the article on the [semantics highlight
+semantics](/learn/semantics-highlight) of Elvish is worth reading, even if you
+have used Elvish for a while.
+
+A little terminology:
 
 *   An **inline whitespace** is a space or tab.
 
@@ -15,18 +27,20 @@ Some definitions that will be used:
 
 # String
 
-There are three possible syntaxes for strings.
+Let's start with the most common data structure in shells, the string. There
+are three possible syntaxes for strings, single-quoted, double-quoted and
+barewords:
 
-*   Everything a pair of inside **single quotes** represent themselves. For
+*   Everything inside a pair of **single quotes** represent themselves. For
     instance, ``'*\'`` evaluates to ``*\``. To write a single quote, double it:
     ``'it''s'`` evaluates to ``it's``.
 
 *   Within **double quotes**, there are **C-like** escape sequences starting
     with ``\``. For instance, ``"\n"`` evaluates to a newline; ``"\\"``
-    evaluates to a backslash; ``"\*"`` is a syntax error because stars do not
-    need escaping in double quotes.
+    evaluates to a backslash; ``"\*"`` is a syntax error because ``\*`` is not a
+    valid escape sequence.
 
-    There is no interpolation in double quotes. For instance, `"$USER"`
+    There is no interpolation in double quotes. For instance, `"$USER"` simply
     evaluates to the string `$USER`.
 
 *   **Barewords** are sequences of non-metacharacters and do not need quoting.
@@ -41,7 +55,7 @@ There are three possible syntaxes for strings.
 
 These three syntaxes all evaluate to strings: they are interchangeable. For instance, `xyz`, `'xyz'` and `"xyz"` are different syntaxes for the same string, and they are always equivalent.
 
-Note that elvish does **not** have number types; this is partly a consequence of barewords being a syntax for strings. For instance, in the command `+ 1 2`, both `1` and `2` are strings, and it is the command `+` that knows to treat its arguments as numbers.
+Note that Elvish does **not** have number types; this is partly a consequence of barewords being a syntax for strings. For instance, in the command `+ 1 2`, both `1` and `2` are strings, and it is the command `+` that knows to treat its arguments as numbers.
 
 # List and Map
 
@@ -62,8 +76,8 @@ whitespaces. Examples:
 ▶ [lorem ipsum foo bar]
 ```
 
-Note that commas are non-metacharacters and represent themselves, so don't use
-them to separate elements:
+Note that commas have no special meanings and just represent themselves, so
+don't use them to separate elements:
 
 ```elvish
 ~> li = [a, b]
@@ -93,7 +107,11 @@ An empty map is written as `[&]`.
 
 # Variable
 
-## Assignment
+Variables are holders of values with names. In most other shells, variables can map directly to environmental variables: `$PATH` is almost always the `PATH` environment variable. This is not the case in Elvish. Instead, environment variables are put in a dedicated `E:` namespace. `$PATH` and `$E:PATH` are different variables, and only the latter maps to the environment variable called `PATH`. The `$PATH` variable only lives in the Elvish process (and possibly only on a local scope).
+
+You will notice that variable names sometimes have a leading dollar sign, sometimes not. The tradition is that they do when they are used for their values, and do not otherwise (e.g. in assignment). Elvish is consistent with other shells in this aspect.
+
+## Assignment: Ordinary Assignment
 
 A variable can be assigned by writing its name, followed by `=` and the value to assign. There **must** be spaces both before and after `=`. Example:
 
@@ -101,15 +119,15 @@ A variable can be assigned by writing its name, followed by `=` and the value to
 ~> foo = bar
 ```
 
-You can assign multiple values to multiple variables simultaneously:
+You can assign multiple values to multiple variables simultaneously, simply by writing several variable names (separated by inline whitespaces) on the left-hand side, and several values on the right-hand side:
 
 ```elvish
 ~> x y = 3 4
 ```
 
-## Using
+## Use: Simple Use
 
-When referencing a variable, add a `$` before its name:
+When using the value of a variable, add a `$` before its name:
 
 ```elvish
 ~> foo = bar
@@ -120,7 +138,7 @@ When referencing a variable, add a `$` before its name:
 ▶ 3
 ```
 
-Variables must be assigned before use. Attempting to use a variable before assigning will cause a **compilation error**:
+Variables must be assigned before use. Attempting to use a variable before assigning will cause a compilation error:
 
 ```elvish
 ~> echo $x
@@ -133,9 +151,9 @@ Compilation error: variable $x not found
     { echo $x }
 ```
 
-## Exploding and Rest Variable
+## Use: Explosion
 
-When referencing a list variable, add `@` before the name to get all contained values:
+When using a list variable, you can add `@` before the name to get all contained values. This is called **exploding** the variable:
 
 ```elvish
 ~> li = [lorem ipsum foo bar]
@@ -148,14 +166,18 @@ When referencing a list variable, add `@` before the name to get all contained v
 ▶ bar
 ```
 
-If the variable is `args`, you can omit the variable name -- `$@` is equivalent to `$@args`. This is a trick to make `$@` mean roughly the same thing as `"$@"` in POSIX shell. It is most useful when writing wrapper functions: the following code defines an `ll` function that calls `ls` with `-l`, followed by all arguments it was given:
+If the variable is `args` (a special variable for function arguments), you can omit the variable name -- `$@` is equivalent to `$@args`. This is a trick to make `$@` mean roughly the same thing as `"$@"` in POSIX shell. It is most useful when writing wrapper functions: the following code defines an `ll` function that calls `ls` with an additional `-l` flag:
 
 ```elvish
 fn ll { ls -l $@ }
 ```
 
-To turn a list that is not already a variable into all its values, use the [explode](stdlib.html#explode) builtin.
+A more general construct is the [explode](stdlib.html#explode) builtin, which works on arbitrary values.
 
+
+## Assignment: Rest Variable
+
+A inverse mechanism to variable explosion exists for variable assignment.
 
 When assigning variables, if you prefix the name of the last variable with `@`, it becomes a list containing all remaining values. That variable is called a **rest variable**. Example:
 
@@ -169,10 +191,9 @@ When assigning variables, if you prefix the name of the last variable with `@`, 
 ```
 
 
-## Temporary Assignment
+## Assignment: Temporary Assignment
 
-You can prepend a command with **temporary assignments** that look like `x=1`.
-Note:
+You can prepend a command with **temporary assignments** like `x=1`. Rules:
 
 *   There shall be no space around `=`.
 
@@ -199,9 +220,9 @@ Example:
 1
 ```
 
-Note that the behavior is different from that of bash or zsh. In bash or zsh,
-temporary assignments to variable `$x` do not affect its direct appearance in
-the command:
+Note that the behavior is different from that of bash or zsh. In either of them,
+temporary assignments to variables do not affect their direct use in the
+command:
 
 ```sh
 bash-4.4$ x=1
@@ -209,7 +230,7 @@ bash-4.4$ x=100 echo $x
 1
 ```
 
-You can also prepend (ordinary) assignments with temporary assignments.
+You can also prepend ordinary assignments with temporary assignments.
 
 ```elvish
 ~> x=1
@@ -248,7 +269,7 @@ Compilation error: variable $z not found
     echo $z
 ```
 
-This means that Elvish will not shadow your variable in outer scopes by default. You can force Elvish to create an identically named variable as one on the outer scope, and thus shadowing it, by using the `local:` pseudo-namespace:
+This means that Elvish will not shadow your variable in outer scopes. You can force Elvish to create an identically named variable as one on the outer scope, and thus shadowing it, by using the `local:` pseudo-namespace:
 
 ```elvish
 ~> x = 12
@@ -258,7 +279,7 @@ This means that Elvish will not shadow your variable in outer scopes by default.
 12
 ```
 
-After force shadowing, you can access the variable in the outer scope using the `up:` pseudo-namespace:
+After force shadowing, you can still access the variable in the outer scope using the `up:` pseudo-namespace:
 
 ```elvish
 ~> x = 12
@@ -266,7 +287,7 @@ After force shadowing, you can access the variable in the outer scope using the 
 14 12
 ```
 
-The `local:` and `up:` pseudo-namespaces can also be used on non-shadowed variables, although they are not useful in those cases:
+The `local:` and `up:` pseudo-namespaces can also be used on unshadowed variables, although they are not useful in those cases:
 
 ```elvish
 ~> foo = a
@@ -279,10 +300,30 @@ b
 
 # Lambda
 
+Lambdas are first-class values in Elvish. When used as commands, they resemble
+code blocks in C-like languages in syntax:
+
+```elvish-transcript
+~> { echo "Inside a lambda" }
+Inside a lambda
+```
+
+The code above defines a lambda and calls it immediately. Since lambdas are
+first-class values, you can assign them to variables and use them as arguments:
+
+```elvish-transcript
+~> f = { echo "Inside a lambda" }
+~> put $f
+▶ <closure 0x18a1a340>
+~> $f
+Inside a lambda
+```
+
 Lambdas can be either **signatureless** of **signatureful**.
 
-Signatureless lambdas are written like `{ command ... }`. The space after `{` is
-significant: without it, Elvish will parse a braced list. Example:
+## Signatureless Lambda
+
+Signatureless lambdas are written like `{ command ... }`. Example:
 
 ```elvish
 ~> f = { echo Hi }
@@ -292,27 +333,37 @@ significant: without it, Elvish will parse a braced list. Example:
 Hi
 ```
 
-Signatureless lambdas accept arbitrary arguments and options, which are
-available as the `$args` list and the `$opts` map, respectively. Moreover,
-variable `$0`, `$1`, ... are shorthands for `$args[0]`, `$args[1]`, etc.:
+(Some whitespace after `{` **is required**: without whitespace, Elvish will
+parse a braced list. A good style is to always put whitespaces around braces
+when you are using them for lambdas.)
 
-```elvish
-~> f = { put $args $opts $1 $0 }
-~> $f lorem ipsum dolar sit &k=v
-▶ [lorem ipsum dolar sit]
-▶ [&k=v]
-▶ ipsum
-▶ lorem
+Signatureless lambdas accept arbitrary arguments and options; they are
+available as the `$args` list and the `$opts` map, respectively:
+
+```elvish-transcript
+~> f = { put $args $opts }
+~> $f lorem ipsum &foo=bar
+▶ [lorem ipsum]
+▶ [&foo=bar]
 ```
 
-If you stick a list before the lambda, it becomes a signatureful lambda:
-`[a b]{ put $b $a }`. Note there should be no space between
-`]` and `{`; otherwise Elvish parses a list and a lambda.
+Moreover, variables `$0`, `$1`, etc. are shorthands for `$args[0]`, `$args[1]`,
+etc.:
 
-When calling a signatureful lambda, number of arguments must match the
-signature:
+```elvish-transcript
+~> f = { put $1 $0 }
+~> $f foo bar
+▶ bar
+▶ foo
+```
 
-```elvish
+## Signatureful Lambda
+
+A signatureful lambda looks just like a signatureless one, just with an
+argument list in the front: `[a b]{ put $b $a }`. When calling a signatureful
+lambda, number of arguments must match the signature:
+
+```elvish-transcript
 ~> [a b]{ put $b $a } lorem ipsum
 ▶ ipsum
 ▶ lorem
@@ -323,9 +374,14 @@ Traceback:
     [a b]{ put $b $a } lorem
 ```
 
-Like assignments, if the last argument in the list starts with `@`, it becomes a **rest argument** and will be a list containing all remaining arguments:
+Note that in signatureful lambdas, there should be **no space** between
+`]` and `{`; otherwise Elvish parses a list and a lambda.
 
-```elvish
+Analogous to rest variables in assignments, If the last argument in the list
+starts with `@`, it becomes a **rest argument** and its value is a list
+containing all remaining arguments:
+
+```elvish-transcript
 ~> f = [a @rest]{ put $a $rest }
 ~> $f lorem
 ▶ lorem
@@ -342,15 +398,32 @@ You will be able to declare options in signatures as well ([#82](https://github.
 
 # Indexing
 
+Indexing is done by putting one or more **index expressions** in brackets after
+a value.
+
 ## List Indexing
 
-Lists can be indexed with any of the following three ways:
+Lists are zero-based (i.e. the first element has index 0). They can be indexed
+with any of the following three ways:
 
-*   A nonpositive integer, which is a 0-based index. For instance, if `$li` is a list, `$li[0]` is its first element, and `$li[1]` is its second element, and so on.
+*   A non-negative integer, an offset counting from the beginning of the list.
+    For example, `$li[0]` is the first element.
 
-*   A negative integer, which counts from the back. For instance, `$li[-1]` is its last element.
+*   A negative integer, an offset counting from the back of the list. For
+    instance, `$li[-1]` is its last element.
 
-*   A slice, which is a **single string** made up of two integers `a` and `b` with a colon in between. The result is a list made up of elements `$li[a]` up to, but not including, `$li[b]`. Both integers may be omitted; `a` defaults to 0 while `b` defaults to the size of `$li`.
+*   A slice `$a:$b`, where both `$a` and `$b` are integers. The result is
+    sublist of `$li[$a]` upto, but not including, `$li[$b]`. For instance,
+    `$li[4:7]` equals `[$li[4] $li[5] $li[6]]`, while `$li[1:-1]` contains all
+    elements from `$li` except the first and last one.
+
+    Both integers may be omitted; `$a` defaults to 0 while `$b` defaults to the
+    length of the list.
+
+    Note that the slice needs to be a **single** string, meaning that both
+    integers must run together. For instance, `$li[2: 10]` is not the same as
+    `$li[2:10]`, but rather the same as `$li[2:] $li[10]` (see "multiple
+    indicies" below).
 
 Examples:
 
@@ -368,9 +441,12 @@ This feature is stolen from Python.
 
 ## String indexing
 
-Strings should always be UTF-8, and they can indexed by *byte indicies where codepoints start*, and indexing results in *the codepoint that starts there*. This is best explained with examples:
+Strings should always be UTF-8, and they can indexed by **byte indicies at
+which codepoints start**, and indexing results in **the codepoint that starts
+there**.  This is best explained with examples:
 
-*   In the string `elv`, every codepoint is encoded with only one byte, so 0, 1, 2 are all valid indices:
+*   In the string `elv`, every codepoint is encoded with only one byte, so 0,
+    1, 2 are all valid indices:
 
     ```elvish
     ~> put elv[0]
@@ -381,7 +457,9 @@ Strings should always be UTF-8, and they can indexed by *byte indicies where cod
     ▶ v
     ```
 
-*   In the string `世界`, each codepoint is encoded with three bytes. The first codepoint occupies byte 0 through 2, and the second occupies byte 3 through 5. Hence valid indicies are 0 and 3:
+*   In the string `世界`, each codepoint is encoded with three bytes. The first
+    codepoint occupies byte 0 through 2, and the second occupies byte 3 through
+    5. Hence valid indicies are 0 and 3:
 
     ```elvish
     ~> put 世界[0]
@@ -396,7 +474,8 @@ This idea of indexing codepoints by their byte positions is stolen from Julia.
 
 ## Map indexing
 
-Maps are indexed by their keys. There is no slice indexing, and `:` does not have a special meaning. Examples:
+Maps are simply indexed by their keys. There is no slice indexing, and `:` does
+not have a special meaning. Examples:
 
 ```elvish
 ~> map = [&a=lorem &b=ipsum &a:b=haha]
@@ -408,7 +487,9 @@ haha
 
 ## Multiple indices
 
-If you put multiple values in the index, you get multiple values: `$li[x y z]` is equivalent to `$li[x] $li[y] $li[z]`. This applies to all indexable values. Examples:
+If you put multiple values in the index, you get multiple values: `$li[x y z]`
+is equivalent to `$li[x] $li[y] $li[z]`. This applies to all indexable values.
+Examples:
 
 ```elvish
 ~> put elv[0 2 0:2]
@@ -427,7 +508,10 @@ If you put multiple values in the index, you get multiple values: `$li[x y z]` i
 
 # Output Capture
 
-Output capture is formed by putting parentheses around a code chunk. It redirects the output of the chunk into an internal pipe, and evaluates to all the values that have been output.
+Output capture is formed by putting parentheses around a code chunk. (A code
+chunk is zero or more commands or pipelines, and will be described later.) It
+redirects the output of the chunk into an internal pipe, and evaluates to all
+the values that have been output.
 
 ```elvish
 ~> + 1 10 100
@@ -445,7 +529,7 @@ Output capture is formed by putting parentheses around a code chunk. It redirect
 ▶ ipsum
 ```
 
-If the chunk outputs bytes, Elvish strips the last newline (if any), and split them by newlines, and consider each line to be one (string) value:
+If the chunk outputs bytes, Elvish strips the last newline (if any), and split them by newlines, and consider each line to be one string value:
 
 ```elvish
 ~> put (echo "a\nb")
@@ -453,7 +537,9 @@ If the chunk outputs bytes, Elvish strips the last newline (if any), and split t
 ▶ b
 ```
 
-If the chunk outputs both values and bytes, the values of output capture will contain both value outputs and lines, but the original order of output is not guaranteed.
+If the chunk outputs both values and bytes, the values of output capture will
+contain both value outputs and lines, but the ordering between value output and
+byte output might not agree with the order in which they happened:
 
 ```elvish
 ~> put (put a; echo b) # value order need not be the same as output order
@@ -462,9 +548,9 @@ If the chunk outputs both values and bytes, the values of output capture will co
 ```
 
 
-# Error Capture
+# Exception Capture
 
-Error capture is formed by putting `?()` around a code chunk. It runs the chunk and catch the error it throws, and evaluates to that error.
+Exception capture is formed by putting `?()` around a code chunk. It runs the chunk and evaluates to the exception it throws.
 
 ```elvish
 ~> fail bad
@@ -476,7 +562,7 @@ Traceback:
 ▶ ?(fail bad)
 ```
 
-If there was no error, it evaluates to `$ok`:
+If there was no error, it evaluates to the special value `$ok`:
 
 ```elvish
 ~> nop
@@ -484,7 +570,8 @@ If there was no error, it evaluates to `$ok`:
 ▶ $ok
 ```
 
-Remember that errors are false-ish and `$ok` is true-ish. This is useful in `if`:
+Exceptions are booleanly false and `$ok` is booleanly true. This is useful in
+`if` (introduced later):
 
 ```elvish
 if ?(test -d ./a) {
@@ -492,10 +579,21 @@ if ?(test -d ./a) {
 }
 ```
 
+Exception captures do not affect the output of the code chunk. You can combine
+output capture and exception capture:
+
+```
+output = (error = ?(commands-that-may-fail))
+```
+
 
 # Tilde Expansion
 
-Tildes are special when they appear at the beginning of a word (the meaning of "word" will be explained later). The string after it, up to the first `/` or the end of the word, is taken as a user name; and they together evaluate to the home directory of that user. If the user name is empty, the current user is assumed.
+Tildes are special when they appear at the beginning of an expression (the
+exact meaning of "expression" will be explained later). The string after it, up
+to the first `/` or the end of the word, is taken as a user name; and they
+together evaluate to the home directory of that user. If the user name is
+empty, the current user is assumed.
 
 In the following example, the home directory of the current user is `/home/xiaq`, while that of the root user is `/root`:
 
@@ -556,7 +654,7 @@ Elvish supports the following wildcards:
 *   `**` matches any number of arbitrary characters including `/`. For example,
     `**.cc` matches `a.cc`, `foo.cc` and `b/y.cc`.
 
-By default,
+The following behaviors are default, although they can be altered by modifiers:
 
 *   When the entire wildcard pattern has no match, an error is thrown.
 
@@ -568,26 +666,28 @@ By default,
 
     *   `**.conf` does not match `d/.x.conf`.
 
-Both behaviors can be changed by a modifier, the former by a global modifier and the latter by a local modifier.
 
 ## Modifiers
 
-Wildcards can be **modified** using the same syntax as indexing, e.g. `*[mod1
-mod2]`. There are two kinds of modifiers.
+Wildcards can be **modified** using the same syntax as indexing. For instance, in `*[mod1 mod2]` the `*` wildcard is modified. There are two kinds of modifiers.
 
 **Global modifiers** apply to the whole pattern and can be placed after any
 wildcard:
 
-*   `nomatch-ok` tells elvish not to throw an error when there is no match for
+*   `nomatch-ok` tells Elvish not to throw an error when there is no match for
     the pattern. For instance, in the example directory `put bad*` will be an
     error, but `put bad*[nomatch-ok]` does exactly nothing.
 
 *   `but:xxx` (where `xxx` is any filename) excludes the filename from the final
     result.
 
-Although global modifiers affect the entire wildcard pattern, you can add it after any wildcard, and the effect is the same. For example, `put */*[nomatch-ok].cpp` and `put *[nomatch-ok]/*.cpp` do the same thing.
+Although global modifiers affect the entire wildcard pattern, you can add it
+after any wildcard, and the effect is the same. For example, `put
+*/*[nomatch-ok].cpp` and `put *[nomatch-ok]/*.cpp` do the same thing.
 
-On the other hand, you must add it after a wildcard, instead of after the entire pattern: `put */*.cpp[nomatch-ok]` unfortunately does not do the correct thing.
+On the other hand, you must add it after a wildcard, instead of after the
+entire pattern: `put */*.cpp[nomatch-ok]` unfortunately does not do the correct
+thing. (This will probably be fixed.)
 
 **Local modifiers** only apply to the wildcard it immediately follows:
 
@@ -622,9 +722,11 @@ On the other hand, you must add it after a wildcard, instead of after the entire
         is not affected by character matchers.
 
 
-# Compounding and Braced List
+# Compound Expression and Braced Lists
 
-Writing two strings together will concatenate them. This is called **compounding** in elvish, because it mimics the formation of compound words in natural languages. Examples:
+Writing several expressions together with no space in between will concatenate
+them. This creates a **compound expression**, because it mimics the formation
+of compound words in natural languages. Examples:
 
 ```elvish
 ~> put 'a'b"c" # compounding three string literals
@@ -634,7 +736,9 @@ Writing two strings together will concatenate them. This is called **compounding
 ▶ '$v is value'
 ```
 
-Some constructs can generate multiple values, like indexing with multiple indices and output captures. Compounding multiple values with other values generates all possible combinations:
+Many constructs in Elvish can generate multiple values, like indexing with
+multiple indices and output captures. Compounding multiple values with other
+values generates all possible combinations:
 
 ```elvish
 ~> put (put a b)-(put 1 2)
@@ -646,7 +750,7 @@ Some constructs can generate multiple values, like indexing with multiple indice
 
 Note the order of the generated values. The value that comes later changes faster.
 
-NOTE: There is a perhaps a better way to explain the ordering, but you can think of the previous code as equivalent to this:
+**NOTE**: There is a perhaps a better way to explain the ordering, but you can think of the previous code as equivalent to this:
 
 ```elvish
 for x [a b] {
@@ -655,6 +759,8 @@ for x [a b] {
   }
 }
 ```
+
+## Braced Lists
 
 In practice, you never have to write `(put a b)`: you can use a braced list `{a,b}`:
 
@@ -676,19 +782,33 @@ Elements in braced lists can also be separated with whitespaces, or a combinatio
 ▶ d
 ```
 
-In future, the syntax might stricten to force you to use either comma or whitespaces consistently within one braced list.
+(In future, the syntax might be made more strict.)
 
-Braced list is merely a syntax for grouping values; it is not a data structure.
-
-
-# Word Structure and Evaluation
-
-Braced lists are evaluated before being compounded with other values. You can use this to affect the order of evaluation. For instance, `put *.txt` gives you all filenames that end with `.txt` in the current directory; while `put {*}.txt` gives you all filenames in the current directory, appended with `.txt`.
+Braced list is merely a syntax for grouping multiple values. It is not a data
+structure.
 
 
-# Command
+# Expression Structure and Precedence
 
-A **command** can consist of several parts.
+Braced lists are evaluated before being compounded with other values. You can
+use this to affect the order of evaluation. For instance, `put *.txt` gives you
+all filenames that end with `.txt` in the current directory; while `put
+{*}.txt` gives you all filenames in the current directory, appended with
+`.txt`.
+
+**TODO**: document evaluation order regarding tilde and wildcards.
+
+
+# Ordinary Command
+
+The **command** is probably the most important syntax construct in shell
+languages, and Elvish is no exception. In the terminology of this document, the
+term **command** include scan several things: an ordinary assignment
+(introduced before), an ordinary command (which is being introduced here), or a
+special command.
+
+An **ordinary command** consists of a compulsory head, and any number of
+arguments, options and redirections.
 
 ## Head
 
@@ -711,7 +831,8 @@ Traceback:
     (put ls -l)
 ```
 
-The definition of barewords is relaxed for the head to include `<`, `>`, `*` and `^`. These are all names of numeric builtins:
+The definition of barewords is relaxed for the head to include `<`, `>`, `*`
+and `^`. These are all names of numeric builtins:
 
 ```elvish
 ~> < 3 5 # less-than
@@ -726,7 +847,9 @@ The definition of barewords is relaxed for the head to include `<`, `>`, `*` and
 
 ## Arguments and Options
 
-**Arguments** (args for short) and **options** (opts for short) are data passed to the command. Arguments are arbitrary words, while options have the same syntax as map pairs:
+**Arguments** (args for short) and **options** (opts for short) can be supplied
+to commands. Arguments are arbitrary words, while options have the same
+syntax as map pairs. They are separated by inline whitespaces:
 
 ```elvish
 ~> splits &sep=: /home:/root # &sep=: is an option; /home:/root is an argument
@@ -734,27 +857,34 @@ The definition of barewords is relaxed for the head to include `<`, `>`, `*` and
 ▶ /root
 ```
 
+
 ## Redirections
 
-Redirections are used for modifying file descriptors (fd).
+Redirections are used for modifying file descriptors (FD).
 
-The most common form of redirections opens a file and associates it with an fd. The form consists of an optional destination fd (like `2`), a redirection operator (like `>`) and a filename (like `error.log`):
+The most common form of redirections opens a file and associates it with an FD.
+The form consists of an optional destination FD (like `2`), a redirection
+operator (like `>`) and a filename (like `error.log`):
 
-*   The destination fd determines which fd will be modified; if absent, it is determined from the redirection operator. If present, there must be no space between the fd and the redirection operator. (Otherwise Elvish parses it as an argument.)
+*   The **destination fd** determines which FD to modify. If absent, it is
+    determined from the redirection operator. If present, there must be no
+    space between the fd and the redirection operator. (Otherwise Elvish parses
+    it as an argument.)
 
-*   The redirection operator determines the mode to open the file, and the default destination fd.
+*   The **redirection operator** determines the mode to open the file, and the
+    destination fd if it is not explicitly specified.
 
-*   The filename names a file to open.
+*   The **filename** names the file to open.
 
-Possible redirection operators are:
+Possible redirection operators and their default FDs are:
 
-*   `<` for reading. The default fd is 0.
+*   `<` for reading. The default FD is 0 (stdin).
 
-*   `>` for writing. The default fd is 1.
+*   `>` for writing. The default FD is 1 (stdout).
 
-*   `>>` for appending. The default fd is 1.
+*   `>>` for appending. The default FD is 1 (stdout).
 
-*   `<>` for reading and writing. The default fd is 1.
+*   `<>` for reading and writing. The default FD is 1 (stdout).
 
 Examples:
 
@@ -776,10 +906,14 @@ Traceback:
 Try '/bin/ls --help' for more information.
 ```
 
-Redirections can also be used for closing or dupping file descriptors. Use `&n` (where `n` is a number) for dupping, and `&-` for closing. In this case, the redirection operator is irrevelant. Examples:
+Redirections can also be used for closing or duplicating FDs. Instead of
+writing a filename, use `&n` (where `n` is a number) for duplicating, or `&-`
+for closing. In this case, the redirection operator only determines the default
+destination FD (and is totally irrevelant if a destination FD is specified).
+Examples:
 
 ```elvish
-~> ls >&-
+~> ls >&- # close stdout
 /bin/ls: write error: Bad file descriptor
 Exception: ls exited with 2
 Traceback:
@@ -802,12 +936,18 @@ err
 
 ## Ordering
 
-The ordering of arguments, options and redirections is arbitrary: they can intermix each other. The only requirement is that the head must come first. This is different from POSIX shells, where redirections may appear before the head.
+The ordering of arguments, options and redirections is arbitrary: they can
+intermix each other. The only requirement is that the head must come first.
+This is different from POSIX shells, where redirections may appear before the
+head.
 
 
 # Special Commands
 
-**Special commands** obey the same syntax rules as normal commands, but have evaluation rules that are custom to each command. To explain this, we use the following example:
+**Special commands** obey the same syntax rules as normal commands (i.e.
+syntactically special commands can be treated the same as ordinary commands),
+but have evaluation rules that are custom to each command. To explain this, we
+use the following example:
 
 ```elvish
 ~> or ?(echo x) ?(echo y) ?(echo z)
@@ -820,10 +960,19 @@ In the example, the `or` command first evaluates its first argument, which has t
 If `or` were a normal command, the code above is still syntactically correct. However, Elvish would then evaluate all its arguments, with the side effect of outputting `x`, `y` and `z`, before calling `or`.
 
 
-## `and` and `or`
+## Logics: `and` and `or`
+
+The `and` special command evaluates its arguments from left to right; as soon
+as a booleanly false value is obtained, it outputs the value and stops. When
+given no arguments, it outputs `$true`.
+
+The `or` special command is the same except that it stops when a booleanly true
+value is obtained. When given no arguments, it outpus `$false`.
 
 
-## if
+## Condition: `if`
+
+**TODO**: Document the syntax notation, and perhaps use another one.
 
 Syntax:
 
@@ -837,7 +986,26 @@ if <condition> {
 }
 ```
 
-## while
+The `if` special command goes through the conditions one by one: as soon as one
+evaluates to a booleanly true value, its corresponding body is executed. If
+none of conditions are booleanly true and an else body is supplied, it is
+executed.
+
+The condition part is an expression, not a command like in other shells.
+
+Tip: a combination of `if` and `?()` gives you a semantics close to other shells:
+
+```elvish
+if ?(test -d .git) {
+    # do something
+}
+```
+
+However, for Elvish's builtin predicates that output values instead of throw exceptions, the output capture construct `()` should be used.
+
+**TODO**: add more examples.
+
+## Conditional Loop: `while`
 
 Syntax:
 
@@ -849,19 +1017,36 @@ while <condition> {
 }
 ```
 
-## for
+Execute the body as long as the condition evaluates to a booleanly true value.
+
+The else body, if present, is executed if the body has never been executed
+(i.e. the condition evaluates to a booleanly false value in the very
+beginning).
+
+
+## Iterative Loop: `for`
 
 Syntax:
 
 ```elvish
-for <var> <iterable> {
+for <var> <container> {
     <body>
 } else {
     <body>
 }
 ```
 
-## try
+Iterate the container (e.g. a list). In each iteration, assign the variable to
+an element of the container and execute the body.
+
+The else body, if present, is executed if the body has never been executed
+(i.e. the iteration value has no elements).
+
+
+## Exception Control: `try`
+
+(If you just want to capture the exception, you can use the more concise
+exception capture construct `?()` instead.)
 
 Syntax:
 
@@ -914,15 +1099,42 @@ Examples:
 7.  `try { fail bad } except e { fail worse } finally { fail worst }` throws `worst`.
 
 
-## fn
+## Function Definition: `fn`
+
+Syntax:
+
+```elvish
+fn <name> <lambda>
+```
+
+Define a function with a given name. The function behaves in the same way to
+the lambda used to define it, except that it "captures" `return`. In other
+words, `return` exits the innermost functions defined with `fn`:
+
+```elvish
+fn f {
+    { echo a; return }
+    echo b # not executed
+}
+{
+    f
+    echo c # executed, because f "captures" the return
+}
+```
+
+**TODO**: Find a better way to describe this. Hopefully the example is
+illustrative enough, though.
 
 
-## use
+## Importing Module: `use`
 
-To have reusable modules, put them under `~/.elvish/lib`. To load them, use
-`use`. Modules are executed in its own namespace. Example:
+**TODO**: Namespacing deserves more explanation.
 
-```sh
+Reusable modules are Elvish source files with a `.elv` extension under
+`~/.elvish/lib`. The `use` special command loads modules. Modules get their own
+namespace. Example:
+
+```elvish-transcript
 ~> cat ~/.elvish/lib/a.elv
 echo "mod a loading"
 fn f {
@@ -935,7 +1147,64 @@ f from mod a
 ```
 
 Source files in directories become nested modules. For instance,
-`~/.elvish/lib/lorem/ipsum.elv` is the source file for module `lorem:ipsum`.
+`~/.elvish/lib/lorem/ipsum.elv` can be used with `use lorem:ipsum`.
 
 
 # Pipeline
+
+A **pipeline** is formed by joining one or more commands together with the pipe
+sign (`|`).
+
+## IO Semantics
+
+For each pair of adjacent commands `a | b`, the output of `a` is connected to
+the input of `b`. Both the byte pipe and the value channel are connected, even
+if one of them is not used.
+
+Command redirections are applied before the connection happens. For instance,
+the following writes `foo` to `a.txt` instead of the output:
+
+```elvish
+echo foo > a.txt | cat
+```
+
+## Execution Flow
+
+All of the commands in a pipeline are executed in parallel, and the execution
+of the pipeline finishes when all of its commands finish execution.
+
+If one or more command in a pipeline throws an exception, the other commands
+will continue to execute as normal. After all commands finish execution, an
+exception is thrown, the value of which depends on the number of commands that
+have thrown an exception:
+
+*   If only one command has thrown an exception, that exception is rethrown.
+
+*   If more than one commands have thrown exceptions, a "composite exception",
+    containing information all exceptions involved, is thrown.
+
+## Background Pipeline
+
+Adding an ampersand `&` to the end of a pipeline will cause it to be executed
+in the background. In this case, the rest of the code chunk will continue to
+execute without waiting for the pipeline to finish. Exceptions thrown from the
+background pipeline do not affect the code chunk that contains it.
+
+When a background pipeline finishes, a message is printed to the terminal if
+the shell is interactive.
+
+
+# Code Chunk
+
+A **code chunk** is formed by joining zero or more pipelines together,
+separating them with either newlines or semicolons.
+
+Pipelines in a code chunk are executed in sequence. If any pipeline throws an
+exception, the execution of the whole code chunk stops, propagating that
+exception.
+
+
+# Exception and Flow Commands
+
+
+# Namespace

@@ -1,4 +1,4 @@
-The design of elvish is driven by a philosophy consisting of a set of principles.
+The development of Elvish is driven by a set of ideas, a **design philosophy**.
 
 # The language
 
@@ -8,7 +8,7 @@ The design of elvish is driven by a philosophy consisting of a set of principles
     does not restrict itself to this notion. It embraces such concepts as
     namespacing, first-class functions and exceptions. Whatever you may find in
     a modern general-purpose programming language is likely to be found in
-    elvish.
+    Elvish.
 
     Elvish is not alone in this respect. There are multiple ongoing efforts;
     [this page](https://github.com/oilshell/oil/wiki/ExternalResources) on
@@ -24,10 +24,10 @@ The design of elvish is driven by a philosophy consisting of a set of principles
         like `+ 10 (/ 105 5)`.
 
     *   Pipeline is the main tool for function composition. To make pipelines
-        suitable for complex data manipulation, elvish extends them to be able
+        suitable for complex data manipulation, Elvish extends them to be able
         to carry structured data (as opposed to just bytes).
 
-    *   Output capture is the auxilary tool for function composition. Elvish
+    *   Output capture is the auxiliary tool for function composition. Elvish
         functions may write structured data directly to the output, and
         capturing the output yields the same structured data.
 

@@ -9,6 +9,7 @@ default: gen
 	./md-to-html $< $@
 
 gen: $(HTMLS)
+	genblog -print-default-css > assets/genblog.css
 	genblog src dst
 
 clean:

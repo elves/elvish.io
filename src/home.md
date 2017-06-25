@@ -26,16 +26,19 @@
 <div id="demo-window"> <div id="demo-container" class="animated-transition">
   <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col">
-      <img src="assets/pipeline.png" srcset="assets/pipeline-2x.png 2x" class="macos" alt="Rich pipeline demo in elvish">
+      <img src="assets/pipeline.png" srcset="assets/pipeline-2x.png 2x" class="macos" alt="Rich pipeline demo in Elvish">
     </div>
     <div class="demo-col"> <div class="demo-description">
-      <div class="demo-title">Powerful pipelines</div>
+      <div class="demo-title">Structureful pipelines</div>
       <p>
-        Have data more complex than what grep and cut can handle?
+        Text pipelines are powerful, but gets unwiedly when your data is
+        complex. Keeping track of which column is what, and escaping text
+        properly quickly becomes tedious. (You know this if you have written
+        long <code>awk</code> scripts.)
       </p>
       <p>
-        Pipelines in elvish can carry structured data, not just text. Stream
-        your lists, maps and even functions through the powerful pipeline.
+        Pipelines in Elvish can carry structured data, not just text. You can
+        stream lists, maps and even anonymous functions through the pipeline.
       </p>
     </div> </div>
   </div> </div>
@@ -47,11 +50,13 @@
     <div class="demo-col"> <div class="demo-description">
       <div class="demo-title">C-like control structures</div>
       <p>
-        Never sure where to put semicolons, and no longer amused by "fi" and
-        "esac"?
+        The idea that <code>fi</code> pairs with <code>if</code> and
+        <code>esac</code> pairs with <code>case</code> is neat, but not so much
+        if you keep forgetting the syntax.
       </p>
       <p>
-        Elvish uses curly braces for control structures.
+        Control structures in Elvish has a easier-to-remember syntax that
+        mimics C. (It works differently under the hood, though.)
       </p>
     </div> </div>
   </div> </div>
@@ -63,8 +68,9 @@
     <div class="demo-col"> <div class="demo-description">
       <div class="demo-title">Directory history</div>
       <p>
-        Tired of cd'ing into /a/long/nested/directory? Keep forgetting where
-        your configuration files are?
+        Is <code>cd</code>ing into /a/long/nested/directory the first thing you
+        do every day? Wish you remember the path of the configuration file you
+        touched two months ago?
       </p>
       <p>
         Elvish remembers where you have been. Press Ctrl-L and search, like in a
@@ -80,11 +86,14 @@
     <div class="demo-col"> <div class="demo-description">
       <div class="demo-title">Command history</div>
       <p>
-        Need to remind yourself of the usage of ffmpeg?
+        Want to see all the <code>ffmpeg</code> commands you have run?
       </p>
       <p>
         Just dig through your command history. Press Ctrl-R and search. Same
         key, more features.
+      </p>
+      <p>
+        (In fact, you can do this in bash with <code>history | grep ffmpeg</code>, but it's far less keystrokes in Elvish :)
       </p>
     </div> </div>
   </div> </div>
@@ -130,9 +139,23 @@
     [language](ref/lang.html), the [builtin module](ref/builtin.html), and
     more.
 
-*   The [blog](blog) is the place for release notes, notes on the
-    internals of Elvish, and other random musings from the developers.
+*   [The blog](blog) contains news on Elvish.
 
-To keep updated, subscribe to the [feed](feed.atom). It contains updates to all
-sections of the website, not just the blog.
+    It is the place for release notes, notes on the internals of Elvish, and
+    other announcements or musings from the developers.
 
+*   [The feed](feed.atom) contains updates to all sections of the website (not
+    just the blog).
+
+## Meeting other Elves
+
+*   Discuss by joining the #elvish channel on Freenode, the [Gitter
+    room](https://gitter.im/elves/elvish-public), or the [Telegram
+    group](https://telegram.me/elvish).
+
+    The wonderful [fishroom](https://github.com/tuna/fishroom) service connects
+    all of them together, so you can join whichever one suits you best, and you
+    won't miss discussions happening in other channels.
+
+*   Chinese speakers are also welcome on the #elvish-zh channel on
+    Freenode and the [Chinese Telegram group](https://telegram.me/elvishzh).

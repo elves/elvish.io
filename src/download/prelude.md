@@ -4,11 +4,11 @@ The binaries are statically linked and don't have any runtime dependencies.
 If you have other OS/CPU combinations, you may build Elvish from
 [source](https://github.com/elves/elvish).
 
-Please note that **Elvish does not have a 1.0 release yet**. Before that, the
+Please beware that **Elvish does not have a 1.0 release yet**. Before that, the
 shell can be buggy, and might change dramatically from release to release.
-However, the primary developer does use the HEAD version of Elvish on his
-personal and work computers, so most functions should work fine (and are fixed
-quickly when they don't).
+However, the primary developer does use the HEAD version of Elvish on all his
+personal and work computers, so most functions should work properly (and are
+fixed quickly when they don't).
 
 <style>
   table {
