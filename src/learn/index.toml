@@ -1,9 +1,14 @@
 [[articles]]
-name = "semantics-uniqueness"
-title = "Semantics Uniqueness"
+name = "cookbook"
+title = "Cookbook"
 timestamp = "2017-06-25"
 
 [[articles]]
-name = "cookbook"
-title = "Cookbook"
+name = "fundamentals"
+title = "Elvish Fundamentals"
+timestamp = "2017-06-25"
+
+[[articles]]
+name = "semantics-uniqueness"
+title = "Semantics Uniqueness"
 timestamp = "2017-06-25"

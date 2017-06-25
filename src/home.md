@@ -129,8 +129,8 @@
 
 *   [Learn](/learn) to speak Elvish by following tutorials.
 
-    If you are not experienced with any shell, learn the
-    [basics](/learn/basics.html) first.
+    If you are not experienced with any shell, start with the
+    [fundamentals](/learn/fundamentals.html).
 
     If you come from other shells, read the [cookbook](/learn/cookbook.html)
     to get started quickly, and learn about Elvish's [unique
