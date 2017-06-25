@@ -1,17 +1,16 @@
 /* elvish.io-specific stylings. */
 
 #blog-title {
-  font-family: monospace;
   cursor: default;
 }
 
-#blog-title > a {
+#blog-title a {
   color: white;
   text-decoration: none;
   cursor: default;
 }
 
-#blog-title > a.command {
+#blog-title a.command {
   color: #5b5;
 }
 
