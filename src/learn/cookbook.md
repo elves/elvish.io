@@ -19,34 +19,36 @@ If you come from other shells, hopefully the following recipes will get you star
 
 *   Press Up to search through history. It uses what you have typed to do prefix match. To cancel, press Escape.
 
-    ![history](https://raw.githubusercontent.com/elves/images/master/history.png)
+    <img src="/assets/history.png" srcset="/assets/history-2x.png 2x" class="macos" alt="History mode demo">
 
-*   Press Tab to start completion. Use arrow key and Tab to select the candidate;  press Enter, or just continue typing to accept. To cancel, press Escape.
+*   Press Tab to start completion. Use arrow key and Tab to select the candidate; press Enter, or just continue typing to accept. To cancel, press Escape. It even comes with a scrollbar.
 
-    ![tab completion](https://raw.githubusercontent.com/elves/images/master/completion.png)
+    <img src="/assets/tab-completion.png" srcset="/assets/tab-completion-2x.png 2x" class="macos" alt="Tab completion demo">
 
 *   Press Ctrl-N to start navigation mode. Press Ctrl-H to show hidden files; press again to hide. Press tab to append selected filename to your command. Likewise, pressing Escape gets you back to the default (insert) mode.
 
-    ![navigation mode](https://raw.githubusercontent.com/elves/images/master/navigation.png)
+    <img src="/assets/navigation.png" srcset="/assets/navigation-2x.png 2x" class="macos" alt="Navigation mode demo">
 
 *   Try typing `echo [` and press Enter. Elvish knows that the command is unfinished due to the unclosed `[` and inserts a newline instead of accepting the command. Moreover, common errors like syntax errors and missing variables are highlighted in real time.
 
 *   Elvish remembers which directories you have visited. Press Ctrl-L to list visited directories. Like in completion, use Up, Down and Tab to navigate and use Enter to accept (which `cd`s into the selected directory). Press Escape to cancel.
 
-    <img src="/assets/location.png" srcset="/assets/location-2x.png 2x" class="macos"alt="Screenshot of location mode">
-
+    <img src="/assets/location.png" srcset="/assets/location-2x.png 2x" class="macos"alt="Location mode demo">
 
     Type to filter:
-  
-    ![location mode, filtering](https://raw.githubusercontent.com/elves/images/master/location-filter.png)
 
-    The filtering algorithm takes your filter and adds `**` to both sides of each path component. So `g/di` becomes pattern `**g**/**di**`, so it matches /home/xiaq/**g**o/elves/elvish/e**di**t.
+    <img src="/assets/location-filter.png" srcset="/assets/location-filter-2x.png 2x" class="macos"alt="Location mode filter demo">
 
-*   **NOTE**: Default key bindings as listed above are subject to change in the future; but the functionality will not go away.
+    The filtering algorithm is tailored for matching paths; you need only type
+    a prefix of each component. In the screenshot, x/p/v matches
+    **x**iaq/**p**ersistent/**v**ector.
 
-*   Elvish doesn't support history expansion like `!!`. Instead, it has a "bang mode", triggered by `Alt-,`, that provides the same functionality. For example, if you typed a command but forgot to add `sudo`, you can then type `sudo ` and press `Alt-,` twice to fix it:
+*   Elvish doesn't support history expansion like `!!`. Instead, it has a
+    "last command mode", triggered by `Alt-,`, that provides the same
+    functionality. For example, if you typed a command but forgot to add
+    `sudo`, you can then type `sudo ` and press `Alt-,` twice to fix it:
 
-    ![bang mode](https://raw.githubusercontent.com/elves/images/master/bang.png)
+    <img src="/assets/bang.png" srcset="/assets/bang-2x.png 2x" class="macos"alt="Bang mode demo">
 
 *   Lists look like `[a b c]`, and maps look like `[&key1=value1 &key2=value2]`. Unlike other shells, a list never expands to multiple words, unless you explicitly explode it by prefixing the variable name with `@`:
     ```sh

@@ -22,4 +22,7 @@ tool:
 publish: gen
 	rsync -aLv --delete ./dst/ $(PUBLISH_DIR)
 
+assets/%.png: assets/%-2x.png
+	gm convert -resize 50% $< $@
+
 .PHONY: default gen tool publish clean
