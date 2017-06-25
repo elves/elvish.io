@@ -24,9 +24,9 @@ img.macos {
 /* Keys */
 .key {
   display: inline-block;
-  border: 1px solid;
+  border: 1px solid black;
   border-radius: 3px;
-  padding: 1px 2px;
+  padding: 0 2px;
   margin: 1px;
   font-size: 85%;
 }

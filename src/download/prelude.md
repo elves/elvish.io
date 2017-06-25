@@ -3,7 +3,7 @@ The binaries are statically linked and don't have any runtime dependencies.
 If you have other OS/CPU combinations, you may build Elvish from
 [source](https://github.com/elves/elvish).
 
-For users in China, the download links might be too slow for you. Try the
+The download links might be too slow for users in China. Try using the
 [mirror](https://cn.dl.elvish.io) if that happens.
 
 Please beware that **Elvish does not have a 1.0 release yet**. Before that, the

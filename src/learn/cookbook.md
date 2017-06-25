@@ -1,14 +1,20 @@
 If you come from other shells, hopefully the following recipes will get you started quickly:
 
-*   Put your startup script in `~/.elvish/rc.elv`. There is no `alias` yet, but you can achieve the goal by defining a function:
+*   Put your startup script in `~/.elvish/rc.elv`. There is no `alias` yet,
+    but you can achieve the goal by defining a function:
 
     ```elvish
     fn ls { e:ls --color $@ }
     ```
 
-    The `e:` prefix (for "external") ensures that the external command named `ls` will be called. Otherwise this definition will result in infinite recursion.
+    The `e:` prefix (for "external") ensures that the external command named
+    `ls` will be called. Otherwise this definition will result in infinite
+    recursion.
 
-*   The left and right prompts can be customized by assigning functions to `le:prompt` and `le:rprompt`. Their outputs are concatenated (with no spaces in between) before being used as the respective prompts. The following simulates the default prompts but uses fancy Unicode:
+*   The left and right prompts can be customized by assigning functions to
+    `le:prompt` and `le:rprompt`. Their outputs are concatenated (with no
+    spaces in between) before being used as the respective prompts. The
+    following simulates the default prompts but uses fancy Unicode:
 
     ```elvish
     # "tilde-abbr" abbreviates home directory to a tilde.
@@ -22,8 +28,8 @@ If you come from other shells, hopefully the following recipes will get you star
 
     <img src="/assets/custom-prompt.png" srcset="/assets/custom-prompt-2x.png 2x" class="macos" alt="Custom prompt demo">
 
-*   Press <span class="key">Up</span> to search through history. It uses what
-    you have typed to do prefix match. To cancel, press <span
+*   Press <span class="key">▲&#xfe0e;</span> to search through history. It
+    uses what you have typed to do prefix match. To cancel, press <span
     class="key">Escape</span>.
 
     <img src="/assets/history.png" srcset="/assets/history-2x.png 2x" class="macos" alt="History mode demo">
@@ -120,10 +126,10 @@ If you come from other shells, hopefully the following recipes will get you star
     ```
 
 *   You can manipulate the keybinding through the map `$le:binding`. For
-    example, this binds Ctrl-L to clearing the terminal:
-    `le:binding[insert][Ctrl-L] = { clear > /dev/tty }`. The first index into
-    the map is the mode and the second is the key. (Yes, the braces enclose a
-    lambda.)
+    example, this binds <span class="key">Ctrl-L</span> to clearing the
+    terminal: `le:binding[insert][Ctrl-L] = { clear > /dev/tty }`. The first
+    index into the map is the mode and the second is the key. (Yes, the braces
+    enclose a lambda.)
 
     Use `pprint $le:binding` to get a nice (albeit long) view of the current
     keybinding.
@@ -158,8 +164,8 @@ If you come from other shells, hopefully the following recipes will get you star
 
     ```elvish-transcript
     ~> fn square [x]{
-       * $x $x
-     }
+         * $x $x
+       }
     ~> square 4
     ▶ 16
     ```

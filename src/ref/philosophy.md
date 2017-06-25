@@ -6,7 +6,7 @@ The development of Elvish is driven by a set of ideas, a **design philosophy**.
 
     Shells are often considered domain-specific languages (DSL), but Elvish
     does not restrict itself to this notion. It embraces such concepts as
-    namespacing, first-class functions and exceptions. Whatever you may find in
+    namespaces, first-class functions and exceptions. Whatever you may find in
     a modern general-purpose programming language is likely to be found in
     Elvish.
 
