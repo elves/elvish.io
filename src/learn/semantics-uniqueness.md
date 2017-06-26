@@ -26,7 +26,7 @@ is hard to debug and maintain.
 
 Elvish offers first-class support for data structures such as lists and maps. Here is an example that uses a list:
 
-```elvish
+```elvish-transcript
 ~> li = [foo bar 'lorem ipsum']
 ~> kind-of $li
 ▶ list
@@ -43,8 +43,8 @@ As you can see, you can store lists in variables and use them as command
 arguments. But they would be much less useful if you cannot **return** them
 from a function. A naive way to do this is by `echo`ing the list and use output
 capture to recover it:
-     
-```elvish
+
+```elvish-transcript
 ~> fn f {
      echo [foo bar 'lorem ipsum']
    }
@@ -64,7 +64,7 @@ output. In this case, it will convert the list to a string. So when you try to
 recover the list, you get a string instead. To correctly do this, you use
 another builtin command called `put`:
 
-```elvish
+```elvish-transcript
 ~> fn f {
      put [foo bar 'lorem ipsum']
    }
@@ -86,7 +86,7 @@ internal structures of the values.
 If you invoke `put` directly from the command prompt, the values it output have
 a leading `▶`:
 
-```elvish
+```elvish-transcript
 ~> put [foo bar]
 ▶ [foo bar]
 ```
@@ -106,7 +106,7 @@ very similar way. Data structures can flow in the value-oriented part of the
 pipeline as well. For instance, the `each` command takes **input** from the
 value-oriented channel, and apply a function to each value:
 
-```elvish
+```elvish-transcript
 ~> put lorem ipsum | each { echo "Got "$0 }
 Got lorem
 Got ipsum
@@ -152,6 +152,10 @@ bad # will print a stack trace and stop execution
 echo "after bad" # not executed
 ```
 
+(If you run this interactively, you need to enter a literal newline after
+`bad` by pressing <span class="key">Alt-Enter</span> to make sure that it is
+executed in the same chunk as `echo "after bad"`.)
+
 Non-zero exit status from external commands are turned into exceptions:
 
 ```elvish
@@ -179,9 +183,9 @@ and finally **evaluate** the just-generated internal representation.
 If any error happens during the first two phases, Elvish will reject the code
 without executing any of it. For instance, in Elvish unclosed parenthesis is a
 syntax error (error in the first parsing phase). The following code, when
-executed as a chunk, does nothing:
+executed as a chunk, does nothing other than printing the parse error:
 
-```elvish
+```elvish-bad
 echo before
 echo (
 ```
@@ -194,7 +198,7 @@ Likewise, in Elvish using an unassigned variable is a compilation error, so the
 following code does nothing either:
 
 ```elvish
- assuming #nonexistent was not assigned
+# assuming $nonexistent was not assigned
 echo before
 echo $nonexistent
 ```
