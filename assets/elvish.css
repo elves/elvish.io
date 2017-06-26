@@ -35,22 +35,22 @@ img.macos {
   font-weight: bold;
 }
 .sgr-31 {
-  color: darkred;
+  color: darkred; /* red in tty */
 }
 .sgr-32 {
-  color: green;
+  color: green; /* green in tty */
 }
 .sgr-33 {
-  color: orange;
+  color: goldenrod; /* yellow in tty */
 }
 .sgr-34 {
-  color: darkblue;
+  color: darkblue; /* blue in tty */
 }
 .sgr-35 {
-  color: darkmagenta;
+  color: darkorchid; /* magenta in tty */
 }
 .sgr-36 {
-  color: darkcyan;
+  color: darkcyan; /* cyan in tty */
 }
 .sgr-37 {
   color: gray;

@@ -94,6 +94,7 @@ If you come from other shells, hopefully the following recipes will get you star
     $screenshot lastcmd Last command mode demo
 
 *   Lists look like `[a b c]`, and maps look like `[&key1=value1 &key2=value2]`. Unlike other shells, a list never expands to multiple words, unless you explicitly explode it by prefixing the variable name with `@`:
+
     ```elvish-transcript
     ~> li = [1 2 3]
     ~> put $li
@@ -108,6 +109,7 @@ If you come from other shells, hopefully the following recipes will get you star
     ```
 
 *   Environment variables live in a separate `E:` (for "environment") namespace and must be explicitly qualified:
+
     ```elvish-transcript
     ~> put $E:HOME
     ▶ /home/xiaq
@@ -115,6 +117,7 @@ If you come from other shells, hopefully the following recipes will get you star
     ```
 
 *   You can manipulate search paths through the special list `$paths`, which is synced with `$E:PATH`:
+
     ```elvish-transcript
     ~> echo $paths
     [/bin /sbin]

@@ -166,6 +166,8 @@ When using a list variable, you can add `@` before the name to get all contained
 ▶ bar
 ```
 
+(This notation is restricted to exploding variables. To explode arbitrary values, use the builtin [explode](/ref/builtin.html#explode) command.)
+
 If the variable is `args` (a special variable for function arguments), you can omit the variable name -- `$@` is equivalent to `$@args`. This is a trick to make `$@` mean roughly the same thing as `"$@"` in POSIX shell. It is most useful when writing wrapper functions: the following code defines an `ll` function that calls `ls` with an additional `-l` flag:
 
 ```elvish-transcript
@@ -180,23 +182,20 @@ drwxr-xr-x 8 xiaq xiaq 4096 Jun 25 02:26 ..
 drwx------ 2 root xiaq 4096 Jun 20  2016 x
 ```
 
-A more general construct is the [explode](stdlib.html#explode) builtin, which works on arbitrary values.
-
 
 ## Assignment: Rest Variable
-
-A inverse mechanism to variable explosion exists for variable assignment.
 
 When assigning variables, if you prefix the name of the last variable with `@`, it becomes a list containing all remaining values. That variable is called a **rest variable**. Example:
 
 ```elvish-transcript
-~> a b c @d = (range 10)
-~> put $a $b $c $d
-▶ 0
+~> a b @rest = 1 2 3 4 5 6 7
+~> put $a $b $rest
 ▶ 1
 ▶ 2
-▶ [3 4 5 6 7 8 9]
+▶ [3 4 5 6 7]
 ```
+
+Schematically this is an inversive operation to variable explosion, which is why they share the `@` sign.
 
 
 ## Assignment: Temporary Assignment
@@ -216,7 +215,8 @@ finishes, whether it has thrown an error or not:
 
 *   If a variable existed before, it reverts to its old value.
 
-*   If not, its value becomes the empty string.
+*   If not, its value becomes the empty string. (This behavior will likely
+    change to deleting the variable.)
 
 Example:
 
@@ -228,9 +228,9 @@ Example:
 1
 ```
 
-Note that the behavior is different from that of bash or zsh. In either of them,
-temporary assignments to variables do not affect their direct use in the
-command:
+Note that the behavior is different from that of bash or zsh in one important
+place. In either of them, temporary assignments to variables do not affect
+their direct use in the command:
 
 ```sh
 bash-4.4$ x=1
