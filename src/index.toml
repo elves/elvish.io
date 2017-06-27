@@ -2,6 +2,7 @@ title = "Elvish the Unix Shell"
 author = "Qi Xiao"
 feedPosts = 10
 template = "template.html"
+rootURL = "https://elvish.io"
 
 [index]
 name = "home"
