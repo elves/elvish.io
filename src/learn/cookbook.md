@@ -24,15 +24,15 @@ If you come from other shells, hopefully the following recipes will get you star
     le:rprompt = (constantly (le:styled `whoami`✸`hostname` inverse))
     ```
 
-    Screenshot:
+    Here is a terminalshot of the alternative prompts:
 
-    $screenshot custom-prompt Custom prompt demo
+    $ttyshot unicode-prompts
 
 *   Press <span class="key">▲&#xfe0e;</span> to search through history. It
     uses what you have typed to do prefix match. To cancel, press <span
     class="key">Escape</span>.
 
-    $screenshot history History mode demo
+    $ttyshot history-mode
 
 *   Press <span class="key">Tab</span> to start completion. Use arrow keys
     <span class="key">▲&#xfe0e;</span>
@@ -45,7 +45,7 @@ If you come from other shells, hopefully the following recipes will get you star
     class="key">Escape.</span> It even comes with a scrollbar! :) In fact,
     all interactive modes show a scrollbar when there is more output to see.
 
-    $screenshot tab-completion Tab completion demo
+    $ttyshot completion-mode
 
 *   Press <span class="key">Ctrl-N</span> to start the builtin filesystem
     navigator, aptly named "navigation mode." Use arrow keys to navigate.
@@ -59,7 +59,7 @@ If you come from other shells, hopefully the following recipes will get you star
     other modes, <span class="key">Escape</span> gets you back to the default
     (insert) mode.
 
-    $screenshot navigation Navigation mode demo
+    $ttyshot navigation-mode
 
 *   Try typing `echo [` and press <span class="key">Enter</span>. Elvish knows that the command is unfinished due to the unclosed `[` and inserts a newline instead of accepting the command. Moreover, common errors like syntax errors and missing variables are highlighted in real time.
 
@@ -72,11 +72,11 @@ If you come from other shells, hopefully the following recipes will get you star
     select a directory and use Enter to `cd` into it. Press <span
     class="key">Escape</span> to cancel.
 
-    $screenshot location Location mode demo
+    $ttyshot location-mode
 
     Type to filter:
 
-    $screenshot location-filter Location mode filter demo
+    $ttyshot location-mode-filter
 
     The filtering algorithm is tailored for matching paths; you need only type
     a prefix of each component. In the screenshot, x/p/v matches
@@ -91,7 +91,7 @@ If you come from other shells, hopefully the following recipes will get you star
 
     This is showing me trying to fix a forgotten `sudo`:
 
-    $screenshot lastcmd Last command mode demo
+    $ttyshot lastcmd
 
 *   Lists look like `[a b c]`, and maps look like `[&key1=value1 &key2=value2]`. Unlike other shells, a list never expands to multiple words, unless you explicitly explode it by prefixing the variable name with `@`:
 

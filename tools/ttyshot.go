@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"io/ioutil"
 	"log"
 	"os"
@@ -18,13 +19,14 @@ func main() {
 		i := strings.Index(line, directive)
 		if i >= 0 {
 			name := line[i+len(directive):]
-			bytes, err := ioutil.ReadFile(path.Join("tty", name+".html"))
+			content, err := ioutil.ReadFile(path.Join("tty", name+".html"))
 			if err != nil {
 				log.Fatal(err)
 			}
 			os.Stdout.WriteString(line[:i])
 			os.Stdout.WriteString(`<pre class="ttyshot"><code>`)
-			os.Stdout.Write(bytes)
+			os.Stdout.Write(bytes.Replace(
+				content, []byte("\n"), []byte("<br>"), -1))
 			os.Stdout.WriteString("</code></pre>")
 		} else {
 			os.Stdout.WriteString(line)

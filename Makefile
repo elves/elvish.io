@@ -4,7 +4,7 @@ PUBLISH_DIR := ../published/ # ul.elvish.io:elvish.io/published
 
 default: gen
 
-%.html: %.md tools/highlighter tools/ttyshot
+%.html: %.md # tools/highlighter tools/ttyshot
 	./md-to-html $< $@
 
 %: %.go
