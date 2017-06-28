@@ -72,6 +72,7 @@
   document.getElementById('demo-expander-li').className = "";
   demoContainer.className = "";
   demoWindow.className = "overflow-hidden";
+  expanded = false;
 
   /* Resizing breaks sliding, fix it. */
   window.addEventListener('resize', function() { scrollTo(current, true); });
