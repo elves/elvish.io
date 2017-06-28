@@ -113,7 +113,7 @@
 </div> </div>
 
 <link href="/assets/home-demos.css?v=21" rel="stylesheet">
-<script src="/assets/home-demos.js"></script>
+<script src="/assets/home-demos.js?v=24"></script>
 
 ## Getting Elvish
 

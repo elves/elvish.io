@@ -86,32 +86,6 @@
     scrollX = scrollY = false;
   }
 
-  /* Support scrolling with mouse wheel. */
-  var wheelStep = 4, wheelTimeout = 200;
-  var settleTimeoutHandle;
-  /*
-  demoWindow.addEventListener('wheel', function(ev) {
-    console.log('wheel', ev);
-    ev.preventDefault();
-  });
-  */
-  demoWindow.addEventListener('mousewheel', function(ev) {
-    // console.log(ev);
-    offsetX += Math.sign(ev.wheelDeltaX) * wheelStep;
-    offsetY += Math.sign(ev.wheelDeltaY) * wheelStep;
-    handleScroll(ev);
-    if (!scrollY) {
-      ev.preventDefault();
-    }
-    if (settleTimeoutHandle) {
-      clearTimeout(settleTimeoutHandle);
-    }
-    settleTimeoutHandle = setTimeout(function() {
-      settleTimeoutHandle = undefined;
-      settleScroll();
-    }, wheelTimeout);
-  });
-
   /* Support scrolling by touch. */
   var initX, initY;
   demoWindow.addEventListener('touchstart', function(ev) {
