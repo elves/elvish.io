@@ -1,5 +1,7 @@
 (function() {
   var current = 0,
+      expanded = true;
+      expander = document.getElementById('demo-expander'),
       demoWindow = document.getElementById("demo-window"),
       demoContainer = document.getElementById("demo-container"),
       demoSwitcher = document.getElementById("demo-switcher"),
@@ -8,6 +10,9 @@
       switcherLinks = [];
 
   var scrollTo = function(to, instant) {
+    if (expanded) {
+      return;
+    }
     if (current != null) {
       switcherLinks[current].className = "";
     }
@@ -23,13 +28,36 @@
   var scrollToPrev = function() {
     scrollTo(current > 0 ? current - 1 : current);
   };
+  function scrollToCurrent() {
+    scrollTo(current);
+  }
+
+  function expand() {
+    expanded = true;
+    expander.className = "current";
+    switcherLinks[current].className = "";
+    demoContainer.className = "expanded";
+    demoContainer.style.transform = "";
+  }
+  function collapse() {
+    switcherLinks[current].className = "current";
+    expander.className = "";
+    demoContainer.className = "";
+  }
+  expander.onclick = expand;
 
   /* Build demo switcher. */
   for (var i = 0; i < nDemos; i++) {
     var li = document.createElement("li"),
         link = document.createElement("a");
     link.textContent = i + 1;
-    link.onclick = (function(to) { return function() { scrollTo(to) }; })(i);
+    link.onclick = (function(to) { return function() {
+      if (expanded) {
+        expanded = false;
+        collapse();
+      }
+      scrollTo(to);
+    }; })(i);
     if (i == 0) {
       link.className = "current";
     }
@@ -38,7 +66,11 @@
     demoSwitcher.appendChild(li);
   }
 
-  /* Switcher built, hide scrollbar. */
+  /* Switcher built. Hide the warning text, show the expand button, unexpand
+   * and hide scrollbar. */
+  document.getElementById('demo-js-warning').className = "no-display";
+  document.getElementById('demo-expander-li').className = "";
+  demoContainer.className = "";
   demoWindow.className = "overflow-hidden";
 
   /* Resizing breaks sliding, fix it. */
@@ -79,7 +111,7 @@
       } else if (offsetX > threshold) {
         scrollToPrev();
       } else {
-        scrollTo(current);
+        scrollToCurrent();
       }
     }
     offsetX = offsetY = baseOffset = 0;
@@ -89,11 +121,17 @@
   /* Support scrolling by touch. */
   var initX, initY;
   demoWindow.addEventListener('touchstart', function(ev) {
+    if (expanded) {
+      return;
+    }
     initX = ev.touches[0].clientX;
     initY = ev.touches[0].clientY;
     demoContainer.className = "";
   });
   demoWindow.addEventListener('touchmove', function(ev) {
+    if (expanded) {
+      return;
+    }
     if (ev.touches.length == 1) {
       var lastX = ev.touches[0].clientX;
       var lastY = ev.touches[0].clientY;
@@ -103,8 +141,18 @@
       // document.getElementById('demo-debug').innerText = '(' + offsetX + ', ' + offsetY + '), ' + scrollX + ', ' + scrollY;
     }
   });
-  demoWindow.addEventListener('touchcancel', function() { scrollTo(current); });
-  demoWindow.addEventListener('touchend', settleScroll);
+  demoWindow.addEventListener('touchcancel', function() {
+    if (expanded) {
+      return;
+    }
+    scrollTo(current);
+  });
+  demoWindow.addEventListener('touchend', function() {
+    if (expanded) {
+      return;
+    }
+    settleScroll();
+  });
 
   // Keyboard bindings.
   window.addEventListener('keypress', function(ev) {
@@ -113,6 +161,23 @@
       scrollToPrev();
     } else if (char == 'l') {
       scrollToNext();
+    } else if (char == 'o') {
+      expanded = !expanded;
+      if (expanded) {
+        expand();
+      } else {
+        collapse();
+        scrollToCurrent();
+      }
+    } else {
+      var i = parseInt(char);
+      if (1 <= i && i <= nDemos) {
+        if (expanded) {
+          expanded = false;
+          collapse();
+        }
+        scrollTo(i-1);
+      }
     }
   });
 })();

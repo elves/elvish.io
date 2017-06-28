@@ -21,9 +21,14 @@
 </pre>
 -->
 
-<ul id="demo-switcher"> </ul>
+<ul id="demo-switcher">
+  <li id="demo-js-warning">
+    Enable JavaScript for the option of showing demos as slides.
+  </li>
+  <li id="demo-expander-li" class="no-display"><a id="demo-expander">↧</a></li>
+</ul>
 
-<div id="demo-window"> <div id="demo-container" class="animated-transition">
+<div id="demo-window"> <div id="demo-container" class="expanded">
   <div class="demo-wrapper"> <div class="demo">
     <div class="demo-col left"><div class="demo-ttyshot">
       $ttyshot pipelines
@@ -112,8 +117,8 @@
   </div> </div>
 </div> </div>
 
-<link href="/assets/home-demos.css?v=21" rel="stylesheet">
-<script src="/assets/home-demos.js?v=24"></script>
+<link href="/assets/home-demos.css?v=22" rel="stylesheet">
+<script src="/assets/home-demos.js?v=27"></script>
 
 ## Getting Elvish
 

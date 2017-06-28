@@ -6,6 +6,10 @@
   overflow: scroll;
 }
 
+.no-display {
+  display: none !important;
+}
+
 .overflow-hidden {
   overflow: hidden !important;
 }
@@ -22,6 +26,14 @@
 .demo-wrapper {
   width: 20%;
   float: left;
+}
+
+/* Expanded view. */
+#demo-container.expanded {
+  width: 100%;
+}
+#demo-container.expanded .demo-wrapper {
+  width: 100%;
 }
 
 .demo:after {
