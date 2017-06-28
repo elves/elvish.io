@@ -14,7 +14,7 @@ has number-sections && {
     opts="$opts --number-sections"
 }
 
-./ttyshot < $1 |
-./highlighter |
+./tools/ttyshot < $1 |
+./tools/highlighter |
   pandoc -f markdown_github-hard_line_breaks --smart \
     --data-dir=./pandoc-data -o $2 $opts

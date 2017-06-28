@@ -1,3 +1,5 @@
 /src/*.html
 /src/*/*.html
 /dst
+/tools/highlighter
+/tools/ttyshot
