@@ -14,8 +14,7 @@ has number-sections && {
     opts="$opts --number-sections"
 }
 
-# Generate <img> tags for screenshots
-sed 's|$screenshot \([^ "]*\) \([^"]*\)|<img src="/assets/\1.png" srcset="/assets/\1-1.5x.png 1.5x, /assets/\1-2x.png 2x" class="macos" alt="\2">|g' $1 |
-md-highlighter |
+./ttyshot < $1 |
+./highlighter |
   pandoc -f markdown_github-hard_line_breaks --smart \
     --data-dir=./pandoc-data -o $2 $opts

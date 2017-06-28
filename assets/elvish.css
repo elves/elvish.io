@@ -21,12 +21,12 @@ img.macos {
 }
 
 /* TODO: Font size likely still tweaking. */
-.terminal-shot {
+.ttyshot {
   font-size: 11pt;
   border: 1px solid black;
 }
-@media screen and (max-width: 540px) {
-  .terminal-shot {
+@media screen and (max-width: 799px) {
+  .ttyshot {
     font-size: 2.6vw;
     border: 1px solid black;
   }
