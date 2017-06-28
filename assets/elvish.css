@@ -20,6 +20,11 @@ img.macos {
   box-shadow: 0 0 10px #999;
 }
 
+.terminal-shot {
+  font-size: 1.2vw;
+  border: 1px solid black;
+}
+
 /* Keys */
 .key {
   display: inline-block;
@@ -34,24 +39,51 @@ img.macos {
 .sgr-1 {
   font-weight: bold;
 }
+.sgr-7 {
+  color: inherit;
+  background-color: inherit;
+  -webkit-filter: invert(100%);
+  filter: invert(100%);
+}
 .sgr-31 {
   color: darkred; /* red in tty */
+}
+.sgr-41 {
+  background-color: darkred; /* red in tty */
 }
 .sgr-32 {
   color: green; /* green in tty */
 }
+.sgr-42 {
+  background-color: green; /* green in tty */
+}
 .sgr-33 {
   color: goldenrod; /* yellow in tty */
+}
+.sgr-43 {
+  background-color: goldenrod; /* yellow in tty */
 }
 .sgr-34 {
   color: darkblue; /* blue in tty */
 }
+.sgr-44 {
+  background-color: darkblue; /* blue in tty */
+}
 .sgr-35 {
   color: darkorchid; /* magenta in tty */
+}
+.sgr-45 {
+  background-color: darkorchid; /* magenta in tty */
 }
 .sgr-36 {
   color: darkcyan; /* cyan in tty */
 }
+.sgr-46 {
+  background-color: darkcyan; /* cyan in tty */
+}
 .sgr-37 {
   color: gray;
+}
+.sgr-47 {
+  background-color: gray;
 }
