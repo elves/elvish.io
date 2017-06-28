@@ -14,7 +14,7 @@ gen: $(HTMLS)
 	genblog -print-default-css > assets/genblog.css
 	genblog src dst
 
-tool:
+genblog:
 	cd $(GOPATH)/src/github.com/xiaq/genblog; \
 		git pull; \
 		go generate; \
@@ -26,4 +26,4 @@ publish: gen
 clean:
 	rm $(HTMLS)
 
-.PHONY: default gen tool publish clean
+.PHONY: default gen genblog publish clean
