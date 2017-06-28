@@ -17,7 +17,10 @@ clean:
 	rm -r dst
 
 tool:
-	cd $(GOPATH)/src/github.com/xiaq/genblog; go generate; go get
+	cd $(GOPATH)/src/github.com/xiaq/genblog; \
+		git pull; \
+		go generate; \
+		go get
 
 publish: gen
 	rsync -aLv --delete ./dst/ $(PUBLISH_DIR)
