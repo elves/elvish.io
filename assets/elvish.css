@@ -22,15 +22,16 @@ img.macos {
 
 /* TODO: Font size likely still tweaking. */
 .ttyshot {
-  font-size: 11pt;
+  font-size: 12pt;
   line-height: 0.99 !important;
   border: 1px solid black;
   display: inline-block;
+  margin-bottom: 0 !important;
 }
-@media screen and (max-width: 799px) {
+
+@media screen and (max-width: 600px) {
   .ttyshot {
     font-size: 2.6vw;
-    border: 1px solid black;
   }
 }
 

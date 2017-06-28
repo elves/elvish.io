@@ -25,16 +25,15 @@
 
 <div id="demo-window"> <div id="demo-container" class="animated-transition">
   <div class="demo-wrapper"> <div class="demo">
-    <div class="demo-col">
+    <div class="demo-col left"><div class="demo-ttyshot">
       $ttyshot pipelines
-    </div>
-    <div class="demo-col"> <div class="demo-description">
+    </div></div>
+    <div class="demo-col right"> <div class="demo-description">
       <div class="demo-title">Structureful pipelines</div>
       <p>
         Text pipelines are powerful, but gets unwiedly when your data is
-        complex. Keeping track of which column is what, and escaping text
-        properly quickly becomes tedious. (You know this if you have written
-        long <code>awk</code> scripts.)
+        complex. Complex text processing pipelines are hard to read and hard
+        to maintain.
       </p>
       <p>
         Pipelines in Elvish can carry structured data, not just text. You can
@@ -44,10 +43,10 @@
   </div> </div>
 
   <div class="demo-wrapper"> <div class="demo">
-    <div class="demo-col">
+    <div class="demo-col left"><div class="demo-ttyshot">
       $ttyshot control-structures
-    </div>
-    <div class="demo-col"> <div class="demo-description">
+    </div></div>
+    <div class="demo-col right"> <div class="demo-description">
       <div class="demo-title">C-like control structures</div>
       <p>
         The idea that <code>fi</code> pairs with <code>if</code> and
@@ -62,10 +61,10 @@
   </div> </div>
 
   <div class="demo-wrapper"> <div class="demo">
-    <div class="demo-col">
+    <div class="demo-col left"><div class="demo-ttyshot">
       $ttyshot location-mode
-    </div>
-    <div class="demo-col"> <div class="demo-description">
+    </div></div>
+    <div class="demo-col right"> <div class="demo-description">
       <div class="demo-title">Directory history</div>
       <p>
         Is <code>cd</code>ing into /a/long/nested/directory the first thing you
@@ -80,15 +79,13 @@
   </div> </div>
 
   <div class="demo-wrapper"> <div class="demo">
-    <div class="demo-col">
+    <div class="demo-col left"><div class="demo-ttyshot">
       $ttyshot histlist-mode
-    </div>
-    <div class="demo-col"> <div class="demo-description">
+    </div></div>
+    <div class="demo-col right"> <div class="demo-description">
       <div class="demo-title">Command history</div>
       <p>
         Want to see all the <code>ffmpeg</code> commands you have run?
-      </p>
-      <p>
         Just dig through your command history. Press Ctrl-R and search. Same
         key, more features.
       </p>
@@ -99,10 +96,10 @@
   </div> </div>
 
   <div class="demo-wrapper"> <div class="demo">
-    <div class="demo-col">
+    <div class="demo-col left"><div class="demo-ttyshot">
       $ttyshot navigation-mode
-    </div>
-    <div class="demo-col"> <div class="demo-description">
+    </div></div>
+    <div class="demo-col right"> <div class="demo-description">
       <div class="demo-title">Built-in File Manager</div>
       <p>
         Power of the shell or convenience of a file manager?
@@ -115,7 +112,7 @@
   </div> </div>
 </div> </div>
 
-<link href="/assets/home-demos.css" rel="stylesheet">
+<link href="/assets/home-demos.css?v=21" rel="stylesheet">
 <script src="/assets/home-demos.js"></script>
 
 ## Getting Elvish

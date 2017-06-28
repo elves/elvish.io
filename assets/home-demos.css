@@ -40,18 +40,24 @@
   float: left;
 }
 
-.demo-col img {
-  display: block;
-  margin: 0 auto;
+.demo-col .demo-ttyshot {
+  text-align: center;
+}
+
+.demo-col .demo-ttyshot .ttyshot {
+  text-align: left;
 }
 
 .demo-description {
   margin: 16px 5% 0;
 }
 
-@media screen and (min-width: 800px) {
-  .demo-col {
-    width: 50%;
+@media screen and (min-width: 1024px) {
+  .demo-col.left {
+    width: 60%;
+  }
+  .demo-col.right {
+    width: 40%;
   }
   .demo-description {
     margin: 0 5%;
