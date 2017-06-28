@@ -20,9 +20,16 @@ img.macos {
   box-shadow: 0 0 10px #999;
 }
 
+/* TODO: Font size likely still tweaking. */
 .terminal-shot {
-  font-size: 1.2vw;
+  font-size: 11pt;
   border: 1px solid black;
+}
+@media screen and (max-width: 540px) {
+  .terminal-shot {
+    font-size: 2.6vw;
+    border: 1px solid black;
+  }
 }
 
 /* Keys */
