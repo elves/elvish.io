@@ -23,8 +23,9 @@ img.macos {
 /* TODO: Font size likely still tweaking. */
 .ttyshot {
   font-size: 11pt;
-  line-height: 1.1 !important;
+  line-height: 0.99 !important;
   border: 1px solid black;
+  display: inline-block;
 }
 @media screen and (max-width: 799px) {
   .ttyshot {
@@ -48,10 +49,8 @@ img.macos {
   font-weight: bold;
 }
 .sgr-7 {
-  color: inherit;
-  background-color: inherit;
-  -webkit-filter: invert(100%);
-  filter: invert(100%);
+  color: white;
+  background-color: black;
 }
 .sgr-31 {
   color: darkred; /* red in tty */
@@ -62,36 +61,37 @@ img.macos {
 .sgr-32 {
   color: green; /* green in tty */
 }
-.sgr-42 {
+.sgr-42, .sgr-7.sgr-32 {
   background-color: green; /* green in tty */
 }
 .sgr-33 {
   color: goldenrod; /* yellow in tty */
 }
-.sgr-43 {
+.sgr-43, .sgr-7.sgr-33 {
   background-color: goldenrod; /* yellow in tty */
 }
 .sgr-34 {
-  color: darkblue; /* blue in tty */
+  color: blue;
 }
-.sgr-44 {
-  background-color: darkblue; /* blue in tty */
+.sgr-44, .sgr-7.sgr-34 {
+  color: white; /* Hacky hacky, just to make the nav ttyshot work */
+  background-color: blue;
 }
 .sgr-35 {
   color: darkorchid; /* magenta in tty */
 }
-.sgr-45 {
+.sgr-45, .sgr-7.sgr-35 {
   background-color: darkorchid; /* magenta in tty */
 }
 .sgr-36 {
   color: darkcyan; /* cyan in tty */
 }
-.sgr-46 {
+.sgr-46, .sgr-7.sgr-36 {
   background-color: darkcyan; /* cyan in tty */
 }
 .sgr-37 {
-  color: gray;
+  color: lightgray;
 }
-.sgr-47 {
+.sgr-47, .sgr-7.sgr-37 {
   background-color: gray;
 }
