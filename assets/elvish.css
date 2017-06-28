@@ -23,6 +23,7 @@ img.macos {
 /* TODO: Font size likely still tweaking. */
 .ttyshot {
   font-size: 11pt;
+  line-height: 1.1 !important;
   border: 1px solid black;
 }
 @media screen and (max-width: 799px) {
