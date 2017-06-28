@@ -44,62 +44,93 @@
   /* Resizing breaks sliding, fix it. */
   window.addEventListener('resize', function() { scrollTo(current, true); });
 
-  /* Support sliding by touch. */
+  /* Scrolling primitives. */
   var scrollXTrigger = 5, scrollYTrigger = 5;
-  var initX, initY, offsetX, offsetY, baseOffset, scrollX, scrollY;
+  var scrollX = false, scrollY = false;
+  var offsetX = 0, offsetY = 0, baseOffset = 0;
+  function handleScroll(ev) {
+    if (!scrollX && !scrollY) {
+      if (Math.abs(offsetX) > scrollXTrigger) {
+        baseOffset = offsetX;
+        scrollX = true;
+      } else if (Math.abs(offsetY) > scrollYTrigger) {
+        baseOffset = offsetY;
+        scrollY = true;
+      }
+    }
+    if (!scrollX) {
+      return;
+    }
+    // No overscrolling.
+    var calculatedOffset = offsetX - baseOffset;
+    if ((current == 0 && calculatedOffset > 0) ||
+        (current == nDemos-1 && calculatedOffset < 0)) {
+      calculatedOffset = 0;
+    }
+    var translate = calculatedOffset - demoWrappers[0].offsetWidth * current;
+    demoContainer.style.transform = "translateX(" + translate + "px)";
+    ev.preventDefault();
+  }
+  function settleScroll() {
+    if (scrollX) {
+      var threshold = Math.min(60, demoWindow.offsetWidth / 4);
+      if (offsetX < -threshold) {
+        scrollToNext();
+      } else if (offsetX > threshold) {
+        scrollToPrev();
+      } else {
+        scrollTo(current);
+      }
+    }
+    offsetX = offsetY = baseOffset = 0;
+    scrollX = scrollY = false;
+  }
+
+  /* Support scrolling with mouse wheel. */
+  var wheelStep = 4, wheelTimeout = 200;
+  var settleTimeoutHandle;
+  /*
+  demoWindow.addEventListener('wheel', function(ev) {
+    console.log('wheel', ev);
+    ev.preventDefault();
+  });
+  */
+  demoWindow.addEventListener('mousewheel', function(ev) {
+    // console.log(ev);
+    offsetX += Math.sign(ev.wheelDeltaX) * wheelStep;
+    offsetY += Math.sign(ev.wheelDeltaY) * wheelStep;
+    handleScroll(ev);
+    if (!scrollY) {
+      ev.preventDefault();
+    }
+    if (settleTimeoutHandle) {
+      clearTimeout(settleTimeoutHandle);
+    }
+    settleTimeoutHandle = setTimeout(function() {
+      settleTimeoutHandle = undefined;
+      settleScroll();
+    }, wheelTimeout);
+  });
+
+  /* Support scrolling by touch. */
+  var initX, initY;
   demoWindow.addEventListener('touchstart', function(ev) {
     initX = ev.touches[0].clientX;
     initY = ev.touches[0].clientY;
-    offsetX = offsetY = baseOffset = 0;
-    scrollX = scrollY = false;
     demoContainer.className = "";
   });
   demoWindow.addEventListener('touchmove', function(ev) {
     if (ev.touches.length == 1) {
-      lastX = ev.touches[0].clientX;
-      lastY = ev.touches[0].clientY;
+      var lastX = ev.touches[0].clientX;
+      var lastY = ev.touches[0].clientY;
       offsetX = lastX - initX;
       offsetY = lastY - initY;
+      handleScroll(ev);
       // document.getElementById('demo-debug').innerText = '(' + offsetX + ', ' + offsetY + '), ' + scrollX + ', ' + scrollY;
-      if (!scrollX && !scrollY) {
-        if (Math.abs(offsetX) > scrollXTrigger) {
-          baseOffset = offsetX;
-          scrollX = true;
-        } else if (Math.abs(offsetY) > scrollYTrigger) {
-          baseOffset = offsetY;
-          scrollY = true;
-        }
-      }
-      if (!scrollX) {
-        return;
-      }
-      // No overscrolling.
-      var calculatedOffset = offsetX - baseOffset;
-      if ((current == 0 && calculatedOffset > 0) ||
-          (current == nDemos-1 && calculatedOffset < 0)) {
-        calculatedOffset = 0;
-      }
-      var translate = calculatedOffset - demoWrappers[0].offsetWidth * current;
-      demoContainer.style.transform = "translateX(" + translate + "px)";
-      ev.preventDefault();
     }
   });
-  demoWindow.addEventListener('touchcancel', function(ev) {
-    scrollTo(current);
-  });
-  demoWindow.addEventListener('touchend', function(ev) {
-    if (!scrollX) {
-      return;
-    }
-    var threshold = Math.min(60, demoWindow.offsetWidth / 4);
-    if (offsetX < -threshold) {
-      scrollToNext();
-    } else if (offsetX > threshold) {
-      scrollToPrev();
-    } else {
-      scrollTo(current);
-    }
-  });
+  demoWindow.addEventListener('touchcancel', function() { scrollTo(current); });
+  demoWindow.addEventListener('touchend', settleScroll);
 
   // Keyboard bindings.
   window.addEventListener('keypress', function(ev) {
