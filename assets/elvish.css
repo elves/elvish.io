@@ -1,5 +1,13 @@
 /* elvish.io-specific stylings. */
 
+a {
+  color: #0645ad;
+}
+
+a:visited {
+  color: #0b0080;
+}
+
 /* Used to several places. */
 .no-display {
   display: none !important;
@@ -37,23 +45,8 @@
   margin-left: -0.6em;
 }
 
-.toc ul {
-  /* margin-left: 0; */
-}
-
-.toc li {
+#toc-list li {
   list-style: none;
-}
-
-.toc a {
-  color: black;
-}
-
-
-/* macOS screenshots. */
-img.macos {
-  border-radius: 6px;
-  box-shadow: 0 0 10px #999;
 }
 
 /* TODO: Font size likely still tweaking. */

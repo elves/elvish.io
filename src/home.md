@@ -138,7 +138,7 @@
 
     If you come from other shells, read the [cookbook](/learn/cookbook.html)
     to get started quickly, and learn about Elvish's [unique
-    semantics](learn/semantics-uniqueness.html).
+    semantics](learn/unique-semantics.html).
 
 *   [Reference](ref) documents describe Elvish in a more formal and complete way.
 
