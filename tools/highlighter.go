@@ -13,18 +13,27 @@ import (
 	"github.com/elves/elvish/parse"
 )
 
+var (
+	scanner = bufio.NewScanner(os.Stdin)
+	lineno  = 0
+)
+
+func scan() bool {
+	lineno++
+	return scanner.Scan()
+}
+
 func main() {
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
+	for scan() {
 		line := scanner.Text()
 		trimmed := strings.TrimLeft(line, " ")
 		indent := line[:len(line)-len(trimmed)]
 		if trimmed == "```elvish" || trimmed == "```elvish-bad" {
 			bad := trimmed == "```elvish-bad"
-			highlighted := convert(collectFenced(scanner, indent), bad)
+			highlighted := convert(collectFenced(indent), bad)
 			fmt.Printf("%s<pre><code>%s</code></pre>\n", indent, highlighted)
 		} else if trimmed == "```elvish-transcript" {
-			highlighted := convertTranscript(collectFenced(scanner, indent))
+			highlighted := convertTranscript(collectFenced(indent))
 			fmt.Printf("%s<pre><code>%s</code></pre>\n", indent, highlighted)
 		} else {
 			fmt.Println(line)
@@ -32,12 +41,12 @@ func main() {
 	}
 }
 
-func collectFenced(scanner *bufio.Scanner, indent string) string {
+func collectFenced(indent string) string {
 	var buf bytes.Buffer
-	for scanner.Scan() {
+	for scan() {
 		line := scanner.Text()
 		if !strings.HasPrefix(line, indent) {
-			log.Fatal("bad indent")
+			log.Fatalf("bad indent of line %d: %q", lineno, line)
 		}
 		unindented := line[len(indent):]
 		if unindented == "```" {

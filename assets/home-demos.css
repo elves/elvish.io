@@ -6,10 +6,6 @@
   overflow: scroll;
 }
 
-.no-display {
-  display: none !important;
-}
-
 .overflow-hidden {
   overflow: hidden !important;
 }

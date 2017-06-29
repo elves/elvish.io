@@ -1,5 +1,25 @@
-<p>Table of Content:</p>
 <div class="toc">
+<p>Table of Content: <a id="toc-toggle" href="">[-]</a></p>
+<div id="toc-list">
 $toc$
+</div>
+<script>
+(function() {
+  var shown = true,
+      tocToggle = document.getElementById('toc-toggle'),
+      tocList = document.getElementById('toc-list');
+  tocToggle.onclick = function(ev) {
+    shown = !shown;
+    if (shown) {
+      tocToggle.innerText = "[-]";
+      tocList.className = "";
+    } else {
+      tocToggle.innerText = "[+]";
+      tocList.className = "no-display";
+    }
+    ev.preventDefault();
+  };
+})();
+</script>
 </div>
 $body$

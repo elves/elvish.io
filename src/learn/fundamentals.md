@@ -1,98 +1,121 @@
-TBW: sth about the vision of elvish
+This tutorial introduces the fundamentals of shell programming with Elvish.
+It does not assume familiarity with other shells, but some understanding of
+basic programming concepts is required.
+
+Beware that Elvish is very similar to other shell languages in many aspects,
+but very different in some other aspects. When transferring your knowledge of
+Elvish to another shell, it is worthwhile to check how things work in the
+other shell.
 
 # Hello, world!
 
-Let's begin with the traditional "hello world" program:
+Let's begin with the most traditional "hello world" program. In Elvish,
+you call the `echo` **command** to print something on the terminal:
 
-```elvish
-echo "Hello, world!"
+```elvish-transcript
+~> echo "Hello, world!"
+Hello, world!
 ```
 
-Why not say hello to yourself as well?
+In Elvish, as in other shells, command calls follow a simple structure: you
+write the command name, followed by arguments, all separated by spaces (or
+tabs). No parentheses or commas are needed.
 
-```elvish
-echo "Hello, world! Hello, "$E:USER"!"
+We enclose our text here in double quotes, making it a **string literal**.
+Compared to other languages, shell languages are a bit sloppy in that they
+allow you to write strings *without* quotes. The following also works:
+
+```elvish-transcript
+~> echo Hello, world!
+Hello, world!
 ```
 
-If you compare it to the equivalent bash code
+However, the way it works has a subtle difference: here `Hello,` and `world!`
+are two arguments (remember that spaces separate arguments), and `echo` joins
+them together with a space. This is apparent if you put multiple spaces
+between them:
 
-```sh
-echo "Hello, world! Hello, $USER!"
+```elvish-transcript
+~> echo Hello,      world!
+Hello, world!
+~> echo "Hello,     world!"
+Hello,     world!
 ```
 
-you will notice two differences. First, environment variables have to be qualified by `E:` in elvish; this is because environment variables do not live on the default (unqualified) **namespace**, but rather the special `E` namespace. So `$USER` and `$E:USER` are different variables: the former only exists in the current process, while the latter will affect all child processes. There is no need for an `export` command in elvish: variables in the `E` namespace are exported while other variables are not.
+When you write your message without quotes, no matter how many spaces there
+are, it is always the same two arguments `Hello,` and `world!`. If you quote
+your message, the spaces are part of the string and thus preserved.
 
-Second, there is no string interpolation in elvish. Instead, the lack of spaces between `$E:USER` and two strings around it causes elvish to concatenate them.
+It is a good idea to always quote your string when it contains spaces or any
+special symbols other than period (`.`), dash (`-`) or underscore (`_`).
 
-# Hello, \\x1b[32mworld\\x1b[m!
 
-Why not say hello to a green world? If you know [ASCII](https://en.wikipedia.org/wiki/ASCII), you will know that there are some invisible "control" characters, one of them being ESC. This character is used to start [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code) (**not** related to the concept of escaping with a backslash), which can, among other things, give you colors.
+# Hello, {insert user name}!
 
-In elvish, any ASCII character can be written with `"\x??"`, where `??` is two hex digits representing the value of the character. Hence the ESC character, whose value is 27, or 0x1b in hex, is written as `"\x1b"`. The sequences `"\x1b[31m"` tells the terminal to switch to green color for the text, and `"\x1b[m"` clears the color. Therefore to say hello to a green world, you would do:
+A program that always prints the same message is not very interesting.
 
-```elvish
-echo "Hello, \x1b[32mworld\x1b[m!"
+One way to make programs more interesting is to make them do different things
+depending on the context. In the case of our "hello world" program, why not
+teach it to greet whoever is running the program?
+
+```elvish-transcript
+~> echo "Hello, world! Hello, "$E:USER"!"
+Hello, world! Hello, xiaq!
 ```
 
-As easy as it is, writing special characters like ESC is tricky in traditional shells. The program above works in zsh but not in bash: this is because double quotes in those shells do not really support the syntax of `"\x??"`; instead they keep the backslash as is. In zsh, it is the `echo` that understands `"\x??"`; while in bash such it is not understood unless you add a `-e` switch to `echo`.
+There are several things happening here. First, `$E:USER` represents the `USER`
+**environment variable** ("E" being mnemonic for "environment"). In UNIX
+environments, it is usually set to the name of the current user. Second, we
+are running several strings and a variable all together: in this case, Elvish
+will concatenate them for you. Hence the result we see.
 
-This implies that while you can `echo` special characters like ESC (with `-e` in bash), it is more tricky to write special characters in other situations, like file names. If you have a file whose name contain a ESC character, you have to either use `$(echo "\x1b")` or embed an actual ESC character in your script.
+Depending on your taste, you might feel that it's nicer to greet the world and
+the user on separate lines. There are several ways to do this; we can use two
+`echo` commands:
 
-I won't go into full details here, since for our purpose, it suffices to know that strings are much simpler in elvish:
-
-*   Double-quoted strings are **C-like**: i.e. they support escape sequences
-    like `\n` for newline, `\t` for tab, ``\\`` for backslash and so on. There
-    is a special sequence, `\e` that is equivalent to `\x1b` -- this helps
-    writing ANSI escape sequences. As we have seen, interpolations are not
-    supported.
-
-*   Single-quoted strings are **raw**: they support no escape sequences (so
-    ``\`` has no special meaning), except that single quotes can be written by
-    doubling them: ``'it''s\'`` represents the string ``it's\``.
-
-*   Outside quotes, ``\`` has no special meaning. To write special characters
-    like `$`, you must use quotes: `'$'` or `"$"` instead of `\$`. This makes
-    it easier to write paths in Windows when elvish gets ported there.
-
-Moreover, the `echo` builtin in elvish does not accept any switch starting with `-`:  `echo $x` always prints `$x` followed by a newline. The following
-
-```elvish
-x=-e
-echo $x
+```elvish-transcript
+~> echo "Hello, world"
+   echo "Hello, "$E:USER"!"
+Hello, world
+Hello, xiaq!
 ```
 
-prints nothing in bash and zsh, but `-e` in elvish. The `echo` command in traditional shells also have a `-n` switch to suppress the trailing newline. To suppress the newline in elvish, use the `print` builtin.
+(When using the terminal interface, press <span class="key">Alt-Enter</span>
+to insert a literal newline instead of executing a command.)
 
-# Hello, &nbsp; &nbsp; world!
+Or we can use a special **escape sequence** that represents a newline in our
+string:
 
-I just mentioned that `echo $x` always prints `$x`. This is indeed true:
-
-```elvish
-x='Hello,    world!'
-echo $x # prints "Hello,    world!"
+```elvish-transcript
+~> echo "Hello, world!\nHello, "$E:USER"!"
+Hello, world!
+Hello, xiaq!
 ```
 
-In bash, this prints `Hello, world!` -- the four spaces after the comma become one, which often comes as a surprise to newcomers. This is because bash will break `$x` into two arguments, `Hello,` and `world!` by splitting at the spaces. The `echo` command then join its arguments with a single space.
+Within double quotes, `\n` represents a newline. There are many such sequences
+starting with a backslash, including `\\` which represents the backslash
+itself.
 
-Such breakings do not happen in elvish. In elvish, `$x` is always exactly one argument. To be more precise, `$x` is always one **value**: besides being an argument to commands, it can also be e.g. filenames used for redirections. The following
+Yet the simplest, albeit slight less unreadable option is to simply insert a
+newline in the string:
 
-```elvish
-x="I am a file"
-echo "I am some content" > $x
+```elvish-transcript
+~> echo "Hello, world!
+   Hello, "$E:USER"!"
+Hello, world!
+Hello, xiaq!
 ```
 
-writes to a file named `I am a file`.
 
+<!--
 # Hello, everyone!
 
 Now let's say you want to say hello to several people, and typing `Hello` repeatedly is tiresome. You can save some work by using a **for-loop**:
 
 ```elvish
-for name in 'Julius Caesar'
-            'Pompey the Great'
-            'Marcus Licinius Crassus'; do
+for name [Julius Pompey Marcus] {
     echo 'Hello, '$name'!'
-done
+}
 ```
 
 In elvish you can put newlines between the elements to loop over, as long as they are terminated by `; do`.
@@ -100,24 +123,10 @@ In elvish you can put newlines between the elements to loop over, as long as the
 For easier reuse, you can also create a **list** to store the names:
 
 ```elvish
-first-triumvirate=[
-    'Julius Caesar'
-    'Pompey the Great'
-    'Marcus Licinius Crassus'
-]
+triumvirate = [Julius Pompey Marcus]
 ```
 
 Lists are surrounded by square brackets, like in several other languages. Elements are separated by whitespaces.
-
-<!-- Comma is a normal character in elvish; trailing commas will become part of the elements:
-
-sh
-a-list=[a, b, c]
-echo $li[0] # a,
-echo $li[1] # b,
-echo $li[2] # c
-
--->
 
 As you may have noticed, dashes are allowed in variable names. You are encouraged to use them instead of underscores; they are easier to type and more readable (after a little getting-used-to).
 

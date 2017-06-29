@@ -1,5 +1,7 @@
 If you come from other shells, hopefully the following recipes will get you started quickly:
 
+# UI Recipes
+
 *   Put your startup script in `~/.elvish/rc.elv`. There is no `alias` yet,
     but you can achieve the goal by defining a function:
 
@@ -93,7 +95,12 @@ If you come from other shells, hopefully the following recipes will get you star
 
     $ttyshot lastcmd
 
-*   Lists look like `[a b c]`, and maps look like `[&key1=value1 &key2=value2]`. Unlike other shells, a list never expands to multiple words, unless you explicitly explode it by prefixing the variable name with `@`:
+# Language Recipes
+
+*   Lists look like `[a b c]`, and maps look like `[&key1=value1
+    &key2=value2]`. Unlike other shells, a list never expands to multiple
+    words, unless you explicitly explode it by prefixing the variable name
+    with `@`:
 
     ```elvish-transcript
     ~> li = [1 2 3]
@@ -141,13 +148,43 @@ If you come from other shells, hopefully the following recipes will get you star
     instance, `Alt-a` means pressing `Alt` and `A`, while `Alt-A` means
     pressing `Alt`, `Shift` and `A`. This will probably change in the future.
 
-*   There is no interpolation inside double quotes (yet). Use implicit string concatenation:
+*   There is no interpolation inside double quotes (yet). For example, the
+    value of `"$user"` is simply the string `$user`. Use implicit string
+    concatenation to build strings:
 
     ```elvish-transcript
     ~> name = xiaq
     ~> echo "My name is "$name"."
     My name is xiaq.
     ```
+
+    Sometimes string concatenation will force you to string literals instead
+    of barewords:
+
+    ```elvish-transcript
+    ~> noun = language
+    ~> echo $noun's'
+    languages
+    ```
+
+    You cannot write `s` as a bareword because Elvish would think you are
+    trying to write the variable `$nouns`.
+
+*   Double quotes do support C-like escape sequences (``\n`` for newline,
+    etc.):
+
+    ```elvish-transcript
+    ~> echo "a\nb"
+    a
+    b
+    ```
+
+    Note: If you run `echo "a\nb"` in bash or zsh, you might get the same
+    result (depending on the value of some options), and this might lead
+    you to believe that they support C-like escape sequences in double quotes
+    as well. This is not the case; bash and zsh preserve the backslash in
+    double quotes, and it is the `echo` builtin command that interpret the
+    escape sequences.
 
 *   Elementary floating-point arithmetics as well as comparisons are builtin,
     with a prefix syntax:
@@ -168,7 +205,7 @@ If you come from other shells, hopefully the following recipes will get you star
     ```elvish-transcript
     ~> fn square [x]{
          * $x $x
-       }
+         }
     ~> square 4
     ▶ 16
     ```
@@ -179,3 +216,26 @@ If you come from other shells, hopefully the following recipes will get you star
     between values are preserved. This allows us to manipulate structured data
     in the shell. Read [semantics
     highlights](/learn/semantics-highlights.html) for details.
+
+*   When calling Elvish commands, options use the special `&option=value`
+    syntax. For instance, the `echo` builtin command supports a `sep` option
+    for specifying an alternative separator:
+
+    ```elvish-transcript
+    ~> echo &sep="," a b c
+    a,b,c
+    ```
+
+    The mixture of options and arguments is a classical problem in traditional
+    shell programming. For instance, if you want to print a file whose name is
+    in `$x`, `cat $x` is the obvious thing to do, but it does not do this
+    reliably -- if `$x` starts with `-` (e.g. `-v`), `cat` thinks that it is
+    an option. The correct way is `cat -- $x`.
+
+    Elvish commands are free from this problem. However, the option facility
+    is only available to builtin commands and user-defined functions, not
+    external commands, meaning that you still need to do `cat -- $x`.
+
+    In principle, it is possible to write safe wrapper
+    for external commands and there is a
+    [plan](https://github.com/elves/elvish/issues/371) for this.

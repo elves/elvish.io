@@ -1,5 +1,10 @@
 /* elvish.io-specific stylings. */
 
+/* Used to several places. */
+.no-display {
+  display: none !important;
+}
+
 #blog-title {
   cursor: default;
 }
@@ -13,6 +18,37 @@
 #blog-title a.command {
   color: #5b5;
 }
+
+.toc {
+  background-color: #f0f0f0;
+  padding: 1em;
+  margin: 0 16px 16px 0;
+  border-radius: 6px;
+  display: inline-block;
+  float: left;
+}
+
+/* The first <h1> clears the TOC */
+.article-content h1 {
+  clear: both;
+}
+
+#toc-list {
+  margin-left: -0.6em;
+}
+
+.toc ul {
+  /* margin-left: 0; */
+}
+
+.toc li {
+  list-style: none;
+}
+
+.toc a {
+  color: black;
+}
+
 
 /* macOS screenshots. */
 img.macos {

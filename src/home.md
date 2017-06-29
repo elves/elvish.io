@@ -34,15 +34,15 @@
       $ttyshot pipelines
     </div></div>
     <div class="demo-col right"> <div class="demo-description">
-      <div class="demo-title">Structureful pipelines</div>
+      <div class="demo-title">Powerful Pipelines</div>
       <p>
-        Text pipelines are powerful, but gets unwiedly when your data is
-        complex. Complex text processing pipelines are hard to read and hard
-        to maintain.
+        Text pipelines are intuitive and powerful. However, if your data have
+        inherently complex structures, passing them through the pipeline
+        often requires a lot of ad-hoc, hard-to-maintain text processing code.
       </p>
       <p>
         Pipelines in Elvish can carry structured data, not just text. You can
-        stream lists, maps and even anonymous functions through the pipeline.
+        stream lists, maps and even functions through the pipeline.
       </p>
     </div> </div>
   </div> </div>
@@ -52,15 +52,13 @@
       $ttyshot control-structures
     </div></div>
     <div class="demo-col right"> <div class="demo-description">
-      <div class="demo-title">C-like control structures</div>
+      <div class="demo-title">Intuitive Control Structures</div>
       <p>
-        The idea that <code>fi</code> pairs with <code>if</code> and
-        <code>esac</code> pairs with <code>case</code> is neat, but not so much
-        the syntax gets in the way.
+        If you know programming, you probably already know how
+        <code>if</code> looks in C. So why learn another syntax?
       </p>
       <p>
-        Control structures in Elvish has a easier-to-remember syntax that
-        mimics C. (It works differently under the hood, though.)
+        Control structures in Elvish has an intuitive C-like syntax.
       </p>
     </div> </div>
   </div> </div>
@@ -70,11 +68,11 @@
       $ttyshot location-mode
     </div></div>
     <div class="demo-col right"> <div class="demo-description">
-      <div class="demo-title">Directory history</div>
+      <div class="demo-title">Directory History</div>
       <p>
-        Is <code>cd</code>ing into /a/long/nested/directory the first thing you
-        do every day? Wish you remember the path of the configuration file you
-        touched two months ago?
+        Is <code>cd /a/long/nested/directory</code> the first thing you
+        do every day? Struggling to remember where your logs and
+        configurations?
       </p>
       <p>
         Elvish remembers where you have been. Press Ctrl-L and search, like in a
@@ -88,14 +86,18 @@
       $ttyshot histlist-mode
     </div></div>
     <div class="demo-col right"> <div class="demo-description">
-      <div class="demo-title">Command history</div>
+      <div class="demo-title">Command History</div>
       <p>
-        Want to see all the <code>ffmpeg</code> commands you have run?
-        Just dig through your command history. Press Ctrl-R and search. Same
-        key, more features.
+        Want to find the magical <code>ffmpeg</code> command that you used to
+        transcode a video file two months ago?
       </p>
       <p>
-        (In fact, you can do this in bash with <code>history | grep ffmpeg</code>, but it's far less keystrokes in Elvish :)
+        Just dig through your command history with Ctrl-R. Same key, more
+        useful.
+      </p>
+      <p>
+        (To be fair, you can do this in bash with <code>history | grep
+        ffmpeg</code>, but it's far less keystrokes in Elvish :)
       </p>
     </div> </div>
   </div> </div>
@@ -110,7 +112,7 @@
         Power of the shell or convenience of a file manager?
       </p>
       <p>
-        Choose two. Press Ctrl-N to quickly navigate directories and preview
+        Choose both. Press Ctrl-N to quickly navigate directories and preview
         files, with full shell power.
       </p>
     </div> </div>
