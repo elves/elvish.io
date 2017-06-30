@@ -11,7 +11,6 @@ default: gen
 	go build -o $@ $<
 
 gen: $(HTMLS)
-	genblog -print-default-css > assets/genblog.css
 	genblog src dst
 
 genblog:
@@ -19,6 +18,7 @@ genblog:
 		git pull; \
 		go generate; \
 		go get
+	genblog -print-default-css > assets/genblog.css
 
 publish: gen
 	rsync -aLv --delete ./dst/ $(PUBLISH_DIR)
