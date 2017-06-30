@@ -1,16 +1,49 @@
 <!-- toc number-sections -->
 
-# Introduction and Notation
+# Introduction
 
 **THIS DOCUMENT IS NOT YET COMPLETE.**
 
-In function usages, a trailing `?` represents an optional argument.
+## Usage Notation
+
+The usage of a builtin command is described by giving an example usage, using
+variables as arguments. For instance, The `repeat` command takes two arguments
+and are described as:
+
+```elvish
+repeat $n $v
+```
+
+Optional arguments are represented with a trailing `?`, while variadic
+arguments with a trailing `...`. For instance, the `count` command takes an optional list:
+
+```elvish
+count $input-list?
+```
+
+While the `put` command takes an arbitrary number of arguments:
+
+```elvish
+put $values...
+```
+
+Options are given along with their default values. For instance, the `echo`
+command takes an `sep` option and arbitrary arguments:
+
+```elvish
+echo &sep=' ' $value...
+```
+
+(When you calling functions, options are always optional.)
+
+
+## Optional input list
 
 Some builtin functions like `count` and `each` can take input in two ways:
 
 1. From pipe:
 
-    ```elvish
+    ```elvish-transcript
     ~> put lorem ipsum | count
     2
     ~> put 10 100 | each { + 1 $0 }
@@ -20,14 +53,14 @@ Some builtin functions like `count` and `each` can take input in two ways:
 
     Byte pipes are also possible; one line becomes one input:
 
-    ```elvish
+    ```elvish-transcript
     ~> echo "a\nb\nc" | count
     ▶ 3
     ```
 
 1. From argument:
 
-    ```elvish
+    ```elvish-transcript
     ~> count [lorem ipsum]
     2
     ~> each { + 1 $0 } [10 100]
@@ -37,7 +70,7 @@ Some builtin functions like `count` and `each` can take input in two ways:
 
     Strings, and in future, other sequence types are also possible:
 
-    ```elvish
+    ```elvish-transcript
     ~> count lorem
     ▶ 5
     ```
@@ -52,41 +85,64 @@ Such commands can be recognized in their specifications in that they take a trai
 
 ## + - * /
 
+```elvish
++ $summand...
+- $minuend $subtrahend...
+* $factor...
+/ $dividend $divisor...
+```
+
 Basic arithmetic operators for adding, substraction, multiplication and
 division respectively.
 
 Note that `/`, when given no argument, is a synonym for `cd /` due to the
 implicit cd feature.
 
+## bool
+
+```elvish
+bool $value
+```
+
+Convert a value to boolean.
+
+## cd
+
+```elvish
+cd $dirname
+```
+
+Change directory.
+
 ## constantly
 
-```
-constantly a b c ...
+```elvish
+constantly $value...
 ```
 
-Takes any number of arguments `a b c ...`, and outputs a function. The function takes no arguments and outputs `a b c ...` when called. Examples:
+Output a function that takes no arguments and outputs all given `$value`s when
+called. Examples:
 
-```
-~> f=(constantly a b c)
+```elvish-transcript
+~> f=(constantly lorem ipsum)
 ~> $f
-▶ a
-▶ b
-▶ c
+▶ lorem
+▶ ipsum
 ```
 
 Etymology: Clojure.
 
 ## count
 
-```
-count input-list?
+```elvish
+count $input-list?
 ```
 
 Count the number of inputs.
 
 Examples:
 
-```
+```elvish
 ~> count lorem
 ▶ 5
 ~> count [lorem ipsum]
@@ -101,13 +157,13 @@ Etymology: English.
 
 ## each
 
-```
-each f input-list?
-```
-
-Calls `f` on all inputs. Examples:
-
 ```elvish
+each $f $input-list?
+```
+
+Call `$f` on all inputs. Examples:
+
+```elvish-transcript
 ~> range 5 8 | each [x]{ ^ $x 2 }
 ▶ 25
 ▶ 36
@@ -122,34 +178,40 @@ Etymology: Various languages, as `for each`.
 
 ## echo
 
-```
-echo x y z ...
+```elvish
+echo &sep=' ' $value...
 ```
 
-Print all arguments and a newline. Arguments are separated by a space when printed.
+Print all arguments and a newline. Arguments are separated by the `sep` option.
 
 Examples:
 
-```elvish
+```elvish-transcript
 ~> echo Hello   elvish
 Hello elvish
 ~> echo "Hello   elvish"
 Hello   elvish
+~> echo &sep=, lorem ipsum
+lorem,ipsum
 ```
 
-Notes: The `echo` builtin does not treat `-e` or `-n` specially. For instance, `echo -n` just prints `-n`. Use double-quoted strings to print special characters, and `print` to not have a newline.
+Notes: The `echo` builtin does not treat `-e` or `-n` specially. For instance, `echo -n` just prints `-n`. Use double-quoted strings to print special characters, and `print` to suppress the trailing newline.
 
 Etymology: Bourne sh.
 
 
 ## explode
 
-Takes one list and puts all its values on the structured stdout. Like
-`flatten` in functional languages. Equivalent to `[li]{ put $@li }`.
+```elvish
+explode $list
+```
+
+Put all elements of the `$list` on the structured stdout. Like `flatten` in
+functional languages. Equivalent to `[li]{ put $@li }`.
 
 Example:
 
-```elvish
+```elvish-transcript
 ~> explode [a b [x]]
 ▶ a
 ▶ b
@@ -161,11 +223,15 @@ Etymology: PHP, although they do different things.
 
 ## from-json
 
+```elvish
+from-json
+```
+
 Takes bytes stdin, parses it as JSON and puts the result on structured stdout.
 
 Examples:
 
-```elvish
+```elvish-transcript
 ~> echo '"a"' | from-json
 ▶ a
 ~> echo '["lorem", "ipsum"]' | from-json
@@ -177,11 +243,15 @@ Examples:
 
 ## nop
 
+```elvish
+nop &any-opt= $value...
+```
+
 Accepts arbitrary arguments and options and does exactly nothing.
 
 Examples:
 
-```elvish
+```elvish-transcript
 ~> nop
 ~> nop a b c
 ~> nop &k=v
@@ -192,11 +262,15 @@ Etymology: Various languages, especially assembly languages.
 
 ## peach
 
+```elvish
+peach $f $input-list?
+```
+
 Like `each`, but may run the function in parallel.
 
 Example (your output will differ):
 
-```elvish
+```elvish-transcript
 ~> range 1 7 | peach { + $0 10 }
 ▶ 12
 ▶ 11
@@ -209,11 +283,15 @@ Example (your output will differ):
 
 ## put
 
+```elvish
+put $value...
+```
+
 Takes arbitrary arguments and write them to the structured stdout.
 
 Examples:
 
-```
+```elvish-transcript
 ~> put a
 ▶ a
 ~> put lorem ipsum [a b] { ls }
@@ -228,6 +306,10 @@ Etymology: Various languages, in particular C and Ruby as `puts`.
 
 ## print
 
+```elvish
+print &sep=' ' $value...
+```
+
 Like `echo`, just without the newline.
 
 Etymology: Various languages, in particular Perl and zsh.
@@ -237,7 +319,7 @@ Etymology: Various languages, in particular Perl and zsh.
 
 Takes a number `n` and a value `v`. Output value `v` for `n` times. Example:
 
-```elvish
+```elvish-transcript
 ~> repeat 4 foo
 ▶ foo
 ▶ foo
@@ -248,6 +330,10 @@ Takes a number `n` and a value `v`. Output value `v` for `n` times. Example:
 Etymology: Clojure.
 
 ## repr
+
+```elvish
+repr $value...
+```
 
 Like `echo`, but writes the representation instead of stringification.
 
@@ -261,7 +347,7 @@ stdout.
 
 Example:
 
-```elvish
+```elvish-transcript
 ~> echo "a\nb" | slurp
 ▶ "a\nb\n"
 ```
@@ -274,7 +360,7 @@ Etymology: Perl, as `File::Slurp`.
 Takes structured stdin, convert it to JSON and puts the result on bytes
 stdout.
 
-```elvish
+```elvish-transcript
 ~> put a | to-json
 "a"
 ~> put [lorem ipsum] | to-json
