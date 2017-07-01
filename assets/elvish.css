@@ -49,13 +49,16 @@ a:visited {
   list-style: none;
 }
 
-/* TODO: Font size likely still tweaking. */
-.ttyshot {
+pre.ttyshot {
   font-size: 12pt;
   line-height: 1 !important;
   border: 1px solid black;
   display: inline-block;
   margin-bottom: 0 !important;
+}
+
+pre.ttyshot, .ttyshot code {
+  background-color: white;
 }
 
 @media screen and (max-width: 600px) {
