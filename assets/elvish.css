@@ -57,12 +57,12 @@ pre.ttyshot {
   margin-bottom: 0 !important;
 }
 
-pre.ttyshot, .ttyshot code {
+pre.ttyshot, pre.ttyshot code {
   background-color: white;
 }
 
 @media screen and (max-width: 600px) {
-  .ttyshot {
+  pre.ttyshot {
     font-size: 2.6vw;
   }
 }
