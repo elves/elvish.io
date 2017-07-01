@@ -2,11 +2,10 @@
 
 # Introduction
 
-**THIS DOCUMENT IS NOT YET COMPLETE.**
-
 The builtin module contains facilities that are potentially useful to all
-users. It occupies the `builtin:` namespace, although you rarely have to
-explicitly specify it, unless you have shadowed a name in it.
+users. It occupies the `builtin:` namespace. You rarely have to explicitly
+specify the namespace though, since it is one of the namespaces consulted when
+resolving unqualified names.
 
 ## Usage Notation
 
