@@ -5,8 +5,9 @@
 **Note to the reader**. This document is a work in progress. Some materials are
 missing, and some are documented in a handwavy way. If you found something that
 should be improved -- even if there is already a "TODO" for it -- please feel
-free to ask on any of the chat channels. The developer will explain to you,
-**and update the document**. Question-driven documentation :)
+free to ask on any of the chat channels advertised on the [homepage](/). The
+developer will explain to you, **and update the document**. Question-driven
+documentation :)
 
 This is a reference manual for the Elvish programming language. It is written
 in a not-so-formal style, but nonetheless tries to be precise.
@@ -251,19 +252,36 @@ You can also prepend ordinary assignments with temporary assignments.
 
 ## Scoping rule
 
-Elvish has lexical scoping, and each block has its own scope.
+Elvish has lexical scoping, with each lambda having its own scope. There are
+no other constructs that introduce new scopes other than modules, which are
+introduced later.
 
-When you use a variable, Elvish looks for it in the current lexical scope, then its parent lexical scope, until the root scope:
+When you use a variable, Elvish looks for it in the current lexical scope,
+then its parent lexical scope and so forth, until the outermost scope:
 
 ```elvish-transcript
 ~> x = 12
-~> { echo $x } # $x is in the root scope
+~> { echo $x } # $x is in the outermost scope
 12
 ~> { y = bar; { echo $y } } # $y is in the outer block
 bar
 ```
 
-When you assign a variable, Elvish does the same searching; only if no such variable is found, it creates this new variable on the current (innermost) scope:
+If a variable is not in any of the lexical scopes, Elvish tries to resolve it
+in the `builtin:` namespace, and if that also fails, cause a **compilation
+error**:
+
+```elvish-transcript
+~> echo $pid # builtin
+36613
+~> echo $nonexistent
+Compilation error: variable $nonexistent not found
+  [interactive], line 1:
+    echo $nonexistent
+```
+
+When you assign a variable, Elvish does a similar searching. If the variable
+cannot found, it will be created on the current (innermost) scope:
 
 ```elvish-transcript
 ~> x = 12
@@ -277,7 +295,10 @@ Compilation error: variable $z not found
     echo $z
 ```
 
-This means that Elvish will not shadow your variable in outer scopes. You can force Elvish to create an identically named variable as one on the outer scope, and thus shadowing it, by using the `local:` pseudo-namespace:
+This means that Elvish will not shadow your variable in outer scopes.
+
+There is a `local:` pseudo-namespace that always refers to the innermost scope,
+and by using it it is possible to force Elvish to shadow variables:
 
 ```elvish-transcript
 ~> x = 12
@@ -287,7 +308,8 @@ This means that Elvish will not shadow your variable in outer scopes. You can fo
 12
 ```
 
-After force shadowing, you can still access the variable in the outer scope using the `up:` pseudo-namespace:
+After force shadowing, you can still access the variable in the outer scope
+using the `up:` pseudo-namespace, which always **skips** the innermost scope:
 
 ```elvish-transcript
 ~> x = 12
@@ -295,7 +317,8 @@ After force shadowing, you can still access the variable in the outer scope usin
 14 12
 ```
 
-The `local:` and `up:` pseudo-namespaces can also be used on unshadowed variables, although they are not useful in those cases:
+The `local:` and `up:` pseudo-namespaces can also be used on unshadowed
+variables, although they are not useful in those cases:
 
 ```elvish-transcript
 ~> foo = a
@@ -304,6 +327,11 @@ a
 ~> { bar = b; echo $local:bar } # $local:bar is the same as $bar
 b
 ```
+
+It is not possible to refer to a specific outer scope.
+
+You cannot create new variables in the `builtin:` namespace cannot be altered,
+although some existing variables in it can be assigned.
 
 
 # Lambda
@@ -402,6 +430,28 @@ containing all remaining arguments:
 This is similar to `*rest` in Python, or `rest ...T` in Go.
 
 You will be able to declare options in signatures as well ([#82](https://github.com/elves/elvish/issues/82)).
+
+## Closure
+
+Lambdas have closure semantics:
+
+```elvish-transcript
+~> fn make-adder {
+     n = 0
+     put { put $n } { n = (+ $n 1) }
+   }
+~> getter adder = (make-adder)
+~> $getter
+▶ 0
+~> $adder
+~> $getter
+▶ 1
+~> getter2 adder2 = (make-adder)
+~> $getter2
+▶ 0
+~> $getter
+▶ 1
+```
 
 
 # Indexing
@@ -1163,6 +1213,31 @@ Source files in directories become nested modules. For instance,
 `~/.elvish/lib/lorem/ipsum.elv` can be used with `use lorem:ipsum`.
 
 
+# Command Resolution
+
+When using a literal string as the head of a command, it is first **resolved**
+during the compilation phase, using the following order:
+
+1.  Special commands.
+
+2.  Functions defined on any of the containing lexical scopes, with inner
+    scopes looked up first. (This is exactly the same process as variable
+    resolution).
+
+3.  The `builtin:` namespace.
+
+4.  Should all these steps fail, it is resolved to be an external command.
+    Determination of the path of the external command does not happen in the
+    resolution process; that happens during evaluation.
+
+You can use the [resolve](/ref/builtin.html#resolve) command to see which
+command Elvish resolves a string to.
+
+During the evaluation phase, external commands are then subject to
+**searching**. This can be observed with the
+[search-external](/ref/builtin.html#search-builtin) command.
+
+
 # Pipeline
 
 A **pipeline** is formed by joining one or more commands together with the pipe
@@ -1221,5 +1296,43 @@ exception.
 
 # Exception and Flow Commands
 
+Exceptions have similar semantics to those in Python or Java. They can be
+thrown with the [fail](/ref/builtin.html#fail) command and caught with either
+exception capture `?()` or the `try` special command.
 
-# Namespace
+If an external command exits with a non-zero status, Elvish treats that as an
+exception.
+
+Flow commands -- `break`, `continue` and `return` -- are ordinary builtin
+commands that raise special "flow control" exceptions. The `for` and `while`
+commands capture `break` and `continue`, while `fn` modifies its closure to
+capture `return`.
+
+One interesting implication is that since flow commands are just ordinary
+commands you can build functions on top of them. For instance, this function
+`break`s randomly:
+
+```elvish
+fn random-break {
+  if eq (randint 2) 0 {
+    break
+  }
+}
+```
+
+The function `random-break` can then be used in for-loops and while-loops.
+
+Note that the `return` flow control exception is only captured by functions
+defined with `fn`. It falls through ordinary lambdas:
+
+```elvish
+fn f {
+  {
+    # returns f, falling through the innermost lambda
+    return
+  }
+}
+```
+
+
+# External Modules
