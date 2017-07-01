@@ -122,14 +122,14 @@
 <link href="/assets/home-demos.css?v=22" rel="stylesheet">
 <script src="/assets/home-demos.js?v=27"></script>
 
-## Getting Elvish
+# Getting Elvish
 
 *   [Download](/download) prebuilt binaries if you are running Linux or macOS on
     an x86-64 CPU.
 
 *   Source code is available on the [GitHub repository](https://github.com/elves/elvish).
 
-## Speaking Elvish
+# Speaking Elvish
 
 *   [Learn](/learn) to speak Elvish by following tutorials.
 
@@ -154,7 +154,7 @@
 *   [The feed](feed.atom) contains updates to all sections of the website (not
     just the blog).
 
-## Meeting Other Elves
+# Meeting Other Elves
 
 *   Join the #elvish channel on Freenode, the [Gitter
     room](https://gitter.im/elves/elvish-public), or the [Telegram
