@@ -39,6 +39,11 @@ fixed quickly when they don't).
     <td><a href="https://dl.elvish.io/elvish-osx.tar.gz">elvish-osx.tar.gz</a></td>
   </tr>
   <tr>
+    <td>0.9 (<a href="/blog/0.9-release-notes.html">Release Note</a>)</td>
+    <td><a href="https://dl.elvish.io/elvish-0.9-linux.tar.gz">elvish-linux-0.9.tar.gz</a></td>
+    <td><a href="https://dl.elvish.io/elvish-0.9-osx.tar.gz">elvish-osx-0.9.tar.gz</a></td>
+  </tr>
+  <tr>
     <td>0.8 (<a href="https://github.com/elves/elvish/releases/tag/0.8">Release Note</a>)</td>
     <td><a href="https://dl.elvish.io/elvish-0.8-linux.tar.gz">elvish-linux-0.8.tar.gz</a></td>
     <td><a href="https://dl.elvish.io/elvish-0.8-osx.tar.gz">elvish-osx-0.8.tar.gz</a></td>
