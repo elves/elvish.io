@@ -1,4 +1,9 @@
 [[articles]]
+name = "0.9-release-notes"
+title = "Elvish 0.9 Release Notes"
+timestamp = "2017-07-03"
+
+[[articles]]
 name = "live"
 title = "The Elvish Website is Officially Live!"
 timestamp = "2017-07-03"
