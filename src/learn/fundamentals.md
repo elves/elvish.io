@@ -1,23 +1,30 @@
+**This tutorial is quite incomplete, and it is being constantly expanded.**
+
 This tutorial introduces the fundamentals of shell programming with Elvish.
 It does not assume familiarity with other shells, but some understanding of
 basic programming concepts is required.
 
-Beware that Elvish is very similar to other shell languages in many aspects,
-but very different in some other aspects. When transferring your knowledge of
-Elvish to another shell, it is worthwhile to check how things work in the
-other shell.
+This tutorial evolves around a "hello" program. But if your primary interest
+in shell programming is not saying hello (which, by the way, is a shame), the
+tutorial also contains some hints and examples on how to apply to knowledge to
+non-hello applications.
+
+**Note**: Elvish is very similar to other shell languages in many aspects, but
+also very different in others. When transferring your knowledge of Elvish to
+another shell, it is worthwhile to first check how things work there.
+
 
 # Hello, world!
 
 Let's begin with the most traditional "hello world" program. In Elvish,
-you call the `echo` **command** to print something on the terminal:
+you invoke the `echo` **command** to print something on the terminal:
 
 ```elvish-transcript
 ~> echo "Hello, world!"
 Hello, world!
 ```
 
-In Elvish, as in other shells, command calls follow a simple structure: you
+In Elvish, as in other shells, command invocations follow a simple structure: you
 write the command name, followed by arguments, all separated by spaces (or
 tabs). No parentheses or commas are needed.
 
@@ -50,11 +57,61 @@ It is a good idea to always quote your string when it contains spaces or any
 special symbols other than period (`.`), dash (`-`) or underscore (`_`).
 
 
+## It Doesn't Have to be Hello
+
+All command invocations in shell have the same basic structure: name of
+command, followed by arguments. Elvish provides a lot of useful [builtin
+commands](/ref/builtin.html), and `echo` is just one of them. As another
+example, there is one for generating random numbers, which you can use as a
+digital dice:
+
+```elvish-transcript
+~> # randint a b generates an integer from range a...b-1
+   randint 1 7
+▶ 3
+```
+
+Arithmetic operations are also commands. Since they also follow the same order
+of command name first, the syntax deviates a bit from usual mathematical
+notations:
+
+```elvish-transcript
+~> * 17 28 # multiplication
+▶ 476
+~> ^ 2 10 # exponention
+▶ 1024
+```
+
+The commands introduced above -- `echo`, `randint`, `*` and `^` -- are all
+**builtin** commands, commands that Elvish provides for you.
+
+As a shell language, however, Elvish also makes it trivial to use **external**
+commands, commands implemented as separate programs. Chances are you have
+already used some of them like `ls` or `cat`. Here we show you how to obtain
+Elvish entirely from the command line: you can use `wget` to download files,
+`shasum` to verify its checksum, and `tar` to uncompress them, all of which
+are external commands:
+
+```elvish-transcript
+~> wget https://dl.elvish.io/elvish-linux.tar.gz
+... omit ...
+elvish-linux.tar.gz  100%[======================>]   4.91M  10.9MB/s    in 0.4s
+~> shasum -a 256 elvish-linux.tar.gz
+0fc3c145a81345a1c49576b86ef12156d4eba1829e1bb20e9c39d115991a9c7b elvish-linux.tar.gz
+~> tar xvf elvish-linux.tar.gz
+x elvish
+```
+
+With the most basic knowledge of how to invoke commands, there is already a
+myriad of functionalities at your fingertip.
+
+
 # Hello, {insert user name}!
 
-A program that always prints the same message is not very interesting.
+The "hello world" program is a classic, but the fact that it always prints the
+same simple message does make it a little bit boring.
 
-One way to make programs more interesting is to make them do different things
+One way to make programs more useful is to teach them to do different things
 depending on the context. In the case of our "hello world" program, why not
 teach it to greet whoever is running the program?
 
@@ -70,21 +127,8 @@ are running several strings and a variable all together: in this case, Elvish
 will concatenate them for you. Hence the result we see.
 
 Depending on your taste, you might feel that it's nicer to greet the world and
-the user on separate lines. There are several ways to do this; we can use two
-`echo` commands:
-
-```elvish-transcript
-~> echo "Hello, world"
-   echo "Hello, "$E:USER"!"
-Hello, world
-Hello, xiaq!
-```
-
-(When using the terminal interface, press <span class="key">Alt-Enter</span>
-to insert a literal newline instead of executing a command.)
-
-Or we can use a special **escape sequence** that represents a newline in our
-string:
+the user on separate lines. To do this, we can insert `\n`, an **escape
+sequence** representing a newline in our string:
 
 ```elvish-transcript
 ~> echo "Hello, world!\nHello, "$E:USER"!"
@@ -92,23 +136,63 @@ Hello, world!
 Hello, xiaq!
 ```
 
-Within double quotes, `\n` represents a newline. There are many such sequences
-starting with a backslash, including `\\` which represents the backslash
-itself.
+There are many such sequences starting with a backslash, including `\\` which
+represents the backslash itself. Beware that such escape sequences only work
+within double quotes.
 
-Yet the simplest, albeit slight less unreadable option is to simply insert a
-newline in the string:
+Environment variables are not the only way to learn about a computer system;
+we can also gain more information by invoking commands. For instance, the
+`uname` command tells you which operation system the computer is running:
 
 ```elvish-transcript
-~> echo "Hello, world!
-   Hello, "$E:USER"!"
-Hello, world!
-Hello, xiaq!
+~> uname
+Darwin
+```
+
+([Darwin](https://en.wikipedia.org/wiki/Darwin_(operating_system)), by the
+way, is the open-source core of macOS and iOS.)
+
+To incorporate the output of `uname` into our hello message, we can first
+**capture** its output using parentheses and keep it in a variable using the
+assignment form `variable = value`:
+
+```elvish-transcript
+~> os = (uname)
+~> # Variable "os" now contains "Darwin"
+```
+
+We can then use this variable, in a similar way to how we used the environment
+variable, just without the `E:` namespace:
+
+```elvish-transcript
+~> echo "Hello, "$os" user!"
+Hello, Darwin user!
+```
+
+I used a variable for demonstration, but it's also possible to forego the
+variable and use the captured output directly:
+
+```elvish-transcript
+~> echo "Hello, "(uname)" user!"
+Hello, Darwin user!
+```
+
+## It Doesn't Have to be Hello
+
+Output captures can get you quite far in combining commands. For instance, you
+can use output captures to construct do complex arithmetic involving more than
+one operation:
+
+```elvish-transcript
+~> # compute the answer to life, universe and everything
+   * (+ 3 4) (- 100 94)
+▶ 42
 ```
 
 
 <!--
 # Hello, everyone!
+
 
 Now let's say you want to say hello to several people, and typing `Hello` repeatedly is tiresome. You can save some work by using a **for-loop**:
 

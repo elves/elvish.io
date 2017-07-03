@@ -326,7 +326,7 @@ Count the number of inputs.
 
 Examples:
 
-```elvish
+```elvish-transcript
 ~> count lorem # count bytes in a string
 ▶ 5
 ~> count [lorem ipsum]
@@ -370,6 +370,17 @@ eawk $f $input-list?
 
 For each input, call `$f` with the input followed by all its fields.
 
+It should behave the same as the following functions:
+
+```elvish
+fn eawk [f @rest]{
+  each [line]{
+    @fields = (re:split '[ \t]+'
+                        (re:replace '^[ \t]+|[ \t]+$' '' $line))
+    $f $line $@fields
+  } $@rest
+}
+```
 
 This command allows you to write code very similar to `awk` scripts using
 anonymous functions. In the function, the input is available as `$0` and

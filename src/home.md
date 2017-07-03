@@ -1,19 +1,3 @@
-<div id="disclaimer">
-  <p>
-    <b>UNDER CONSTRUCTION, DO NOT SHARE YET</b>
-  </p>
-  <p>
-    This site is under heavy construction; the author asks you to **not** post it
-    on Hacker News or Reddit.
-  </p>
-  <hr>
-</div>
-<script>
-  if (location.host == 'draft.elvish.io') {
-    document.getElementById('disclaimer').remove();
-  }
-</script>
-
 **Elvish** is a friendly and expressive shell for Linux, macOS and BSDs.
 
 <!--
@@ -124,6 +108,9 @@
 
 # Getting Elvish
 
+Elvish is still in development, but has enough features and stability for
+daily use.
+
 *   [Download](/download) prebuilt binaries if you are running Linux or macOS on
     an x86-64 CPU.
 
@@ -134,7 +121,8 @@
 *   [Learn](/learn) to speak Elvish by following tutorials.
 
     If you are not experienced with any shell, start with the
-    [fundamentals](/learn/fundamentals.html).
+    [fundamentals](/learn/fundamentals.html). (This tutorial is still a work in
+    progress, though.)
 
     If you come from other shells, read the [cookbook](/learn/cookbook.html)
     to get started quickly, and learn about Elvish's [unique

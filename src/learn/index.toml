@@ -1,14 +1,11 @@
 [[articles]]
 name = "fundamentals"
 title = "Fundamentals"
-timestamp = "2017-06-25"
 
 [[articles]]
 name = "cookbook"
 title = "Cookbook"
-timestamp = "2017-06-25"
 
 [[articles]]
 name = "unique-semantics"
 title = "Some Unique Semantics"
-timestamp = "2017-06-25"
