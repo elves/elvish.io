@@ -14,16 +14,16 @@ If you come from other shells, hopefully the following recipes will get you star
     recursion.
 
 *   The left and right prompts can be customized by assigning functions to
-    `le:prompt` and `le:rprompt`. Their outputs are concatenated (with no
+    `edit:prompt` and `edit:rprompt`. Their outputs are concatenated (with no
     spaces in between) before being used as the respective prompts. The
     following simulates the default prompts but uses fancy Unicode:
 
     ```elvish
     # "tilde-abbr" abbreviates home directory to a tilde.
-    le:prompt = { tilde-abbr $pwd; put '❱ ' }
+    edit:prompt = { tilde-abbr $pwd; put '❱ ' }
     # "constantly" returns a function that always writes the same value(s) to
-    # output; "le:styled" writes styled output.
-    le:rprompt = (constantly (le:styled `whoami`✸`hostname` inverse))
+    # output; "edit:styled" writes styled output.
+    edit:rprompt = (constantly (edit:styled `whoami`✸`hostname` inverse))
     ```
 
     Here is a terminalshot of the alternative prompts:
@@ -135,13 +135,13 @@ If you come from other shells, hopefully the following recipes will get you star
     /opt/bin:/bin:/sbin:/usr/bin
     ```
 
-*   You can manipulate the keybinding through the map `$le:binding`. For
+*   You can manipulate the keybinding through the map `$edit:binding`. For
     example, this binds <span class="key">Ctrl-L</span> to clearing the
-    terminal: `le:binding[insert][Ctrl-L] = { clear > /dev/tty }`. The first
+    terminal: `edit:binding[insert][Ctrl-L] = { clear > /dev/tty }`. The first
     index into the map is the mode and the second is the key. (Yes, the braces
     enclose a lambda.)
 
-    Use `pprint $le:binding` to get a nice (albeit long) view of the current
+    Use `pprint $edit:binding` to get a nice (albeit long) view of the current
     keybinding.
 
     **NOTE**: Bindings for letters modified by Alt are case-sensitive. For
