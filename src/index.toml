@@ -1,4 +1,4 @@
-title = "Elvish the Unix Shell"
+title = "Elvish: A Friendly and Expressive Unix Shell"
 author = "Qi Xiao"
 feedPosts = 10
 template = "template.html"
