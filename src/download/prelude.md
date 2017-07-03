@@ -84,3 +84,27 @@ fixed quickly when they don't).
     <td><a href="https://dl.elvish.io/elvish-0.1-osx.tar.gz">elvish-osx-0.1.tar.gz</a></td>
   </tr>
 </table>
+
+# OS-Specific Packages
+
+## RPM Package
+
+RPM Package for Fedora is available in [FZUG Repo](https://github.com/FZUG/repo/wiki/Add-FZUG-Repository).
+
+Instructions:
+
+```elvish
+# Add FZUG repo
+dnf config-manager --add-repo=http://repo.fdzh.org/FZUG/FZUG.repo
+# Install Elvish
+dnf install elvish
+```
+
+## Homebrew Package
+
+Users of [Homebrew](http://brew.sh) can build Elvish with:
+
+```elvish
+# Remove --HEAD for latest release
+brew install --HEAD elvish
+```
