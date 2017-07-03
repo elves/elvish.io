@@ -14,7 +14,9 @@ has number-sections && {
     opts="$opts --number-sections"
 }
 
-./tools/highlighter < $1 |
-  ./tools/macros |
+mydir=$(dirname "$0")
+
+$mydir/highlighter < $1 |
+  $mydir/macros |
   pandoc -f markdown_github-hard_line_breaks --smart \
-    --data-dir=./pandoc-data -o $2 $opts
+    --data-dir=$mydir/pandoc-data -o $2 $opts
