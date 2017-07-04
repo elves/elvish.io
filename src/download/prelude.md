@@ -12,6 +12,11 @@ However, the primary developer does use the HEAD version of Elvish on all his
 personal and work computers, so most functions should work properly (and are
 fixed quickly when they don't).
 
+**Note**: The latest release 0.9 has some known issues that will leave the
+daemon process running after you quit all Elvish instances. If that is a
+trouble, just `killall elvish` after quitting. A fix will be in the next
+release
+
 <style>
   table {
     border-collapse: collpase;
