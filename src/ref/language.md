@@ -1335,4 +1335,63 @@ fn f {
 ```
 
 
-# External Modules
+# Namespaces and Modules
+
+The colon `:` is used for namespaces in Elvish: both command names and variable
+names support it. For instance, the following command uses function `f` from
+namespace `x` and variable `v` from namespace `y`:
+
+```elvish
+x:f $y:v
+```
+
+Namespace names con contain colons in them as well. In fact, when parsing
+command names and variable names, everything up to the last colon is considered
+to be the namespace; `$x:y:z` means "variable `z` in namespace `x:y`".
+
+For clarity, you can add a trailing colon to the namespace to: `x:` means
+"namespace `x`" unambiguously.
+
+There is no implied relationship between `x:y:` and `x:`, or any such
+superficial hiearchy relationship; they just happen to look related and are
+technically independent. However, whoever built those modules might have
+intended some kind of logical relationship between them.
+
+There are several special namespaces in Elvish:
+
+*   `up:` and `local:` refer to lexical scopes, and have been documented above.
+
+*   `e:` refers to externals. For instance, `e:ls` refers to the external
+    command `ls`.
+
+    Most of the time you can rely on the rules of [command
+    resolution](#command-resolution) and do not need to use this explicitly,
+    unless a function defined by you (or an Elvish builtin) has the same name
+    with an external command.
+
+*   `E:` refers to environment variables. For instance, `$E:USER` is the
+    environment variable `USER`.
+
+    This **is** always needed, because unlike command resolution, variable
+    resolution does not fall backs onto environment variables.
+
+*   `builtin:` refers to builtin functions and variables.
+
+    You don't need to use this explicitly unless you have defined names that
+    shadows builtin counterparts.
+
+Namespaces that are not special (i,e. one of the above) are also called
+**modules**. Aside from these special namespaces, Elvish also comes with the
+following modules:
+
+*   `edit:` for accessing the Elvish editor. See [reference](/ref/edit.html).
+
+*   `re:` for regular expression facilities. See [reference](/ref/re.html).
+
+*   `daemon:` for manipulating the daemon. This is not yet documented.
+
+*   `readline-binding` contains readline-style bindings. This module does not
+    have any API, just call `use readline-binding` to use.
+
+You can also put external modules in `~/.elvish/lib`, see
+[use](#importing-module-use).
