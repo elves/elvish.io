@@ -314,6 +314,21 @@ Examples:
 ▶ ipsum
 ```
 
+The above example is actually equivalent to simply `f = { put lorem ipsum }`;
+
+it is most useful when the argument is **not** a literal value, e.g.
+
+```elvish-transcript
+~> f = (constantly (uname))
+~> $f
+▶ Darwin
+~> $f
+▶ Darwin
+```
+
+The above code only calls `uname` once, while if you do `f = { put (uname) }`,
+every time you invoke `$f`, `uname` will be called.
+
 Etymology: Clojure.
 
 ## count
