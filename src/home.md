@@ -81,7 +81,7 @@
       </p>
       <p>
         (To be fair, you can do this in bash with <code>history | grep
-        ffmpeg</code>, but it's far less keystrokes in Elvish :)
+        ffmpeg</code>, but it's far fewer keystrokes in Elvish :)
       </p>
     </div> </div>
   </div> </div>
