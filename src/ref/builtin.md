@@ -315,7 +315,6 @@ Examples:
 ```
 
 The above example is actually equivalent to simply `f = { put lorem ipsum }`;
-
 it is most useful when the argument is **not** a literal value, e.g.
 
 ```elvish-transcript
