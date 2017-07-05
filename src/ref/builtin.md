@@ -847,7 +847,7 @@ Examples:
 ▶ 1
 ▶ 2
 ▶ 3
-~> range 1 6 2
+~> range 1 6 &step=2
 ▶ 1
 ▶ 3
 ▶ 5
