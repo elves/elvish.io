@@ -115,13 +115,15 @@ sudo wget -O /etc/apt/trusted.gpg.d/elvish \
   'https://sks-keyservers.net/pks/lookup?search=0xE9EA75D542E35A20&options=mr&op=get'
 sudo gpg --dearmor /etc/apt/trusted.gpg.d/elvish
 sudo rm /etc/apt/trusted.gpg.d/elvish
-echo 'deb http://ppa.launchpad.net/zhsj/elvish/ubuntu xenial main' | \
+echo 'deb http://ppa.launchpad.net/zhsj/elvish/ubuntu xenial main' |
   sudo tee /etc/apt/sources.list.d/elvish.list
 sudo apt-get update
 
 # Install Elvish
 sudo apt-get install elvish
 ```
+
+(Note that because Elvish does not support line continuation [yet](https://github.com/elves/elvish/issues/417), you need to join the first two lines and remove the backslash if you want to run the script above from Elvish; however, this script works with bash and zsh.)
 
 ## Homebrew Package
 
