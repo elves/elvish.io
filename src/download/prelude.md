@@ -105,6 +105,24 @@ dnf config-manager --add-repo=http://repo.fdzh.org/FZUG/FZUG.repo
 dnf install elvish
 ```
 
+## DEB Package
+
+Debian and its derivatives can install Elvish from [PPA](https://launchpad.net/~zhsj/+archive/ubuntu/elvish).
+
+```elvish
+# Add Elvish PPA repo
+sudo wget -O /etc/apt/trusted.gpg.d/elvish \
+  'https://sks-keyservers.net/pks/lookup?search=0xE9EA75D542E35A20&options=mr&op=get'
+sudo gpg --dearmor /etc/apt/trusted.gpg.d/elvish
+sudo rm /etc/apt/trusted.gpg.d/elvish
+echo 'deb http://ppa.launchpad.net/zhsj/elvish/ubuntu xenial main' | \
+  sudo tee /etc/apt/sources.list.d/elvish.list
+sudo apt-get update
+
+# Install Elvish
+sudo apt-get install elvish
+```
+
 ## Homebrew Package
 
 Users of [Homebrew](http://brew.sh) can build Elvish with:
