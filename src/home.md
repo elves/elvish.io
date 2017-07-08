@@ -42,7 +42,7 @@
         <code>if</code> looks in C. So why learn another syntax?
       </p>
       <p>
-        Control structures in Elvish has an intuitive C-like syntax.
+        Control structures in Elvish have an intuitive C-like syntax.
       </p>
     </div> </div>
   </div> </div>
