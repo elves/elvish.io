@@ -111,14 +111,14 @@
 Elvish is still in development, but has enough features and stability for
 daily use.
 
-*   [Download](/download) prebuilt binaries if you are running Linux or macOS on
+*   [Download](/download/) prebuilt binaries if you are running Linux or macOS on
     an x86-64 CPU.
 
 *   Source code is available on the [GitHub repository](https://github.com/elves/elvish).
 
 # Speaking Elvish
 
-*   [Learn](/learn) to speak Elvish by following tutorials.
+*   [Learn](/learn/) to speak Elvish by following tutorials.
 
     If you are not experienced with any shell, start with the
     [fundamentals](/learn/fundamentals.html). (This tutorial is still a work in
@@ -128,18 +128,19 @@ daily use.
     to get started quickly, and learn about Elvish's [unique
     semantics](learn/unique-semantics.html).
 
-*   [Reference](ref) documents describe Elvish in a more formal and complete way.
+*   [Reference](/ref/) documents describe Elvish in a more formal and complete
+    way.
 
-    Read about the [philosophy](ref/philosophy.html), the
-    [language](ref/language.html), the [builtin module](ref/builtin.html), and
+    Read about the [philosophy](/ref/philosophy.html), the
+    [language](/ref/language.html), the [builtin module](/ref/builtin.html), and
     more.
 
-*   [The blog](blog) contains news on Elvish.
+*   [The blog](/blog/) contains news on Elvish.
 
     It is the place for release notes, notes on the internals of Elvish, and
     other announcements or musings from the developers.
 
-*   [The feed](feed.atom) contains updates to all sections of the website (not
+*   [The feed](/feed.atom) contains updates to all sections of the website (not
     just the blog).
 
 # Meeting Other Elves
