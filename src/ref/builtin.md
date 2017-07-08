@@ -652,6 +652,26 @@ well-known [join](https://en.wikipedia.org/wiki/join_(Unix)) utility.
 $cf splits
 
 
+## keys
+
+```elvish
+keys $map
+```
+
+Put all keys of `$map` on the structured stdout.
+
+Example:
+
+```elvish-transcript
+~> keys [&a=foo &b=bar &c=baz]
+▶ a
+▶ c
+▶ b
+```
+
+Note that there is no guaranteed order for the keys of a map.
+
+
 ## kind-of
 
 ```elvish
