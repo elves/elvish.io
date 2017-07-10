@@ -155,9 +155,17 @@ daily use.
     connects all of them together. So just join whichever channel suits you
     best, and you won't miss discussions happening in other channels.
 
+*   If you are interested in contributing to Elvish, you can also discuss at
+    [#elvish-dev](http://webchat.freenode.net/?channels=elvish-dev) on
+    freenode, [elves/elvish-dev](https://gitter.im/elves/elvish-dev) on Gitter
+    or [@elvish_dev](https://telegram.me/elvish_dev) on Telegram.
+
 *   Chinese speakers are also welcome in
-    [#elvish-zh](https://webchat.freenode.net/?channels=elvish-zh) on
-    Freenode and [@elvish_zh](https://telegram.me/elvish_zh) on Telegram.
+    [#elvish-zh](https://webchat.freenode.net/?channels=elvish-zh) on Freenode
+    and [@elvish_zh](https://telegram.me/elvish_zh) on Telegram.  There are
+    also [#elvish-dev-zh](https://webchat.freenode.net/?channels=elvish-dev-zh)
+    on Freenode and [@elvish_dev_zh](https://telegram.me/elvish_zh) on
+    Telegram.
 
 *   The [issue tracker](https://github.com/elves/elvish/issues) is the place
     for bug reports and feature requests.
