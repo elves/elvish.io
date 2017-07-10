@@ -143,18 +143,21 @@ daily use.
 *   [The feed](/feed.atom) contains updates to all sections of the website (not
     just the blog).
 
+*   [Follow](https://twitter.com/RealElvishShell/) Elvish on Twitter.
+
 # Meeting Other Elves
 
-*   Join the #elvish channel on Freenode, the [Gitter
-    room](https://gitter.im/elves/elvish-public), or the [Telegram
-    group](https://telegram.me/elvish).
+*   Join [#elvish](https://webchat.freenode.net/?channels=elvish) on Freenode,
+    [elves/elvish-public](https://gitter.im/elves/elvish-public) on Gitter, or
+    [@elvish](https://telegram.me/elvish) on Telegram.
 
     The wonderful [fishroom](https://github.com/tuna/fishroom) service
     connects all of them together. So just join whichever channel suits you
     best, and you won't miss discussions happening in other channels.
 
-*   Chinese speakers are also welcome on the #elvish-zh channel on
-    Freenode and the [Chinese Telegram group](https://telegram.me/elvishzh).
+*   Chinese speakers are also welcome in
+    [#elvish-zh](https://webchat.freenode.net/?channels=elvish-zh) on
+    Freenode and [@elvish_zh](https://telegram.me/elvish_zh) on Telegram.
 
 *   The [issue tracker](https://github.com/elves/elvish/issues) is the place
     for bug reports and feature requests.
