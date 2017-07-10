@@ -1,4 +1,9 @@
 [[articles]]
+name = "newsletter-july-2017"
+title = "Elvish Newsletter, July 2017 Issue"
+timestamp = "2017-07-10"
+
+[[articles]]
 name = "0.9-release-notes"
 title = "Elvish 0.9 Release Notes"
 timestamp = "2017-07-03"
