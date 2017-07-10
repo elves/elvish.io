@@ -9,8 +9,8 @@ and future plans.
 
 *   18 pull requests to the [main repo](https://github.com/elves/elvish) have
     been merged in the past four weeks. Among them 13 were made by @xofyargs,
-    and the rest by @myfreeweb, @jiujieti, @HeavyHorst, @silvasur and
-    @ALSchwalm. The [website repo](https://github.com/elves/elvish.io) has also
+    and the rest by @myfreeweb, @jiujieti, @HeavyHorst, @silvasur and @ALSchwalm.
+    The [website repo](https://github.com/elves/elvish.io) has also
     merged 3 pull reqeusts from @bengesoff, @zhsj and @silvasur. Many kudos!
 
 *   The [website](https://elvish.io) was [officially
