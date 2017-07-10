@@ -7,9 +7,9 @@ and future plans.
 
 # Status Updates
 
-*   17 pull requests have been merged in the past three weeks. Among them 13
-    were made by @xofyargs, and the rest by @myfreeweb, @jiujieti, @HeavyHorst
-    and @silvasur -- many kudos!
+*   18 pull requests have been merged in the past four weeks. Among them 13
+    were made by @xofyargs, and the rest by @myfreeweb, @jiujieti, @HeavyHorst,
+    @silvasur and @ALSchwalm -- many kudos!
 
 *   The [website](https://elvish.io) was [officially
     live](/blog/live.html) on 3 July. Although the initial
@@ -40,9 +40,9 @@ and future plans.
 
 The next preview release will be 0.10, and there is now a
 [milestone](https://github.com/elves/elvish/milestone/2) for it, a list of
-issues considered vital for the release.  If you would like to contribute, you
+issues considered vital for the release. If you would like to contribute, you
 are more than welcome to pick an issue from that list, although you are also
-more than welcome to pick any issue.
+more than welcome to pick just any issue.
 
 Aside from the short-term goal of releasing 0.10, here are the current mid-term
 focus areas of Elvish development:
@@ -88,6 +88,7 @@ implementation.
 (So what's the long-term goal of Elvish? The long-term goal is to remove the
 "seeks to" part from the introduction of Elvish at the beginning of the post.)
 
+
 # Development IM Channels
 
 To better coordinate development, there are now IM channels for Elvish
@@ -106,8 +107,8 @@ For general questions, you are welcome in
 # Conclusion
 
 This concludes this first issue of the newsletter. Hopefully future issues of
-this newsletter will also feature blog posts from Elvish users and popular
-Elvish modules like Tetris written in Elvish :)
+this newsletter will also feature blog posts from Elvish users like *Elvish for
+Python Users* and popular Elvish modules like *Tetris in Your Shell* :)
 
 Have Fun with Elvish!
 
