@@ -260,6 +260,27 @@ given multiple arguments. Examples:
 ```
 
 
+## assoc
+
+```elvish
+assoc $container $k $v
+```
+
+Output a slighly modified version of `$container`, such that its value at `$k`
+is `$v`. Currently only applies to lists, but will apply to maps as well.
+
+When `$container` is a list, `$k` may be a negative index. However, slice is
+not yet supported.
+
+
+```elvish-transcript
+~> assoc [foo bar quux] 0 lorem
+▶ [lorem bar quux]
+~> assoc [foo bar quux] -1 ipsum
+▶ [foo bar ipsum]
+```
+
+
 ## bool
 
 ```elvish
