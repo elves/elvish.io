@@ -1121,6 +1121,11 @@ Output the width of `$string` when displayed on the terminal. Examples:
 
 # Builtin Variables
 
+## $_
+
+A blackhole variable. It can only be assigned, and values to assigned to it
+will be discard. Trying to use its value will cause an exception.
+
 ## $false
 
 The boolean false value.
