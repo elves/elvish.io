@@ -280,6 +280,8 @@ not yet supported.
 ▶ [foo bar ipsum]
 ```
 
+Etymology: [Clojure](https://clojuredocs.org/clojure.core/assoc).
+
 
 ## bool
 
@@ -349,7 +351,8 @@ it is most useful when the argument is **not** a literal value, e.g.
 The above code only calls `uname` once, while if you do `f = []{ put (uname) }`,
 every time you invoke `$f`, `uname` will be called.
 
-Etymology: Clojure.
+Etymology: [Clojure](https://clojuredocs.org/clojure.core/constantly).
+
 
 ## count
 
@@ -372,7 +375,6 @@ Examples:
 ▶ 100
 ```
 
-Etymology: English.
 
 ## each
 
@@ -394,7 +396,9 @@ Call `$f` on all inputs. Examples:
 
 $cf peach
 
-Etymology: Various languages, as `for each`.
+Etymology: Various languages, as `for each`. Happens to have the same name as
+the iteration construct of
+[Factor](http://docs.factorcode.org/content/word-each,sequences.html).
 
 
 ## eawk
@@ -428,6 +432,7 @@ Example:
 ▶ lorem
 ▶ 1
 ```
+
 
 ## echo
 
@@ -479,6 +484,8 @@ when given no or one argument.
 
 $cf is
 
+Etymology: [Perl](https://perldoc.perl.org/perlop.html#Equality-Operators).
+
 
 ## exec
 
@@ -516,7 +523,9 @@ Example:
 ▶ [x]
 ```
 
-Etymology: PHP, although they do different things.
+Etymology: [PHP](http://php.net/manual/en/function.explode.php). PHP's
+`explode` is actually equivalent to Elvish's `splits`, but the author liked
+the name too much to not use it.
 
 
 ## fail
@@ -651,6 +660,8 @@ The definition of identity is subject to change. Do not rely on its behavior.
 
 $cf eq
 
+Etymology: [Python](https://docs.python.org/3/reference/expressions.html#is).
+
 
 ## joins
 
@@ -669,6 +680,9 @@ Join inputs with `$sep`. Examples:
 
 The suffix "s" means "string" and also serves to avoid colliding with the
 well-known [join](https://en.wikipedia.org/wiki/join_(Unix)) utility.
+
+Etymology: Various languages as `join`, in particular
+[Python](https://docs.python.org/3.6/library/stdtypes.html#str.join).
 
 $cf splits
 
@@ -726,7 +740,8 @@ Examples:
 ~> nop &k=v
 ```
 
-Etymology: Various languages, especially assembly languages.
+Etymology: Various languages, in particular NOP in [assembly
+languages](https://en.wikipedia.org/wiki/NOP).
 
 
 ## not
@@ -771,6 +786,8 @@ Output value of each codepoint in `$string`, in hexadecimal. Examples:
 ```
 
 The output format is subject to change.
+
+Etymology: [Python](https://docs.python.org/3/library/functions.html#ord).
 
 ## path-*
 
@@ -828,7 +845,8 @@ Examples:
 ▶ <closure 0xc4202607e0>
 ```
 
-Etymology: Various languages, in particular C and Ruby as `puts`.
+Etymology: Various languages, in particular
+[C](https://manpages.debian.org/stretch/manpages-dev/puts.3.en.html) and [Ruby](https://ruby-doc.org/core-2.2.2/IO.html#method-i-puts) as `puts`.
 
 
 ## pprint
@@ -868,7 +886,10 @@ Like `echo`, just without the newline.
 
 $cf echo
 
-Etymology: Various languages, in particular Perl and zsh.
+Etymology: Various languages, in particular
+[Perl](https://perldoc.perl.org/functions/print.html) and
+[zsh](http://zsh.sourceforge.net/Doc/Release/Shell-Builtin-Commands.html),
+whose `print`s do not print a trailing newline.
 
 
 ## range
@@ -909,7 +930,8 @@ Beware floating point oddities:
 ▶ 0.7999999999999999
 ```
 
-Etymology: Python.
+Etymology:
+[Python](https://docs.python.org/3/library/functions.html#func-range).
 
 
 ## rand
@@ -957,7 +979,7 @@ Output `$value` for `$n` times. Example:
 ▶ NAN
 ```
 
-Etymology: Clojure.
+Etymology: [Clojure](https://clojuredocs.org/clojure.core/repeat).
 
 ## repr
 
@@ -975,7 +997,7 @@ newline. Example:
 
 $cf pprint
 
-Etymology: Python.
+Etymology: [Python](https://docs.python.org/3/library/functions.html#repr).
 
 
 ## resolve
@@ -1031,7 +1053,8 @@ Example:
 ▶ "a\nb\n"
 ```
 
-Etymology: Perl, as `File::Slurp`.
+Etymology: Perl, as
+[`File::Slurp`](http://search.cpan.org/~uri/File-Slurp-9999.19/lib/File/Slurp.pm).
 
 
 ## splits
@@ -1051,6 +1074,9 @@ it into codepoints.
 ▶ 你
 ▶ 好
 ```
+
+Etymology: Various languages as `split`, in particular
+[Python](https://docs.python.org/3.6/library/stdtypes.html#str.split).
 
 $cf joins
 
