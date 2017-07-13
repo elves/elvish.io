@@ -10,15 +10,15 @@ builtin module](/ref/builtin.html).
 # Keybindings
 
 The Elvish editor has different **modes**, each with its own UI and
-keybindings.  Keybindings for a mode `foo` can be modified using
-`$edit:foo:binding`, a map mapping keys to functions.  from key to function. As
-an example, the binding for <span class="key">Alt-x</span> in insert mode is
-`$edit:insert:binding[Alt-x]`.
+keybindings. Keybindings for a mode `foo` is `$edit:foo:binding`, a map mapping
+keys to functions. As an example, the binding for <span class="key">Alt-x</span>
+in insert mode is `$edit:insert:binding[Alt-x]`.
 
 To see the entire binding table for mode `foo`, use `pprint $edit:foo:binding`.
 The primary modes supported now are `insert`, `completion`, `navigation`,
-`history`, `listing`, `histlist`, `loc`, and `lastcmd`. The last 4 are somewhat
-special and are documented below. The Elvish editor starts in the insert mode.
+`history`, `listing`, `histlist`, `location`, and `lastcmd`. The last 4 are
+somewhat special and are documented below. The Elvish editor starts in the
+insert mode.
 
 Any valid function can be bound to keys. When they are run, their output is
 captured in a pipe, and then appear above the Elvish prompt, to avoid messing
