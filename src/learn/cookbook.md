@@ -49,6 +49,17 @@ If you come from other shells, hopefully the following recipes will get you star
 
     $ttyshot completion-mode
 
+*   You can make completion case-insensitive with the following code:
+
+    ```elvish
+    edit:-matcher[''] = [p]{ edit:match-prefix &ignore-case $p }
+    ```
+
+    You can also make the completion use "smart case" by changing
+    `&ignore-case` to `&smart-case`. This means that if your pattern
+    is entirely lower case it ignores case, otherwise it's case
+    sensitive.
+
 *   Press <span class="key">Ctrl-N</span> to start the builtin filesystem
     navigator, aptly named "navigation mode." Use arrow keys to navigate.
     <span class="key">Enter</span> inserts the selected filename to your
