@@ -981,6 +981,15 @@ Output `$value` for `$n` times. Example:
 
 Etymology: [Clojure](https://clojuredocs.org/clojure.core/repeat).
 
+## replaces
+
+```elvish
+replaces &max=-1 $s $old $new
+```
+
+Replace all occurrences of `$old` in `$s` with `$new`. If `$max` is
+non-negative, it determines the max number of replaces.
+
 ## repr
 
 ```elvish
