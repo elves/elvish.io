@@ -399,7 +399,22 @@ containing all remaining arguments:
 
 This is similar to `*rest` in Python, or `rest ...T` in Go.
 
-You will be able to declare options in signatures as well ([#82](https://github.com/elves/elvish/issues/82)).
+You can also declare options in the argument list. The syntax imitates map
+pairs, and is `&name=default`.
+
+```elvish-transcript
+~> f = [&opt=default]{ echo "Option value is "$opt }
+~> $f
+Option value is default
+~> $f &opt=foobar
+Option value is foobar
+```
+
+Options must have default values.
+
+(The idea is that options should always be **option**al when calling your
+function, so you must provide a default value.)
+
 
 ## Closure
 
