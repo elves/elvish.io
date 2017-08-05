@@ -169,20 +169,6 @@ When using a list variable, you can add `@` before the name to get all contained
 
 (This notation is restricted to exploding variables. To explode arbitrary values, use the builtin [explode](/ref/builtin.html#explode) command.)
 
-If the variable is `args` (a special variable for function arguments), you can omit the variable name -- `$@` is equivalent to `$@args`. This is a trick to make `$@` mean roughly the same thing as `"$@"` in POSIX shell. It is most useful when writing wrapper functions: the following code defines an `ll` function that calls `ls` with an additional `-l` flag:
-
-```elvish-transcript
-~> fn ll { ls -l $@ }
-~> ll -a
-total 12
-drwxr-xr-x 3 xiaq xiaq 4096 Jun 20  2016 .
-drwxr-xr-x 8 xiaq xiaq 4096 Jun 25 02:26 ..
--rw-r--r-- 1 xiaq xiaq    0 Jun 20  2016 a
--rw-r--r-- 1 xiaq xiaq    0 Jun 20  2016 b
--rw-r--r-- 1 xiaq xiaq    0 Jun 20  2016 c
-drwx------ 2 root xiaq 4096 Jun 20  2016 x
-```
-
 
 ## Assignment: Rest Variable
 
@@ -344,8 +330,9 @@ code blocks in C-like languages in syntax:
 Inside a lambda
 ```
 
-The code above defines a lambda and calls it immediately. Since lambdas are
-first-class values, you can assign them to variables and use them as arguments:
+Under the hood, the code above defines a lambda and calls it immediately. Since
+lambdas are first-class values, you can assign them to variables and use them
+as arguments:
 
 ```elvish-transcript
 ~> f = { echo "Inside a lambda" }
@@ -373,25 +360,8 @@ Hi
 parse a braced list. A good style is to always put whitespaces around braces
 when you are using them for lambdas.)
 
-Signatureless lambdas accept arbitrary arguments and options; they are
-available as the `$args` list and the `$opts` map, respectively:
-
-```elvish-transcript
-~> f = { put $args $opts }
-~> $f lorem ipsum &foo=bar
-▶ [lorem ipsum]
-▶ [&foo=bar]
-```
-
-Moreover, variables `$0`, `$1`, etc. are shorthands for `$args[0]`, `$args[1]`,
-etc.:
-
-```elvish-transcript
-~> f = { put $1 $0 }
-~> $f foo bar
-▶ bar
-▶ foo
-```
+Signatureless lambdas accept no arguments. To accept arguments, you need to add
+a signature to this lambda.
 
 ## Signatureful Lambda
 
@@ -955,8 +925,6 @@ haha
 ~> ls --bad-arg 2> error
 Exception: ls exited with 2
 Traceback:
-  /home/xiaq/.elvish/rc.elv, line 1:
-    fn ls { e:ls --color=auto $@ }
   [interactive], line 1:
     ls --bad-arg 2> error
 ~> cat error
@@ -975,8 +943,6 @@ Examples:
 /bin/ls: write error: Bad file descriptor
 Exception: ls exited with 2
 Traceback:
-  /home/xiaq/.elvish/rc.elv, line 1:
-    fn ls { e:ls --color=auto $@ }
   [interactive], line 1:
     ls >&-
 ```

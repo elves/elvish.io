@@ -6,7 +6,7 @@ If you come from other shells, hopefully the following recipes will get you star
     but you can achieve the goal by defining a function:
 
     ```elvish
-    fn ls { e:ls --color $@ }
+    fn ls [@a]{ e:ls --color $@a }
     ```
 
     The `e:` prefix (for "external") ensures that the external command named
