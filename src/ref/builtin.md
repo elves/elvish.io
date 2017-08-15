@@ -990,6 +990,10 @@ replaces &max=-1 $s $old $new
 Replace all occurrences of `$old` in `$s` with `$new`. If `$max` is
 non-negative, it determines the max number of replaces.
 
+**Note**: `replaces` does not support searching by regular
+expressions, `$old` is always interpreted as a plain string. Use
+[re:replace](re.html#replace) if you need to search by regex.
+
 ## repr
 
 ```elvish
@@ -1084,11 +1088,35 @@ it into codepoints.
 ▶ 好
 ```
 
+**Note**: `splits` does not support splitting by regular expressions,
+`$sep` is always interpreted as a plain string. Use
+[re:split](re.html#split) if you need to split by regex.
+
 Etymology: Various languages as `split`, in particular
 [Python](https://docs.python.org/3.6/library/stdtypes.html#str.split).
 
 $cf joins
 
+## take
+
+```elvish
+take $n $input-list?
+```
+
+Return the first `$n` elements of the inputs. Examples:
+
+```elvish
+~> take 3 [a b c d e]
+▶ a
+▶ b
+▶ c
+
+~> splits ' ' 'how are you?' | take 1
+▶ how
+```
+
+If `$n` is larger than the number of elements in the input, the entire
+input is returned.
 
 ## to-json
 
