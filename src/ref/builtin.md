@@ -984,11 +984,11 @@ Etymology: [Clojure](https://clojuredocs.org/clojure.core/repeat).
 ## replaces
 
 ```elvish
-replaces &max=-1 $s $old $new
+replaces &max=-1 $old $repl $source
 ```
 
-Replace all occurrences of `$old` in `$s` with `$new`. If `$max` is
-non-negative, it determines the max number of replaces.
+Replace all occurrences of `$old` with `$repl` in `$source`. If `$max` is
+non-negative, it determines the max number of substitutions.
 
 **Note**: `replaces` does not support searching by regular
 expressions, `$old` is always interpreted as a plain string. Use
