@@ -1105,7 +1105,7 @@ take $n $input-list?
 
 Return the first `$n` elements of the inputs. Examples:
 
-```elvish
+```elvish-transcript
 ~> take 3 [a b c d e]
 ▶ a
 ▶ b
