@@ -109,7 +109,7 @@ pipeline as well. For instance, the `each` command takes **input** from the
 value-oriented channel, and apply a function to each value:
 
 ```elvish-transcript
-~> put lorem ipsum | each { echo "Got "$0 }
+~> put lorem ipsum | each [x]{ echo "Got "$x }
 Got lorem
 Got ipsum
 ```

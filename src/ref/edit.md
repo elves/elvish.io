@@ -194,12 +194,12 @@ It only supports completing the `install` and `remove` command and package
 names after that:
 
 ```elvish
-all-packages = [(apt-cache search '' | eawk { put $1 })]
+all-packages = [(apt-cache search '' | eawk [0 1 @rest]{ put $1 })]
 
-edit:arg-completer[apt] = {
+edit:arg-completer[apt] = [args]{
     n = (count $args)
     if (eq $n 2) {
-        # apt c<Tab> -- complete a subcommand name
+        # apt x<Tab> -- complete a subcommand name
         put install uninstall
     } elif (eq $n 3) {
         put $@all-packages
