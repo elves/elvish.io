@@ -267,7 +267,7 @@ assoc $container $k $v
 ```
 
 Output a slighly modified version of `$container`, such that its value at `$k`
-is `$v`. Currently only applies to lists, but will apply to maps as well.
+is `$v`. Applies to both lists and to maps.
 
 When `$container` is a list, `$k` may be a negative index. However, slice is
 not yet supported.
@@ -278,9 +278,15 @@ not yet supported.
 ▶ [lorem bar quux]
 ~> assoc [foo bar quux] -1 ipsum
 ▶ [foo bar ipsum]
+~> assoc [&k=v] k v2
+▶ [&k=v2]
+~> assoc [&k=v] k2 v2
+▶ [&k2=v2 &k=v]
 ```
 
 Etymology: [Clojure](https://clojuredocs.org/clojure.core/assoc).
+
+$cf dissoc
 
 
 ## bool
@@ -375,6 +381,51 @@ Examples:
 ~> seq 100 | count
 ▶ 100
 ```
+
+
+## dissoc
+
+```elvish
+dissoc $map $k
+```
+
+Output a slightly modified version of `$map`, with the key `$k` removed. If
+`$map` does not contain `$k` as a key, the same map is returned.
+
+```elvish-transcript
+~> dissoc [&foo=bar &lorem=ipsum] foo
+▶ [&lorem=ipsum]
+~> dissoc [&foo=bar &lorem=ipsum] k
+▶ [&lorem=ipsum &foo=bar]
+```
+
+$cf assoc
+
+## drop
+
+```elvish
+drop $n $input-list?
+```
+
+Drop the first `$n` elements of the input. If `$n` is larger than the number of
+input elements, the entire input is dropped.
+
+Example:
+
+```elvish-transcript
+~> drop 2 [a b c d e]
+▶ c
+▶ d
+▶ e
+~> splits ' ' 'how are you?' | drop 1
+▶ are
+▶ 'you?'
+~> range 2 | drop 10
+```
+
+Etymology: Haskell.
+
+$cf take
 
 
 ## each
@@ -485,7 +536,7 @@ when given no or one argument.
 ▶ $false
 ```
 
-$cf is
+$cf is not-eq
 
 Etymology: [Perl](https://perldoc.perl.org/perlop.html#Equality-Operators).
 
@@ -769,6 +820,17 @@ Boolean negation. Examples:
 **NOTE**: `and` and `or` are implemented as special commands.
 
 $cf bool
+
+
+## not-eq
+
+```elvish
+not-eq $values
+```
+
+Equivalent to `not (eq $values...)`.
+
+$cf eq
 
 
 ## ord
@@ -1106,20 +1168,24 @@ $cf joins
 take $n $input-list?
 ```
 
-Return the first `$n` elements of the inputs. Examples:
+Retain the first `$n` input elements. If `$n` is larger than the number of
+input elements, the entire input is retained. Examples:
 
 ```elvish-transcript
 ~> take 3 [a b c d e]
 ▶ a
 ▶ b
 ▶ c
-
 ~> splits ' ' 'how are you?' | take 1
 ▶ how
+~> range 2 | take 10
+▶ 0
+▶ 1
 ```
 
-If `$n` is larger than the number of elements in the input, the entire
-input is returned.
+
+Etymology: Haskell.
+
 
 ## to-json
 

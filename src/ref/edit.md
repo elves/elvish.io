@@ -7,6 +7,15 @@ builtin module](/ref/builtin.html).
 
 *This document is incomplete.*
 
+# Prompts
+
+The left and right prompts can be customized by assigning functions to
+`$edit:prompt` and `$edit:rprompt`. Their outputs are used as prompts.
+
+# edit:styled
+
+TBD
+
 # Modes and Submodules
 
 The Elvish editor has different **modes**, and exactly one mode is active at
