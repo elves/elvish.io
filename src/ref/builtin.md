@@ -825,10 +825,20 @@ $cf bool
 ## not-eq
 
 ```elvish
-not-eq $values
+not-eq $values...
 ```
 
-Equivalent to `not (eq $values...)`.
+Determines whether every adjacent pair of `$value`s are not equal. Note that
+this does not imply that `$value`s are all distinct. Examples:
+
+```elvish-transcript
+~> not-eq 1 2 3
+▶ $true
+~> not-eq 1 2 1
+▶ $true
+~> not-eq 1 1 2
+▶ $false
+```
 
 $cf eq
 
