@@ -7,30 +7,48 @@ builtin module](/ref/builtin.html).
 
 *This document is incomplete.*
 
+# Modes and Submodules
+
+The Elvish editor has different **modes**, and exactly one mode is active at
+the same time.  Each mode has its own UI and keybindings. For instance, the
+default **insert mode** lets you modify the current command. The **completion
+mode** (triggered by <span class="key">Tab</span> by default) shows you all
+candidates for completion, and you can use arrow keys to navigate those
+candidates.
+
+$ttyshot completion-mode
+
+Each mode has its own submodule under `edit:`. For instance, builtin functions
+and configuration variables for the completion mode can be found in the
+`edit:navigation:` module.
+
+The primary modes supported now are `insert`, `completion`, `navigation`,
+`history`, `histlist`, `location`, and `lastcmd`. The last 4 are "listing
+modes", and their particularity is documented below.
+
 # Keybindings
 
-The Elvish editor has different **modes**, each with its own UI and
-keybindings. Keybindings for a mode `foo` is `$edit:foo:binding`, a map mapping
-keys to functions. As an example, the binding for <span class="key">Alt-x</span>
-in insert mode is `$edit:insert:binding[Alt-x]`.
+Each mode has its own keybinding, accessible as the `binding` variable in its
+module. For instance, the binding table for insert mode is
+`$edit:insert:binding`. To see current bindings, simply print the binding
+table: `pprint $edit:insert:binding` (replace `insert` with any other mode).
 
-To see the entire binding table for mode `foo`, use `pprint $edit:foo:binding`.
-The primary modes supported now are `insert`, `completion`, `navigation`,
-`history`, `listing`, `histlist`, `location`, and `lastcmd`. The last 4 are
-somewhat special and are documented below. The Elvish editor starts in the
-insert mode.
-
-Any valid function can be bound to keys. When they are run, their output is
-captured in a pipe, and then appear above the Elvish prompt, to avoid messing
-up with the terminal. You can see this by doing the following
+The binding tables a maps mapping keys to functions. For instance, to bind `Alt-x` in insert mode to exit Elvish, simply do:
 
 ```elvish
-edit:insert:binding[Alt-x] = { echo 'output from binding!' }
+edit:insert:binding[Alt-x] = { exit }
 ```
 
-and press <span class="key">Alt-x</span> in insert mode: the output will appear
-above the prompt.
+Outputs from a bound function always appear above the Elvish prompt. You can see this by doing the following:
 
+```elvish
+edit:insert:binding[Alt-x] = { echo 'output from a bound function!' }
+```
+
+and press <span class="key">Alt-x</span> in insert mode. It allows you to put
+debugging outputs in bound functions without messing up the terminal.
+
+Internally, this is implemented by connecting their output to a pipe.
 This does the correct thing in most cases, but if you are sure you want to do
 something to the terminal, redirect the output to `/dev/tty`. For instance, the
 following binds <span class="key">Ctrl-L</span> to clearing the terminal:
@@ -39,18 +57,26 @@ following binds <span class="key">Ctrl-L</span> to clearing the terminal:
 edit:insert:binding[Ctrl-L] = { clear > /dev/tty }
 ```
 
+Bound functions have their inputs redirected to /dev/null.
+
 
 ## Listing Modes
 
 The modes `histlist`, `loc` and `lastcmd` are all **listing modes**: They all
-show a list, and you can filter items and accept items. Because they are very
-similiar, they share a lot of keybindings, and those keybindings are in the
-`$edit:listing:binding` binding table (`listing` is not a "real" mode but an
-"abstract" mode). These modes still have their own binding tables like
-`$edit:histlist:binding`, and bindings there have highter precedence over those
-in the shared `$edit:listing:binding` table.
+show a list, and you can filter items and accept items.
 
-## Bindings to Start Modes
+Because they are very similiar, you may want to change their bindings at the
+same time. This is made possible by the `$edit:listing:binding` binding table
+(`listing` is not a "real" mode but an "abstract" mode). These modes still have
+their own binding tables like `$edit:histlist:binding`, and bindings there have
+highter precedence over those in the shared `$edit:listing:binding` table.
+
+Moreover, there are a lot of builtin functions in the `edit:listing` module
+like `edit:listing:down` (for moving down selection). They always apply to
+whichever listing mode is active.
+
+
+## Caveat: Bindings to Start Modes
 
 Note that keybindings to **start** modes live in the binding table of the
 insert mode, not the target mode. For instance, if you want to be able to use
@@ -61,12 +87,15 @@ insert mode, not the target mode. For instance, if you want to be able to use
 edit:insert:binding[Alt-l] = { edit:location:start }
 ```
 
-One particular mode to note is the history mode. The fact that you can press
-<span class="key">▲&#xfe0e;</span>
-to start searching and going to an earlier item relies on two binding entries,
-`$edit:insert:binding[Up]` and `$edit:history:binding[Up]`. So for instance
-if you want to be able to use <span class="key">Ctrl-P</span> for this, you
-need to modify two bindings:
+One tricky case is the history mode. You can press
+<span class="key">▲&#xfe0e;</span> to start searching for history, and continue
+pressing it to search further. However, when the first press happens, the
+editor is in insert mode, while with subsequent presses, the editor is in
+history mode. Hence this binding actually relies on two entries,
+`$edit:insert:binding[Up]` and `$edit:history:binding[Up]`.
+
+So for instance if you want to be able to use
+<span class="key">Ctrl-P</span> for this, you need to modify both bindings:
 
 ```elvish
 edit:insert:binding[Up] = { edit:history:start }
@@ -80,10 +109,12 @@ TBD
 
 # Hooks
 
-Hooks in Elvish are provided by lists of functions. There are current two
-hooks: `$edit:before-readline` and `$edit:after-readline`. Their elements are
-called, before the editor reads code and after that, respectively. For
-instance, if you do the following:
+Hooks are functions that are executed at certain points in time. In Elvish,
+this functionality is provided by lists of functions.
+
+There are current two hooks: `$edit:before-readline` and
+`$edit:after-readline`. Their elements are called, before the editor reads code
+and after that, respectively. For instance, if you do the following:
 
 ```elvish
 edit:before-readline = [{ echo 'before readline!' }]
@@ -100,32 +131,32 @@ or after a chunk of code is executed, `before readline!` is printed.
 There are two types of completions in Elvish: completion for internal data and
 completion for command arguments. The former includes completion for variable
 names (e.g. `echo $`<span class="key">Tab</span>) and indicies (e.g. `echo
-$edit:binding[`<span class="key">Tab</span>). These are the completions that
-Elvish can provide itself because they only depend on the internal state of
-Elvish.
+$edit:insert:binding[`<span class="key">Tab</span>). These are the completions
+that Elvish can provide itself because they only depend on the internal state
+of Elvish.
 
 The latter, in turn, is what happens when you type e.g. `cat `<span
 class="key">Tab</span>. Elvish cannot provide completions for them without full
 knowledge of the command.
 
-Command argument completions are programmable via the `$edit:completer`. When
-Elvish is completing an argument of command `$x`, it will call the value stored
-in `$edit:completer[$x]`, with all the existing arguments, plus the command
-name in the front.
+Command argument completions are programmable via the `$edit:arg-completer`
+variable. When Elvish is completing an argument of command `$x`, it will call
+the value stored in `$edit:arg-completer[$x]`, with all the existing arguments,
+plus the command name in the front.
 
 For example, if the user types `man 1`<span class="key">Tab</span>, Elvish will call:
 
 ```elvish
-$edit:completer[man] man 1
+$edit:arg-completer[man] man 1
 ```
 
-If the user starting a new argument when hitting <span class="key">Tab</span>,
-Elvish will call the completer with a trailing empty string. For instance, if
-you do `man 1`<span class="key">Space</span><span class="key">Tab</span>,
-Elvish will call:
+If the user is starting a new argument when hitting <span
+class="key">Tab</span>, Elvish will call the completer with a trailing empty
+string. For instance, if you do `man 1`<span class="key">Space</span><span
+class="key">Tab</span>, Elvish will call:
 
 ```elvish
-$edit:completer[man] man 1 ""
+$edit:arg-completer[man] man 1 ""
 ```
 
 The output of this call becomes candidates. There are several ways of
@@ -149,9 +180,10 @@ outputting candidates:
     **TODO**: Document this.
 
 After receiving your candidates, Elvish will match your candidates against what
-the user has typed. Hence, normally you do not need to do any matching yourself
-(and shouldn't -- because the matching algorithm will also be programmable).
-That means that in many cases you (and should) can simpy ignore the last
+the user has typed. Hence, normally you don't need to (and shouldn't) do any
+matching yourself.
+
+That means that in many cases you can (and should) simpy ignore the last
 argument to your completer. However, they can be useful for deciding what
 **kind** of things to complete. For instance, if you are to write a completer
 for `ls`, you want to see whether the last argument starts with `-` or not: if
@@ -164,7 +196,7 @@ names after that:
 ```elvish
 all-packages = [(apt-cache search '' | eawk { put $1 })]
 
-edit:completer[apt] = {
+edit:arg-completer[apt] = {
     n = (count $args)
     if (eq $n 2) {
         # apt c<Tab> -- complete a subcommand name
@@ -174,3 +206,41 @@ edit:completer[apt] = {
     }
 }
 ```
+
+
+# Matcher API
+
+As stated above, after the completer outputs candidates, Elvish matches them
+with them with what the user has typed. For clarity, the part of the user input
+that is relevant to tab completion is called for the **seed** of the
+completion. For instance, in `echo x`<span class="key">Tab</span>, the seed is
+`x`.
+
+Elvish first indexes the matcher table -- `$edit:-matcher` -- with the
+completion type to find a **matcher**. The **completion type** is currently one
+of `variable`, `index`, `command`, `redir` or `argument`. If the
+`$edit:-matcher` lacks the suitable key, `$edit:-matcher['']` is used.
+
+
+Elvish then calls the matcher with one argument -- the seed, and feeds
+the *text* of all candidates to the input. The mather must output an identical
+number of booleans, indicating whether the candidate should be kept.
+
+As an example, the following code configures a prefix matcher for all
+completion types:
+
+```elvish
+edit:-matcher[''] = [seed]{ each [cand]{ has-prefix $cand $seed } }
+```
+
+Elvish provides two builtin matchers, `edit:match-prefix` and
+`edit:match-subseq`. In addition to conforming to the matcher protocol, they
+accept two options `&ignore-case` and `&smart-case`. For example, if you want
+completion of arguments to use prefix matching and ignore case, use:
+
+```elvish
+edit:-matcher[argument] = [seed] { edit:match-prefix $seed &ignore-case=$true }
+```
+
+The default value of `$edit:-matcher` is `[&''=$edit:&match-prefix]`, hence
+that candidates for all completion types are matched by prefix.
