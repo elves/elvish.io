@@ -50,7 +50,7 @@ of two ways:
     ```elvish-transcript
     ~> put lorem ipsum | count # count number of inputs
     2
-    ~> put 10 100 | each { + 1 $0 } # apply function to each input
+    ~> put 10 100 | each [x]{ + 1 $x } # apply function to each input
     ▶ 11
     ▶ 101
     ```
@@ -67,7 +67,7 @@ of two ways:
     ```elvish-transcript
     ~> count [lorem ipsum] # count number of elements in argument
     2
-    ~> each { + 1 $0 } [10 100] # apply to each element in argument
+    ~> each [x]{ + 1 $x } [10 100] # apply to each element in argument
     ▶ 11
     ▶ 101
     ```
@@ -151,7 +151,7 @@ When given one element, they all output their sole argument (given that it
 is a valid number). When given no argument,
 
 *   `+` outputs 0, and `*` outputs 1. You can think that they both have
-    "hidden" arguments of 0 and 1, which does not alter their behaviors (in
+    a "hidden" argument of 0 or 1, which does not alter their behaviors (in
     mathematical terms, 0 and 1 are [identity
     elements](https://en.wikipedia.org/wiki/Identity_element) of addition and
     multiplication, respectively).
@@ -203,12 +203,12 @@ Output the result of raising `$base` to the power of `$exponent`. Examples:
 
 Number comparisons. All of them accept an arbitrary number of arguments:
 
-1.  When given less than two arguments, all output `$true`.
+1.  When given fewer than two arguments, all output `$true`.
 
 2.  When given two arguments, output whether the two arguments satisfy the
     named relationship.
 
-3.  When given more than two arguments, output whether any adjacent pair of
+3.  When given more than two arguments, output whether every adjacent pair of
     numbers satisfy the named relationship.
 
 Examples:
@@ -239,12 +239,12 @@ adjacent are equal:
 ## &lt;s &lt;=s ==s !=s &gt;s &gt;=s
 
 ```elvish
-<  $string... # less
-<= $string... # less or equal
-== $string... # equal
-!= $string... # not equal
->  $string... # greater
->= $string... # greater or equal
+<s  $string... # less
+<=s $string... # less or equal
+==s $string... # equal
+!=s $string... # not equal
+>s  $string... # greater
+>=s $string... # greater or equal
 ```
 
 String comparisons. They behave similarly to their number counterparts when
@@ -290,7 +290,8 @@ bool $value
 ```
 
 Convert a value to boolean. In Elvish, only `$false` and errors are booleanly
-false. 0, empty strings and empty lists are all booleanly true:
+false. Everything else, including 0, empty strings and empty lists, is
+booleanly true:
 
 ```elvish-transcript
 ~> bool $true
@@ -422,13 +423,15 @@ fn eawk [f @rest]{
 ```
 
 This command allows you to write code very similar to `awk` scripts using
-anonymous functions. In the function, the input is available as `$0` and
-fields are available as `$1`, `$2`, ...
-
-Example:
+anonymous functions. Example:
 
 ```elvish-transcript
-~> echo " lorem  ipsum \n1 2" | eawk { put $1 }
+~> echo ' lorem ipsum
+   1 2' | awk '{ print $1 }'
+lorem
+1
+~> echo ' lorem ipsum
+   1 2' | eawk [line a b]{ put $a }
 ▶ lorem
 ▶ 1
 ```
@@ -813,7 +816,7 @@ Call `$f` on all inputs, possibly in parallel.
 Example (your output will differ):
 
 ```elvish-transcript
-~> range 1 7 | peach { + $0 10 }
+~> range 1 7 | peach [x]{ + $x 10 }
 ▶ 12
 ▶ 11
 ▶ 13
@@ -1073,17 +1076,17 @@ Etymology: Perl, as
 ## splits
 
 ```elvish
-splits &sep='' $string
+splits $sep $string
 ```
 
-Split `$string` by `$sep`. If `$sep` is an empty string (default value), split
-it into codepoints.
+Split `$string` by `$sep`. If `$sep` is an empty string, split it into
+codepoints.
 
 ```elvish-transcript
-~> splits &sep=, lorem,ipsum
+~> splits , lorem,ipsum
 ▶ lorem
 ▶ ipsum
-~> splits 你好
+~> splits '' 你好
 ▶ 你
 ▶ 好
 ```
