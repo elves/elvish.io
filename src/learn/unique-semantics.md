@@ -1,9 +1,11 @@
 <!-- toc -->
 
-When compared to other shells the semantics of Elvish is unique in many
-aspects in many aspects. This can be surprising if you are used to other
-shells, and it is a result of the [design choice](/ref/philosophy.html) of
-making Elvish a full-fledged programming language.
+<div class="clear"></div>
+
+The semantics of Elvish is unique in many aspects when compared to other
+shells. This can be surprising if you are used to other shells, and it is a
+result of the [design choice](/ref/philosophy.html) of making Elvish a
+full-fledged programming language.
 
 # Structureful IO
 
