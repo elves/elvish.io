@@ -12,11 +12,6 @@ However, the primary developer does use the HEAD version of Elvish on all his
 personal and work computers, so most functions should work properly (and are
 fixed quickly when they don't).
 
-**Note**: The latest release 0.9 has some known issues that will leave the
-daemon process running after you quit all Elvish instances. If that is a
-trouble, just `killall elvish` after quitting. A fix will be in the next
-release.
-
 <style>
   table {
     border-collapse: collpase;
@@ -42,6 +37,11 @@ release.
     <td>HEAD</td>
     <td><a href="https://dl.elvish.io/elvish-linux.tar.gz">elvish-linux.tar.gz</a></td>
     <td><a href="https://dl.elvish.io/elvish-osx.tar.gz">elvish-osx.tar.gz</a></td>
+  </tr>
+  <tr>
+    <td>0.10 (<a href="/blog/0.10-release-notes.html">Release Note</a>)</td>
+    <td><a href="https://dl.elvish.io/elvish-0.10-linux.tar.gz">elvish-linux-0.10.tar.gz</a></td>
+    <td><a href="https://dl.elvish.io/elvish-0.10-osx.tar.gz">elvish-osx-0.10.tar.gz</a></td>
   </tr>
   <tr>
     <td>0.9 (<a href="/blog/0.9-release-notes.html">Release Note</a>)</td>
