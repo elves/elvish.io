@@ -1,6 +1,6 @@
 Welcome to the first issue of Elvish Newsletter!
 
-Elvish is a shell that seeks to combine a full-fledged programming langauge
+Elvish is a shell that seeks to combine a full-fledged programming language
 with a friendly user interface. This newsletter is a summary of its progress
 and future plans.
 

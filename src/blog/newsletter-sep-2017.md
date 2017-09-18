@@ -1,6 +1,6 @@
 Welcome to the second issue of Elvish Newsletter!
 
-Elvish is a shell that seeks to combine a full-fledged programming langauge
+Elvish is a shell that seeks to combine a full-fledged programming language
 with a friendly user interface. This newsletter is a summary of its progress
 and future plans.
 
@@ -12,25 +12,37 @@ contains 125 commits, with contributions from @xofyarg, @tw4452852, @ALSchwalm,
 @zhsj, @HeavyHorst, @silvasur, @zzamboni, @Chilledheart, @myfreeweb, @xchenan
 and @jiujieti.
 
-This release sees the switch to BoltDB as the storage layer, making Elvish a
-pure-Go project, enabling much faster compilation and easier cross-compilation.
-(Elvish previously uses SQLite and requires a C compiler.)
-The data structure implementations have fully transitioned to persistent data
-structures, altering the semantics of assignment.
+Elvish used to depend on SQLite for storage. As a result, compiling Elvish
+relied on cgo and required a C compiler. This release sees the switch to
+BoltDB, making Elvish a pure-Go project. Elvish can now be compiled much
+faster, and into a fully statically linked binary. Cross-compilation is also
+much easier, as the Go compiler has fantastic cross-compiling support.
+
+Maps (`[&k=v k2=v2]`) are now implemented using persistent hash maps. This
+concludes the transition to persistent data structures for all primary data
+types (strings, lists, maps). Persistent data structures are immutable, and
+thus have a simpler semantics and are automatically concurrency-safe. This
+does have an interesting impact on the semantics of assignments, which is now
+documented in a new section on the [unique
+semantics](/learn/unique-semantics.html) page.
 
 For a complete list of changes, see the [release notes](0.10-release-notes.html).
 
 
 # Community
 
-*   We now have an official list of unofficial Elvish libraries:
+*   We now have an official list of awesome unofficial Elvish libraries:
     [elves/awesome-elvish](https://github.com/elves/awesome-elvish). Among
     others, we now have at least two very advanced prompt themes, chain.elv
     from @zzamboni and powerline.elv from @muesli :)
 
-*   Diego Zamboni (@zzamboni), the author of chain.elv, has written
+*   Diego Zamboni (@zzamboni), the author of chain.elv, has written very
     passionately on Elvish: [Elvish, an awesome Unix
     shell](http://zzamboni.org/post/elvish-an-awesome-unix-shell/).
+
+*   Patrick Callahan has given an awesome talk on [Delightful Command-Line
+    Experiences](https://dl.elvish.io/resources/callahan-delightful-commandline-experiences.pdf),
+    featuring Elvish as a "very lively, ambitious shell".
 
 *   The number of followers to
     [@RealElvishShell](https://twitter.com/RealElvishShell/) has grown to 23.
@@ -49,15 +61,15 @@ manager](https://github.com/elves/elvish/issues/239) for Elvish, and a more
 responsive interface by running
 [prompts](https://github.com/elves/elvish/issues/482) and
 [completions](https://github.com/elves/elvish/issues/483) asynchronously. Stay
-very tuned!
+very tuned.
 
 
 # Conclusions
 
 In the last newsletter, I predicted that we will be featuring *Elvish for
 Python Users* and *Tetris in Your Shell* in a future newsletter. It seems we
-are getting closer to that every day!
+are getting close to that pretty steadily.
 
-Have fun with Elvish :D
+Have fun with Elvish!
 
 \- xiaq

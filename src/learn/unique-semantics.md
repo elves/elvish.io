@@ -14,34 +14,34 @@ from functions, and pass them through pipelines.
 
 ## Motivation
 
-Traditionally shells have emphasized the use of strings above all other data
-structures. Arrays and associated arrays are sometimes provided but often
-limited (try building an array of arrays of strings in bash). Similarly, IOs
-(pipelines, standard input and output) are also byte-oriented: communication
-based on unstructured strings is all you get when piercing commands together.
+Traditional shells use strings for all kinds of data. They can be stored in
+variables, used as function arguments, written to output and read from input.
+Strings are very simple to use, but they fall short if your data has an
+inherent structure. A common solution is using pseudo-structures of "each line
+representing a record, and each (whitespace-separated) field represents a
+property", which is fine as long as your data do not contain whitespaces. If
+they do, you will quickly run into problems with escaping and quotation and
+find yourself doing black magics with strings.
 
-While this minimalism is great for simple use cases, it falls short if your
-data has inherent complexity. A common solution is using pseudo-structures of
-"each line representing a record, and each (whitespace-separated) field
-represents a property", but this quickly leads to problems with escaping, and
-is hard to debug and maintain.
+Some shells provide data structures like lists and maps, but they are usually
+not first-class values. You can store them in variables, but you might not to
+be able to nest them, pass them to functions, or returned them from functions.
 
 ## Data Structures and "Returning" Them
 
-Elvish offers first-class support for data structures such as lists and maps. Here is an example that uses a list:
+Elvish offers first-class support for data structures such as lists and maps.
+Here is an example that uses a list:
 
 ```elvish-transcript
 ~> li = [foo bar 'lorem ipsum']
-~> kind-of $li
+~> kind-of $li # "kind" is like type
 ▶ list
-~> count $li
+~> count $li # count the number of elements in a list
 ▶ 3
 ```
 
-(The [language reference](/ref/lang.html) contains detailed description on the
-syntax and usage of data structures. The `kind-of` builtin command gives you
-the *kind* of a value, which you can treat as the same as *type* for now. The
-`count` command here, well, counts the number of elements in `$li`.)
+(See the [language reference](/ref/lang.html) for a more complete description
+of the builtin data structures.)
 
 As you can see, you can store lists in variables and use them as command
 arguments. But they would be much less useful if you cannot **return** them
@@ -52,21 +52,18 @@ capture to recover it:
 ~> fn f {
      echo [foo bar 'lorem ipsum']
    }
-~> li = (f)
+~> li = (f) # (...) is output capture, like $(...) in other shells
 ~> kind-of $li
 ▶ string
-~> count $li
+~> count $li # count the number of bytes, since $li is now a string
 ▶ 23
 ```
 
-(Output capture in Elvish uses parentheses; they are similar to `$()` in other
-shells. You probably already guessed that `fn` defines a function. The `count`
-command here counts the number of bytes in `$li` because it is now a string.)
+As we have seen, our attempt to output a list has turned it into a string.
+This is because the `echo` command in Elvish, like in other shells, is
+string-oriented. To echo a list, it has to be first converted to a string.
 
-However, the `echo` in Elvish, like in other shells, writes a string to the
-output. In this case, it will convert the list to a string. So when you try to
-recover the list, you get a string instead. To correctly do this, you use
-another builtin command called `put`:
+Elvish provides a `put` command to output structured values as they are:
 
 ```elvish-transcript
 ~> fn f {
@@ -81,11 +78,11 @@ another builtin command called `put`:
 
 So how does `put` work differently from `echo` under the hood?
 
-The standard output in Elvish is actually made up of two parts: one traditional
-**byte-oriented file**, and one internal **value-oriented channel**. The `echo`
-command writes to the former, serializing its arguments into a sequence of
-bytes; while the `put` command writes to the latter, preserving all the
-internal structures of the values.
+In Elvish, the standard output is made up of two parts: one traditional
+byte-oriented **file**, and one internal **value-oriented channel**. The
+`echo` command writes to the file, so it has to serialize its arguments into
+strings; the `put` command writes to the value-oriented channel, preserving
+all the internal structures of the values.
 
 If you invoke `put` directly from the command prompt, the values it output have
 a leading `▶`:
@@ -115,6 +112,43 @@ value-oriented channel, and apply a function to each value:
 Got lorem
 Got ipsum
 ```
+
+There are many builtin commands that inputs or outputs values. As another
+example, the `take` commands retains a fixed number of items:
+
+```elvish-transcript
+~> put [lorem ipsum] "foo\nbar" [&key=value] | take 2
+▶ [lorem ipsum]
+▶ "foo\nbar"
+```
+
+## Interoperability with External Commands
+
+Unfortunately, the ability of passing structured values is not available to
+external commands. However, Elvish comes with a pair of commands for JSON
+serialization/deserialization. The following snippet illustrates how
+to interoperate with a Python script:
+
+```elvish-transcript
+~> cat sort-list.py
+import json, sys
+li = json.load(sys.stdin)
+li.sort()
+json.dump(li, sys.stdout)
+~> put [lorem ipsum foo bar] | to-json | python sort-list.py | from-json
+▶ [bar foo ipsum lorem]
+```
+
+It is easy to write a wrapper for such external commands:
+
+```elvish-transcript
+~> fn sort-list { to-json | python sort-list.py | from-json }
+~> put [lorem ipsum foo bar] | sort-list
+▶ [bar foo ipsum lorem]
+```
+
+More serialization/deserialization commands may be added to the language in
+the future.
 
 
 # Exit Status and Exceptions
@@ -168,7 +202,8 @@ echo "after false"
 ```
 
 (If you are running a version of Elvish older than 0.9, you might need to use
-`e:false`, as the builtin version of `false` was removed recently.)
+`e:false`, as Elvish used to have a builtin version of `false` that does
+something different.)
 
 Defaulting on stopping execution when bad things happen makes Elvish safer and
 code behavior more predictable.
@@ -210,3 +245,86 @@ echo $nonexistent
 There seems to be no equivalency of compilation errors in other shells, but
 this extra compilation phase makes the language safer. (In future, optional
 type checking may be introduced, which will fit into the phase.)
+
+
+# Assignment Semantics
+
+In Python, JavaScript and many other languages, if you assign a container
+(e.g. a map) to multiple variables, modifications via those variables mutate
+the same container. This is best illustrated with an example:
+
+```python
+m = {'foo': 'bar', 'lorem': 'ipsum'}
+m2 = m
+m2['foo'] = 'quux'
+print(m['foo']) # prints "quux"
+```
+
+This is because in such languages, variables do not hold the entire map, only
+a reference to the actual map. After the assignment `m2 = m`, both variables
+refer to the same map. The subsequent element assignment `m2['foo'] = 'quux'`
+mutates the underlying map, so `m['foo']`  is also changed.
+
+This is not the case for Elvish:
+
+```elvish-transcript
+~> m = [&foo=bar &lorem=ipsum]
+~> m2 = $m
+~> m2[foo] = quux
+~> put $m[foo]
+▶ bar
+```
+
+It seems that when you assign `m2 = $m`, the entire map is copied from `$m`
+into `$m2`, so any subsequent changes to `$m2` does not affect the original
+map in `$m`. You can entirely think of it this way: thinking
+**assignment as copying** correctly models the behavior of Elvish.
+
+But wouldn't it be expensive to copy an entire list or map every time
+assignment happens? No, the "copying" is actually very cheap. Is it
+implemented as [copy-on-write](https://en.wikipedia.org/wiki/Copy-on-write) --
+i.e. the copying is delayed until `$m2` gets modified? No, subsequent
+modifications to the new `$m2` is also very cheap. Read on if you are
+interested in how it is possible.
+
+## Implementation Detail: Persistent Data Structures
+
+In Elvish, variables like `$m` and `$m2` also only hold a reference to the
+underlying map. However, that map is **immutable**, meaning that they never
+change after creation. That explains why `$m` did not change: because the map
+`$m` refers to never changes. But how is it possible to do `m2[foo] = quux` if
+the map is immutable?
+
+The map implementation of Elvish has another property: although the map is
+immutable, it is easy to create a slight variation of one map. Given a map, it
+is easy to create another map that is almost the same, just 1) with one more
+pair, or 2) with the value for one key changed, or 3) with one fewer pair.
+This operation is fast, even if the original map is very large.
+
+This functionality is provided by the `assoc` (associate) and `dissoc`
+(dissociate) builtins:
+
+```elvish-transcript
+~> assoc [&] foo quux # "add" one pair
+▶ [&foo=quux]
+~> assoc [&foo=bar &lorem=ipsum] foo quux # "modify" one pair
+▶ [&lorem=ipsum &foo=quux]
+~> dissoc [&foo=bar &lorem=ipsum] foo # "remove" one pair
+▶ [&lorem=ipsum]
+```
+
+Now, although maps are immutable, variables are mutable. So when you try to
+assign an element of `$m2`, Elvish turns that into an assignment of `$m2`
+itself:
+
+```elvish
+m2[foo] = quux
+# is just syntax sugar for:
+m2 = (assoc $m2 foo quux)
+```
+
+The sort of immutable data structures that support cheap creation of "slight
+variations" are called [persistent data
+structures](https://en.wikipedia.org/wiki/Persistent_data_structure) and is
+used in functional programming languages. However, the way Elvish turns
+element assignment into a variable assignment seems to be a new approach.
