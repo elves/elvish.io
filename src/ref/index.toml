@@ -19,5 +19,5 @@ name = "re"
 title = "The Regular Expression Module (re:)"
 
 [[articles]]
-name = "embedded"
-title = "Embedded Modules"
+name = "bundled"
+title = "Bundled Modules"
