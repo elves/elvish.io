@@ -1,16 +1,15 @@
 # Introduction
 
-The `re:` module wraps Go's [regexp](http://godoc.org/regexp) package. The Go
-package doc describes syntax of regular expressions and replacement patterns.
-
-The doc is a work in progress.
+The `re:` module wraps Go's `regexp` package. See the
+[doc](http://godoc.org/regexp) for the Go package for syntax of regular
+expressions and replacement patterns.
 
 # Functions
 
-Function usages notations follow are the same as [builtin](/ref/builtin.html)
-module.
+Function usages notations follow the same convention as the [builtin module
+doc](/ref/builtin.html).
 
-There are several options shared by the functions in this module:
+The following options are supported by multiple functions in this module:
 
 *   `&posix=$false`: Use POSIX ERE syntax when true. See also
     [doc](http://godoc.org/regexp#CompilePOSIX) in Go package.
@@ -43,6 +42,9 @@ re:replace &posix=$false &longest=$false &literal=$false $pattern $repl $source
 ```
 
 Replace all occurrences of `$pattern` in `$source` with `$repl`.
+
+If '$literal' is true, '$repl' is treated as a literal string instead of a
+replacement pattern.
 
 ## split
 
