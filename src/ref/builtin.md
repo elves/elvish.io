@@ -1239,8 +1239,10 @@ Output the width of `$string` when displayed on the terminal. Examples:
 
 ## $_
 
-A blackhole variable. It can only be assigned, and values to assigned to it
-will be discard. Trying to use its value will cause an exception.
+A blackhole variable.
+
+Values assigned to it will be discarded. Trying to use its value (like `put
+$_`) causes an exception.
 
 ## $false
 
