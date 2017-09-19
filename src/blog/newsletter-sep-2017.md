@@ -18,7 +18,7 @@ BoltDB, making Elvish a pure-Go project. Elvish can now be compiled much
 faster, and into a fully statically linked binary. Cross-compilation is also
 much easier, as the Go compiler has fantastic cross-compiling support.
 
-Maps (`[&k=v k2=v2]`) are now implemented using persistent hash maps. This
+Maps (`[&k=v &k2=v2]`) are now implemented using persistent hash maps. This
 concludes the transition to persistent data structures for all primary data
 types (strings, lists, maps). Persistent data structures are immutable, and
 thus have a simpler semantics and are automatically concurrency-safe. This
@@ -43,6 +43,8 @@ For a complete list of changes, see the [release notes](0.10-release-notes.html)
 *   Patrick Callahan has given an awesome talk on [Delightful Command-Line
     Experiences](https://dl.elvish.io/resources/callahan-delightful-commandline-experiences.pdf),
     featuring Elvish as a "very lively, ambitious shell".
+
+*   Elvish is now [packaged](https://packages.debian.org/elvish) in Debian.
 
 *   The number of followers to
     [@RealElvishShell](https://twitter.com/RealElvishShell/) has grown to 23.
