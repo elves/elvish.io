@@ -1418,7 +1418,7 @@ fn f {
 
 It is possible to import the module as `z`, `y:z`, or `x:y:z`:
 
-```elvish
+```elvish-transcript
 ~> use x/y/z # imports as "z"
 ~> z:f
 In a deeply nested module
