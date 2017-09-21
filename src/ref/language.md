@@ -10,7 +10,9 @@ developer will explain to you, **and update the document**. Question-driven
 documentation :)
 
 This is a reference manual for the Elvish programming language. It is written
-in a not-so-formal style, but nonetheless tries to be precise.
+in a not-so-formal style, but nonetheless tries to be precise. When it becomes
+impossible to do both in the same doc, the informal explanations will spin
+into tutorials and this doc will be made more formal.
 
 Examples for one construct might use (the most familiar form of) another
 construct that will be introduced later in the text, so familiarity with the
@@ -1170,30 +1172,6 @@ c
 illustrative enough, though.
 
 
-## Importing Module: `use`
-
-**TODO**: Namespacing deserves more explanation.
-
-Reusable modules are Elvish source files with a `.elv` extension under
-`~/.elvish/lib`. The `use` special command loads modules. Modules get their own
-namespace. Example:
-
-```elvish-transcript
-~> cat ~/.elvish/lib/a.elv
-echo "mod a loading"
-fn f {
-  echo "f from mod a"
-}
-~> use a
-mod a loading
-~> a:f
-f from mod a
-```
-
-Source files in directories become nested modules. For instance,
-`~/.elvish/lib/lorem/ipsum.elv` can be used with `use lorem:ipsum`.
-
-
 # Command Resolution
 
 When using a literal string as the head of a command, it is first **resolved**
@@ -1318,61 +1296,182 @@ fn f {
 
 # Namespaces and Modules
 
-The colon `:` is used for namespaces in Elvish: both command names and variable
-names support it. For instance, the following command uses function `f` from
-namespace `x` and variable `v` from namespace `y`:
+Namespace in Elvish helps prevent name collisions and is important for
+building modules.
+
+## Syntax
+
+Prepend `namespace:` to command names and variable names to specify the
+namespace. The following code
 
 ```elvish
-x:f $y:v
+e:echo $E:PATH
 ```
 
-Namespace names con contain colons in them as well. In fact, when parsing
-command names and variable names, everything up to the last colon is considered
-to be the namespace; `$x:y:z` means "variable `z` in namespace `x:y`".
+uses the `echo` command from the `e` namespace and the `PATH` variable from
+the `E` namespace.
 
-For clarity, you can add a trailing colon to the namespace to: `x:` means
-"namespace `x`" unambiguously.
+Names of namespaces can contain colons themselves. For instance, in `$x:y:z`
+the namespace is `x:y`. More precisely, when parsing command names and
+variable names, everything up to the last colon is considered to be the
+namespace.
 
-There is no implied relationship between `x:y:` and `x:`, or any such
-superficial hiearchy relationship; they just happen to look related and are
-technically independent. However, whoever built those modules might have
-intended some kind of logical relationship between them.
+A convention used in articles is when referring to a namespace is to add a
+trailing colon: for instance, `edit:` means "the namespace `edit`". This is
+remniscent to the syntax but is not syntactically valid.
 
-There are several special namespaces in Elvish:
+## Special Namespaces
 
-*   `up:` and `local:` refer to lexical scopes, and have been documented above.
+The following namespaces have special meanings to the language:
+
+*   `local` and `up:` refer to lexical scopes, and have been documented above.
 
 *   `e:` refers to externals. For instance, `e:ls` refers to the external
     command `ls`.
 
     Most of the time you can rely on the rules of [command
     resolution](#command-resolution) and do not need to use this explicitly,
-    unless a function defined by you (or an Elvish builtin) has the same name
-    with an external command.
+    unless a function defined by you (or an Elvish builtin) shadows an
+    external command.
 
 *   `E:` refers to environment variables. For instance, `$E:USER` is the
     environment variable `USER`.
 
     This **is** always needed, because unlike command resolution, variable
-    resolution does not fall backs onto environment variables.
+    resolution does not fall back onto environment variables.
 
 *   `builtin:` refers to builtin functions and variables.
 
     You don't need to use this explicitly unless you have defined names that
     shadows builtin counterparts.
 
+## Pre-Imported Modules
+
 Namespaces that are not special (i,e. one of the above) are also called
 **modules**. Aside from these special namespaces, Elvish also comes with the
 following modules:
 
-*   `edit:` for accessing the Elvish editor. See [reference](/ref/edit.html).
+*   `edit:` for accessing the Elvish editor. This module is available in
+    interactive mode.
 
-*   `re:` for regular expression facilities. See [reference](/ref/re.html).
+    See [reference](/ref/edit.html).
 
-*   `daemon:` for manipulating the daemon. This is not yet documented.
+*   `re:` for regular expression facilities.
+    This module is always available. See [reference](/ref/re.html).
 
-*   `readline-binding` contains readline-style bindings. This module does not
-    have any API, just call `use readline-binding` to use.
+*   `daemon:` for manipulating the daemon. This module is always available.
 
-You can also put external modules in `~/.elvish/lib`, see
-[use](#importing-module-use).
+    This is not yet documented.
+
+## User-Defined Modules
+
+You can define your own modules with Elvishscript but putting them under
+`~/.elvish/lib` and giving them a `.elv` extension. For instance, to define a
+module named `a`, store it in `~/.elvish/lib/a.elv`:
+
+```elvish-transcript
+~> cat ~/.elvish/lib/a.elv
+echo "mod a loading"
+fn f {
+  echo "f from mod a"
+}
+```
+
+To import the module, use `use`:
+
+```elvish-transcript
+~> use a
+mod a loading
+~> a:f
+f from mod a
+```
+
+The argument to `use` is called the **usespec** and will be explained in more
+details below. In the simplest case, it is simply the module name.
+
+Modules are evaluated in a seprate scope. That means that functions and
+variables defined in the module does not pollute the default namespace, and
+vice versa. For instance, if you define `ls` as a wrapper function in
+`rc.elv`:
+
+```elvish
+fn ls [@a]{
+    e:ls --color=auto $@a
+}
+```
+
+That definition is not visible in module files: `ls` will still refer to the
+external command `ls`, unless you shadow it in the very same module.
+
+## Modules in Nested Directories
+
+It is often useful to put modules under directories. When importing such
+modules, you can control which (trailing) parts becomes the module name.
+
+For instance, if you have the following content in `x/y/z.elv` (relative to `~/.elvish/lib`, of course):
+
+```elvish
+fn f {
+    echo 'In a deeply nested module'
+}
+```
+
+It is possible to import the module as `z`, `y:z`, or `x:y:z`:
+
+```elvish
+~> use x/y/z # imports as "z"
+~> z:f
+In a deeply nested module
+~> use x/y:z # impors as "y:z"
+~> y:z:f
+In a deeply nested module
+~> use x:y:z # impors as "x:y:z"
+~> x:y:z:f
+In a deeply nested module
+```
+
+To be precise:
+
+*   The path of the module to import is derived by replacing all `:` with `/`
+    and adding `.elv`. In the above example, all of `x/y/z`, `x/y:z` and
+    `x:y:z` have the same path `x/y/z.elv` and refer to the same module
+
+*   The part after the last `/` becomes the module name.
+
+## Lexical Scoping of Imports
+
+Namespace imports are also lexically scoped. For instance, if you `use` a
+module within an inner scope, it is not available outside that scope:
+
+```elvish
+{
+    use some-mod
+    some-mod:some-func
+}
+some-mod:some-func # not valid
+```
+
+## Re-Importing
+
+Modules are cached after one import. Subsequent imports do not re-execute the
+module; they only serve the bring it into the current scope. Moreover, the
+cache is keyed by the path of the module, not the name under which it is
+imported. For instance, if you have the following in `~/.elvish/lib/a/b.elv`:
+
+```elvish
+echo importing
+```
+
+The following code only prints one `importing`:
+
+```elvish
+{ use a:b }
+use a:b # only brings mod into the lexical scope
+```
+
+As does the following:
+
+```elvish
+use a/b
+use a:b
+```
