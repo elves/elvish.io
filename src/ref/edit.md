@@ -42,7 +42,8 @@ module. For instance, the binding table for insert mode is
 `$edit:insert:binding`. To see current bindings, simply print the binding
 table: `pprint $edit:insert:binding` (replace `insert` with any other mode).
 
-The binding tables a maps mapping keys to functions. For instance, to bind `Alt-x` in insert mode to exit Elvish, simply do:
+A binding tables is simply a map that maps keys to functions. For instance, to
+bind `Alt-x` in insert mode to exit Elvish, simply do:
 
 ```elvish
 edit:insert:binding[Alt-x] = { exit }
