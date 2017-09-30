@@ -107,10 +107,13 @@ dnf install elvish
 
 ## DEB Package
 
-Users of [Ubuntu](http://packages.ubuntu.com/elvish)(>= 17.10) and [Debian](https://packages.debian.org/elvish)(>= 10)
-can install Elvish from official repository. You can just run `sudo apt install elvish` to install.
+Users of [Ubuntu](http://packages.ubuntu.com/elvish)(>= 17.10) and
+[Debian](https://packages.debian.org/elvish)(>= 10) can install Elvish from
+official repository. You can just run `sudo apt install elvish` to install.
+(Note: This is likely to not give you the latest version.)
 
-Users on older distributions or other derivatives still can install from
+If you want to keep updated to the latest version, or are using older
+distributions or other derivatives, you can always install from
 [PPA](https://launchpad.net/~zhsj/+archive/ubuntu/elvish).
 
 ```elvish
@@ -127,7 +130,8 @@ sudo apt-get update
 sudo apt-get install elvish
 ```
 
-(Note that because Elvish does not support line continuation [yet](https://github.com/elves/elvish/issues/417), you need to join the first two lines and remove the backslash if you want to run the script above from Elvish; however, this script works with bash and zsh.)
+(This is a script for bash or zsh. If you are running from Elvish, replace the
+trailing backslash `\` with a backquote `` ` ``.)
 
 ## Homebrew Package
 
