@@ -107,7 +107,11 @@ dnf install elvish
 
 ## DEB Package
 
-Debian and its derivatives can install Elvish from [PPA](https://launchpad.net/~zhsj/+archive/ubuntu/elvish).
+Users of [Ubuntu](http://packages.ubuntu.com/elvish)(>= 17.10) and [Debian](https://packages.debian.org/elvish)(>= 10)
+can install Elvish from official repository. You can just run `sudo apt install elvish` to install.
+
+Users on older distributions or other derivatives still can install from
+[PPA](https://launchpad.net/~zhsj/+archive/ubuntu/elvish).
 
 ```elvish
 # Add Elvish PPA repo
