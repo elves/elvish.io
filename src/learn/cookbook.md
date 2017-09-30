@@ -23,7 +23,7 @@ If you come from other shells, hopefully the following recipes will get you star
     edit:prompt = { tilde-abbr $pwd; put '❱ ' }
     # "constantly" returns a function that always writes the same value(s) to
     # output; "edit:styled" writes styled output.
-    edit:rprompt = (constantly (edit:styled `whoami`✸`hostname` inverse))
+    edit:rprompt = (constantly (edit:styled (whoami)✸(hostname) inverse))
     ```
 
     Here is a terminalshot of the alternative prompts:
