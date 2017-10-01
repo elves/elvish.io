@@ -209,7 +209,7 @@ Defaulting on stopping execution when bad things happen makes Elvish safer and
 code behavior more predictable.
 
 
-# Execution Flow
+# Execution Phases
 
 Elvish interprets code in **chunks**. If you run `elvish some-script.elv` from
 the command line, the entire script is one chunk; in interactive mode, each
