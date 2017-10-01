@@ -14,7 +14,49 @@ The left and right prompts can be customized by assigning functions to
 
 # edit:styled
 
-TBD
+```elvish
+edit:styled $text $style
+```
+
+Construct an abstract "styled" text. The `$text` argument can be an arbitrary
+string, while the `$style` argument is a semicolon-delimited list of the
+following styles:
+
+* Text styles: `bold`, `dim`, `italic`, `underlined`, `blink`, `inverse`.
+
+* Text colors: `black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`,
+  `lightgray`, and their corresponding light colors: `gray`, `lightred`,
+  `lightgreen`, `lightyellow`, `lightblue`, `lightmagenta`, `lightcyan` and
+  `white`.
+
+* Background colors: any of the text colors with a `bg-` prefix (e.g. `bg-red`
+  for red background), plus `bg-default` for default background color.
+
+* An [ANSI SGR
+  parameter](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_.28Select_Graphic_Rendition.29_parameters)
+  code (e.g. `1` for bold), subject to terminal support.
+
+Note that the result of `edit:styled` is an abstract data structure, not an
+ANSI sequence. However, it stringifies to an ANSI sequence, so you rarely have
+to convert it. To force a conversion, use `to-string`:
+
+```elvish-transcript
+~> edit:styled haha green
+▶ (le:styled haha 32)
+~> echo (edit:styled haha green) # output is green
+haha
+~> to-string (edit:styled haha green)
+▶ "\e[32mhaha\e[m"
+```
+
+The forced conversion is useful when e.g. assigning to `$value-out-indicator`:
+
+```elvish-transcript
+~> value-out-indicator = (to-string (edit:styled '> ' green))
+~> put lorem ipsum # leading '> ' is green
+> lorem
+> ipsum
+```
 
 # Modes and Submodules
 
