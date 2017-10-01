@@ -4,7 +4,7 @@ If you have other OS/CPU combinations, you may build Elvish from
 [source](https://github.com/elves/elvish).
 
 The download links might be too slow for users in China. Try using the
-[mirror](https://cn.dl.elvish.io) if that happens.
+[mirror](https://mirrors.tuna.tsinghua.edu.cn/elvish) if that happens.
 
 Please beware that **Elvish does not have a 1.0 release yet**. Before that, the
 shell can be buggy, and might change dramatically from release to release.
