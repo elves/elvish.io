@@ -291,7 +291,7 @@ accept two options `&ignore-case` and `&smart-case`. For example, if you want
 completion of arguments to use prefix matching and ignore case, use:
 
 ```elvish
-edit:-matcher[argument] = [seed] { edit:match-prefix $seed &ignore-case=$true }
+edit:-matcher[argument] = [seed]{ edit:match-prefix $seed &ignore-case=$true }
 ```
 
 The default value of `$edit:-matcher` is `[&''=$edit:&match-prefix]`, hence
