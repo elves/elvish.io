@@ -900,6 +900,52 @@ Example (your output will differ):
 $cf each
 
 
+## pipe
+
+```elvish
+pipe
+```
+
+Create a new Unix pipe that can be used in redirections.
+
+A pipe contains both the read FD and the write FD. When redirecting command
+input to a pipe with `<`, the read FD is used. When redirecting command output
+to a pipe with `>`, the write FD is used. It is not supported to redirect both
+input and output with `<>` to a pipe.
+
+Pipes have an OS-dependent buffer, so writing to a pipe without an active
+reader does not necessarily block. Pipes **must** be explicitly closed with
+`prclose` and `pwclose`.
+
+Putting values into pipes will cause those values to be discarded.
+
+Examples (assuming the pipe has a large enough buffer):
+
+```elvish-transcript
+~> p = (pipe)
+~> echo 'lorem ipsum' > $p
+~> head -n1 < $p
+lorem ipsum
+~> put 'lorem ipsum' > $p
+~> head -n1 < $p
+# blocks
+# $p should be closed with prclose and pwclose afterwards
+```
+
+$cf prclose pwclose
+
+
+## prclose
+
+```elvish
+prclose $pipe
+```
+
+Close the read end of a pipe.
+
+$cf pwclose pipe
+
+
 ## put
 
 ```elvish
@@ -965,6 +1011,17 @@ Etymology: Various languages, in particular
 [Perl](https://perldoc.perl.org/functions/print.html) and
 [zsh](http://zsh.sourceforge.net/Doc/Release/Shell-Builtin-Commands.html),
 whose `print`s do not print a trailing newline.
+
+
+## pwclose
+
+```elvish
+pwclose $pipe
+```
+
+Close the write end of a pipe.
+
+$cf prclose pipe
 
 
 ## range
