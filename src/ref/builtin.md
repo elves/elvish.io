@@ -606,6 +606,40 @@ complaining that you cannot throw a map). This is subject to change. Builtins
 will likely also throw structured exceptions in future.
 
 
+## fclose
+
+```elvish
+fclose $file
+```
+
+Close a file opened with `fopen`.
+
+$cf fopen
+
+
+## fopen
+
+```elvish
+fopen $filename
+```
+
+Open a file. Currently, `fopen` only supports opening a file for reading. File
+must be closed with `fclose` explicitly. Example:
+
+```elvish-transcript
+~> cat a.txt
+This is
+a file.
+~> f = (fopen a.txt)
+~> cat < $f
+This is
+a file.
+~> fclose $f
+```
+
+$cf fclose
+
+
 ## from-json
 
 ```elvish
