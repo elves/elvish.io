@@ -1200,6 +1200,42 @@ Example:
 ▶ <external cat>
 ```
 
+
+## run-parallel
+
+```elvish
+run-parallel $callable ...
+```
+
+Run several callables in parallel, and wait for all of them to finish.
+
+If one or more callables throw exceptions, the other callables continue
+running, and a composite exception is thrown when all callables finish
+execution.
+
+The behavior of `run-parallel` is consistent with the behavior of pipelines,
+except that it does not perform any redirections.
+
+Here is an example that lets you pipe the stdout and stderr of a command to
+two different commands:
+
+```elvish
+pout = (pipe)
+perr = (pipe)
+run-parallel {
+  foo > $pout 2> $perr
+  pwclose $pout
+  pwclose $perr
+} {
+  bar < $pout
+  prclose $pout
+} {
+  bar2 < $perr
+  prclose $perr
+}
+```
+
+
 ## search-external
 
 ```elvish
