@@ -120,6 +120,19 @@ or `$false`. They are described like "Determine ..." or "Test ...". See
 [`is`](#is) for one example.
 
 
+## "Do Not Use" Functions and Variables
+
+The name of some variables and functions have a leading `-`. This is a
+convention to say that it is subject to change and should not be depended
+upon. They are either only useful for debug purposes, or have known issues in
+the interface or implementation, and in the worst case will make Elvish crash.
+(Before 1.0, all features are subject to change, but those ones are sure to be
+changed.)
+
+Those functions and variables are documented near the end of the respective
+sections. Their known problem is also discussed.
+
+
 # Builtin Functions
 
 ## + - * /
@@ -1359,6 +1372,157 @@ Output the width of `$string` when displayed on the terminal. Examples:
 ▶ 5
 ~> wcswidth 你好，世界
 ▶ 10
+```
+
+
+## -gc
+
+```elvish
+-gc
+```
+
+Force the Go garbage collector to run.
+
+This is only useful for debug purposes.
+
+
+## -ifaddrs
+
+```elvish
+-ifaddrs
+```
+
+Output all IP addresses of the current host.
+
+This should be part of a networking module instead of the builtin module.
+
+## -log
+
+```elvish
+-log $filename
+```
+
+Direct internal debug logs to the named file.
+
+This is only useful for debug purposes.
+
+
+## -stack
+
+```elvish
+-stack
+```
+
+
+Print a stack trace.
+
+This is only useful for debug purposes.
+
+
+## -source
+
+```elvish
+-source $filename
+```
+
+Read the named file, and evaluate it in the current scope.
+
+Examples:
+
+```elvish-transcript
+~> cat x.elv
+echo 'executing x.elv'
+foo = bar
+~> -source x.elv
+executing x.elv
+~> echo $foo
+bar
+```
+
+Note that while in the example, you can reference `$foo` after sourcing
+`x.elv`, putting the `-source` command and reference to `$foo` in the **same
+code chunk** (e.g. by using <span class="key">Alt-Enter</span> to insert a
+literal Enter, or using `;`) is invalid:
+
+```elvish-transcript
+~> # A new Elvish session
+~> cat x.elv
+echo 'executing x.elv'
+foo = bar
+~> -source x.elv; echo $foo
+Compilation error: variable $foo not found
+  [interactive], line 1:
+    -source x.elv; echo $foo
+```
+
+This is because the reading of the file is done in the evaluation phase, while
+the check for variables happens at the compilation phase (before evaluation).
+So the compiler has no evidence showing that `$foo` is actually valid, and
+will complain. (See
+[here](https://elvish.io/learn/unique-semantics.html#execution-phases) for a
+more detailed description of execution phases.)
+
+To work around this, you can add a forward declaration for `$foo`:
+
+```elvish-transcript
+~> # Another new session
+~> cat x.elv
+echo 'executing x.elv'
+foo = bar
+~> foo = ''; -source x.elv; echo $foo
+executing x.elv
+bar
+```
+
+
+## -src-name
+
+```elvish
+-src-name
+```
+
+Output the name for the current source as a string value. Example:
+
+```elvish-transcript
+~> -src-name
+▶ '[interactive]'
+~> cat s.elv
+-src-name
+~> elvish s.elv
+▶ s.elv
+```
+
+It is not possible to distinguish an interactive session from a file named
+`[interactive]`: the information for the source should probably be a
+structure, not a plain string. It probably also makes more sense to provide
+this as a variable `$src-name` instead of a function, but that is a bit tricky
+due to implementation limitations.
+
+
+## -time
+
+```elvish
+-time $callable
+```
+
+Run the callable, and write the time used to run it. Example:
+
+```elvish-transcript
+~> -time { sleep 1 }
+1.006060647s
+```
+
+When the callable also produces outputs, they are a bit tricky to separate
+from the output of `-time`. The easiest workaround is to redirect the output
+into a temporary file:
+
+```elvish-transcript
+~> f = (mktemp)
+~> -time { { echo output; sleep 1 } > $f }
+1.005589823s
+~> cat $f
+output
+~> rm $f
 ```
 
 
