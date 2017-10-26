@@ -40,7 +40,7 @@ Here is an example that uses a list:
 ▶ 3
 ```
 
-(See the [language reference](/ref/lang.html) for a more complete description
+(See the [language reference](/ref/language.html) for a more complete description
 of the builtin data structures.)
 
 As you can see, you can store lists in variables and use them as command
