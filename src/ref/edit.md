@@ -164,18 +164,25 @@ TBD
 Hooks are functions that are executed at certain points in time. In Elvish,
 this functionality is provided by lists of functions.
 
-There are current two hooks: `$edit:before-readline` and
-`$edit:after-readline`. Their elements are called, before the editor reads code
-and after that, respectively. For instance, if you do the following:
+There are current two hooks:
+
+*   `$edit:before-readline`, whose elements are called before the editor reads
+    code, with no arguments.
+
+*   `$edit:after-readline`, whose elements are called, after the editor reads
+    code, with a sole element -- the line just read.
+
+Example usage:
 
 ```elvish
-edit:before-readline = [{ echo 'before readline!' }]
-edit:after-readline = [{ echo 'after readline!' }]
+edit:before-readline = [{ echo 'going to read' }]
+edit:after-readline = [[line]{ echo 'just read '$line }]
 ```
 
 Then every time you accept a chunk of code (and thus leaving the editor),
-`after readline!` is printed; and at the very beginning of an Elvish session,
-or after a chunk of code is executed, `before readline!` is printed.
+`just read ` followed by the code is printed; and at the very beginning of an
+Elvish session, or after a chunk of code is executed, `going to read` is
+printed.
 
 
 # Argument completer API
