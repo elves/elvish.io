@@ -248,12 +248,12 @@ names after that:
 ```elvish
 all-packages = [(apt-cache search '' | eawk [0 1 @rest]{ put $1 })]
 
-edit:arg-completer[apt] = [args]{
+edit:arg-completer[apt] = [@args]{
     n = (count $args)
-    if (eq $n 2) {
+    if (== $n 2) {
         # apt x<Tab> -- complete a subcommand name
         put install uninstall
-    } elif (eq $n 3) {
+    } elif (== $n 3) {
         put $@all-packages
     }
 }
