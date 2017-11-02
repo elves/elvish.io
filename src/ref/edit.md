@@ -266,6 +266,44 @@ edit:arg-completer[apt] = [@args]{
 }
 ```
 
+Here is another example of configuring a completer. This time for the `git`
+command. It supports completing some common subcommands and then branch
+names after that:
+
+```elvish
+fn all-git-branches {
+    e:git branch -a --format="%(refname:strip=2)" | eawk [0 1 @rest]{ put $1 }
+}
+
+common-git-commands = [
+  add
+  branch
+  checkout
+  clone
+  commit
+  diff
+  init
+  log
+  merge
+  pull
+  push
+  rebase
+  reset
+  revert
+  show
+  stash
+  status
+]
+
+edit:arg-completer[git] = [@args]{
+    n = (count $args)
+    if (== $n 2) {
+        put $@common-git-commands
+    } elif (>= $n 3) {
+        all-git-branches
+    }
+}
+```
 
 # Matcher API
 
