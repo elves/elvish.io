@@ -36,7 +36,7 @@ fixed quickly when they don't).
   <tr>
     <td>HEAD</td>
     <td><a href="https://dl.elvish.io/elvish-linux.tar.gz">elvish-linux.tar.gz</a></td>
-    <td><a href="https://dl.elvish.io/elvish-osx.tar.gz">elvish-osx.tar.gz</a></td>
+    <td><a href="https://dl.elvish.io/elvish-darwin.tar.gz">elvish-darwin.tar.gz</a></td>
   </tr>
   <tr>
     <td>0.10 (<a href="/blog/0.10-release-notes.html">Release Note</a>)</td>
