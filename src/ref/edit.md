@@ -264,7 +264,25 @@ Elvish session, or after a chunk of code is executed, `going to read` is
 printed.
 
 
-# Variables and Functions
+# Functions and Variables
+
+Functions and variables who name start with `-` are experimental, will have
+their names or behaviors changed in the near future. Others are more stable
+(unless noted explicitly) but are also subject to change before the 1.0
+release.
+
+## edit:-dump-buf
+
+Dump the content of onscreen buffer as HTML. This command is used to generate
+"ttyshots" on [elvish.io](https://elvish.io).
+
+Example:
+
+```elvish
+ttyshot = ~/a.html
+edit:insert:binding[Ctrl-X] = { edit:-dump-buf > $tty }
+```
+
 
 ## edit:styled
 
@@ -311,3 +329,33 @@ The forced conversion is useful when e.g. assigning to `$value-out-indicator`:
 > lorem
 > ipsum
 ```
+
+
+## $edit:current-command
+
+Contains the content of the current input. Setting the variable will cause the
+cursor to move to the very end, as if
+`edit-dot = (count $edit:current-command)` has been invoked.
+
+This API is subject to change.
+
+
+## $edit:-dot
+
+Contains the current position of the curosr, as a byte position within
+`$edit:current-command`.
+
+
+## $edit:-matcher
+
+See [the Matcher section](#matcher).
+
+
+## $edit:prompt
+
+See [the Prompts section](#prompts).
+
+
+## $edit:rprompt
+
+See [the Prompts section](#prompts).
