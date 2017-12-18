@@ -7,58 +7,9 @@ builtin module](/ref/builtin.html).
 
 *This document is incomplete.*
 
-# Prompts
+# Overview
 
-The left and right prompts can be customized by assigning functions to
-`$edit:prompt` and `$edit:rprompt`. Their outputs are used as prompts.
-
-# edit:styled
-
-```elvish
-edit:styled $text $style
-```
-
-Construct an abstract "styled" text. The `$text` argument can be an arbitrary
-string, while the `$style` argument is a semicolon-delimited list of the
-following styles:
-
-* Text styles: `bold`, `dim`, `italic`, `underlined`, `blink`, `inverse`.
-
-* Text colors: `black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`,
-  `lightgray`, and their corresponding light colors: `gray`, `lightred`,
-  `lightgreen`, `lightyellow`, `lightblue`, `lightmagenta`, `lightcyan` and
-  `white`.
-
-* Background colors: any of the text colors with a `bg-` prefix (e.g. `bg-red`
-  for red background), plus `bg-default` for default background color.
-
-* An [ANSI SGR
-  parameter](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_.28Select_Graphic_Rendition.29_parameters)
-  code (e.g. `1` for bold), subject to terminal support.
-
-Note that the result of `edit:styled` is an abstract data structure, not an
-ANSI sequence. However, it stringifies to an ANSI sequence, so you rarely have
-to convert it. To force a conversion, use `to-string`:
-
-```elvish-transcript
-~> edit:styled haha green
-▶ (le:styled haha 32)
-~> echo (edit:styled haha green) # output is green
-haha
-~> to-string (edit:styled haha green)
-▶ "\e[32mhaha\e[m"
-```
-
-The forced conversion is useful when e.g. assigning to `$value-out-indicator`:
-
-```elvish-transcript
-~> value-out-indicator = (to-string (edit:styled '> ' green))
-~> put lorem ipsum # leading '> ' is green
-> lorem
-> ipsum
-```
-
-# Modes and Submodules
+## Modes and Submodules
 
 The Elvish editor has different **modes**, and exactly one mode is active at
 the same time.  Each mode has its own UI and keybindings. For instance, the
@@ -76,6 +27,12 @@ and configuration variables for the completion mode can be found in the
 The primary modes supported now are `insert`, `completion`, `navigation`,
 `history`, `histlist`, `location`, and `lastcmd`. The last 4 are "listing
 modes", and their particularity is documented below.
+
+
+# Prompts
+
+The left and right prompts can be customized by assigning functions to
+`$edit:prompt` and `$edit:rprompt`. Their outputs are used as prompts.
 
 # Keybindings
 
@@ -111,6 +68,10 @@ edit:insert:binding[Ctrl-L] = { clear > /dev/tty }
 
 Bound functions have their inputs redirected to /dev/null.
 
+
+## Format of Keys
+
+TBD
 
 ## Listing Modes
 
@@ -154,38 +115,10 @@ edit:insert:binding[Up] = { edit:history:start }
 edit:history:binding[Up] = { edit:history:up }
 ```
 
-## Format of Keys
 
-TBD
+# Completion API
 
-
-# Hooks
-
-Hooks are functions that are executed at certain points in time. In Elvish,
-this functionality is provided by lists of functions.
-
-There are current two hooks:
-
-*   `$edit:before-readline`, whose elements are called before the editor reads
-    code, with no arguments.
-
-*   `$edit:after-readline`, whose elements are called, after the editor reads
-    code, with a sole element -- the line just read.
-
-Example usage:
-
-```elvish
-edit:before-readline = [{ echo 'going to read' }]
-edit:after-readline = [[line]{ echo 'just read '$line }]
-```
-
-Then every time you accept a chunk of code (and thus leaving the editor),
-`just read ` followed by the code is printed; and at the very beginning of an
-Elvish session, or after a chunk of code is executed, `going to read` is
-printed.
-
-
-# Argument completer API
+## Argument Completer
 
 There are two types of completions in Elvish: completion for internal data and
 completion for command arguments. The former includes completion for variable
@@ -267,7 +200,7 @@ edit:arg-completer[apt] = [@args]{
 ```
 
 
-# Matcher API
+## Matcher
 
 As stated above, after the completer outputs candidates, Elvish matches them
 with them with what the user has typed. For clarity, the part of the user input
@@ -303,3 +236,78 @@ edit:-matcher[argument] = [seed]{ edit:match-prefix $seed &ignore-case=$true }
 
 The default value of `$edit:-matcher` is `[&''=$edit:&match-prefix]`, hence
 that candidates for all completion types are matched by prefix.
+
+
+# Hooks
+
+Hooks are functions that are executed at certain points in time. In Elvish,
+this functionality is provided by lists of functions.
+
+There are current two hooks:
+
+*   `$edit:before-readline`, whose elements are called before the editor reads
+    code, with no arguments.
+
+*   `$edit:after-readline`, whose elements are called, after the editor reads
+    code, with a sole element -- the line just read.
+
+Example usage:
+
+```elvish
+edit:before-readline = [{ echo 'going to read' }]
+edit:after-readline = [[line]{ echo 'just read '$line }]
+```
+
+Then every time you accept a chunk of code (and thus leaving the editor),
+`just read ` followed by the code is printed; and at the very beginning of an
+Elvish session, or after a chunk of code is executed, `going to read` is
+printed.
+
+
+# Variables and Functions
+
+## edit:styled
+
+```elvish
+edit:styled $text $style
+```
+
+Construct an abstract "styled" text. The `$text` argument can be an arbitrary
+string, while the `$style` argument is a semicolon-delimited list of the
+following styles:
+
+* Text styles: `bold`, `dim`, `italic`, `underlined`, `blink`, `inverse`.
+
+* Text colors: `black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`,
+  `lightgray`, and their corresponding light colors: `gray`, `lightred`,
+  `lightgreen`, `lightyellow`, `lightblue`, `lightmagenta`, `lightcyan` and
+  `white`.
+
+* Background colors: any of the text colors with a `bg-` prefix (e.g. `bg-red`
+  for red background), plus `bg-default` for default background color.
+
+* An [ANSI SGR
+  parameter](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_.28Select_Graphic_Rendition.29_parameters)
+  code (e.g. `1` for bold), subject to terminal support.
+
+Note that the result of `edit:styled` is an abstract data structure, not an
+ANSI sequence. However, it stringifies to an ANSI sequence, so you rarely have
+to convert it. To force a conversion, use `to-string`:
+
+```elvish-transcript
+~> edit:styled haha green
+▶ (le:styled haha 32)
+~> echo (edit:styled haha green) # output is green
+haha
+~> to-string (edit:styled haha green)
+▶ "\e[32mhaha\e[m"
+```
+
+The forced conversion is useful when e.g. assigning to `$value-out-indicator`:
+
+```elvish-transcript
+~> value-out-indicator = (to-string (edit:styled '> ' green))
+~> put lorem ipsum # leading '> ' is green
+> lorem
+> ipsum
+```
