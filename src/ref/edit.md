@@ -234,7 +234,7 @@ completion of arguments to use prefix matching and ignore case, use:
 edit:-matcher[argument] = [seed]{ edit:match-prefix $seed &ignore-case=$true }
 ```
 
-The default value of `$edit:-matcher` is `[&''=$edit:&match-prefix]`, hence
+The default value of `$edit:-matcher` is `[&''=$edit:match-prefix~]`, hence
 that candidates for all completion types are matched by prefix.
 
 

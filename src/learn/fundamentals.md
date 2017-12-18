@@ -232,7 +232,7 @@ for name in $@first-triumvirate; do
 done
 ```
 
-# Each person gets $&hello'ed
+# Each person gets $hello~'ed
 
 The for-loop we just show can also be written in a functional style:
 
@@ -268,18 +268,18 @@ hello Cicero # Hello, Cicero!
 
 Users of traditional shells and Common Lisp will find this separation of the variable namespace and command namespace familiar.
 
-However, in elvish this separation is only superficial; what `fn hello` really does is just defining a variable called `&hello`. You can prove this:
+However, in elvish this separation is only superficial; what `fn hello` really does is just defining a variable called `hello~`. You can prove this:
 
 ```elvish
-echo $&hello # <closure ...>
-$&hello Brutus # Hello, Brutus!
-each $&hello $first-triumvirate # (Hello to the first triumvirate)
+echo $hello~ # <closure ...>
+$hello~ Brutus # Hello, Brutus!
+each $hello~ $first-triumvirate # (Hello to the first triumvirate)
 ```
 
-Conversely, defining a variable `&hello` will also create a command named `hello`:
+Conversely, defining a variable `hello~` will also create a command named `hello`:
 
 ```elvish
-'&hello'=[name]{ echo "Hello, hello, "$name"!" }
+hello~ = [name]{ echo "Hello, hello, "$name"!" }
 hello Augustus # Hello, Augustus!
 ```
 
