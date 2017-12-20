@@ -146,21 +146,23 @@ If you come from other shells, hopefully the following recipes will get you star
     /opt/bin:/bin:/sbin:/usr/bin
     ```
 
-*   You can manipulate the keybinding through the map `$edit:binding`. For
-    example, this binds <span class="key">Ctrl-L</span> to clearing the
-    terminal: `edit:binding[insert][Ctrl-L] = { clear > /dev/tty }`. The first
-    index into the map is the mode and the second is the key. (Yes, the braces
-    enclose a lambda.)
+*   You can manipulate the keybinding in the default insert mode through the
+    map `$edit:insert:binding`. For example, this binds
+    <span class="key">Ctrl-L</span> to clearing the terminal:
 
-    Use `pprint $edit:binding` to get a nice (albeit long) view of the current
-    keybinding.
+    ```elvish
+    edit:insert:binding[Ctrl-L] = { clear > /dev/tty }
+    ```
+
+    Use `pprint $edit:insert:binding` to get a nice (albeit long) view of the
+    current keybinding.
 
     **NOTE**: Bindings for letters modified by Alt are case-sensitive. For
     instance, `Alt-a` means pressing `Alt` and `A`, while `Alt-A` means
     pressing `Alt`, `Shift` and `A`. This will probably change in the future.
 
 *   There is no interpolation inside double quotes (yet). For example, the
-    value of `"$user"` is simply the string `$user`. Use implicit string
+    output of `echo "$user"` is simply the string `$user`. Use implicit string
     concatenation to build strings:
 
     ```elvish-transcript
@@ -169,8 +171,8 @@ If you come from other shells, hopefully the following recipes will get you star
     My name is xiaq.
     ```
 
-    Sometimes string concatenation will force you to string literals instead
-    of barewords:
+    Sometimes string concatenation will force you to use string literals
+    instead of barewords:
 
     ```elvish-transcript
     ~> noun = language
@@ -179,9 +181,11 @@ If you come from other shells, hopefully the following recipes will get you star
     ```
 
     You cannot write `s` as a bareword because Elvish would think you are
-    trying to write the variable `$nouns`.
+    trying to write the variable `$nouns`. It's hard to make such mistakes
+    when working interactively, as Elvish highlights variables and complains
+    about nonexistent variables as you type.
 
-*   Double quotes do support C-like escape sequences (``\n`` for newline,
+*   Double quotes support C-like escape sequences (``\n`` for newline,
     etc.):
 
     ```elvish-transcript
@@ -190,12 +194,15 @@ If you come from other shells, hopefully the following recipes will get you star
     b
     ```
 
-    Note: If you run `echo "a\nb"` in bash or zsh, you might get the same
-    result (depending on the value of some options), and this might lead
-    you to believe that they support C-like escape sequences in double quotes
-    as well. This is not the case; bash and zsh preserve the backslash in
-    double quotes, and it is the `echo` builtin command that interpret the
-    escape sequences.
+    **NOTE**: If you run `echo "a\nb"` in bash or zsh, you might get the same
+    result (depending on the value of some options), and this might lead you
+    to believe that they support C-like escape sequences in double quotes as
+    well. This is not the case; bash and zsh preserve the backslash in double
+    quotes, and it is the `echo` builtin command that interpret the escape
+    sequences. This difference becomes apparent if you change `echo` to
+    `touch`: In Elvish, `touch "a\nb"` creates a file whose name has a
+    newline; while in bash or zsh, it creates a file whose name contains a
+    backslash followed by `n`.
 
 *   Elementary floating-point arithmetics as well as comparisons are builtin,
     with a prefix syntax:
@@ -211,6 +218,11 @@ If you come from other shells, hopefully the following recipes will get you star
     ▶ $true
     ```
 
+    **NOTE**: Elvish has special parsing rules to recognize `<` and `>` as
+    command names. That means that you cannot put redirections in the
+    beginning; bash and zsh allows `< input cat`, which is equivalent to
+    `cat < input`; in Elvish, you can only use the latter syntax.
+
 *   Functions are defined with `fn`. You can name arguments:
 
     ```elvish-transcript
@@ -225,8 +237,9 @@ If you come from other shells, hopefully the following recipes will get you star
     the output itself, but shows that such commands output a stream of values
     instead of bytes. As such, their internal structures as well as boundaries
     between values are preserved. This allows us to manipulate structured data
-    in the shell. Read [semantics
-    highlights](/learn/semantics-highlights.html) for details.
+    in the shell.
+
+    Read [semantics highlights](/learn/semantics-highlights.html) for details.
 
 *   When calling Elvish commands, options use the special `&option=value`
     syntax. For instance, the `echo` builtin command supports a `sep` option
