@@ -194,7 +194,7 @@ echo "after bad" # not executed
 `bad` by pressing <span class="key">Alt-Enter</span> to make sure that it is
 executed in the same chunk as `echo "after bad"`.)
 
-Non-zero exit status from external commands are turned into exceptions:
+And, non-zero exit status from external commands are turned into exceptions:
 
 ```elvish
 false # will print a stack trace and stop execution
@@ -205,21 +205,127 @@ echo "after false"
 `e:false`, as Elvish used to have a builtin version of `false` that does
 something different.)
 
+An alternative way to describe this is that Elvish **does** have exit
+statuses, but non-zero exit statuses terminates execution by default.
+
+If you come from POSIX shell, this is aknin to `set -e` or having a `&&`
+between each pair of pipelines. In a sense, `&&` is written as `;` (or more
+commonly, a newline) in Elvish.
+
 Defaulting on stopping execution when bad things happen makes Elvish safer and
 code behavior more predictable.
 
 
-# Execution Phases
+## Predicates and `if`
 
-Elvish interprets code in **chunks**. If you run `elvish some-script.elv` from
-the command line, the entire script is one chunk; in interactive mode, each
-time you hit Enter, the code you have written is one chunk.
+The use of exit status is not limited to errors, however. In the Unix toolbox,
+quite a few commands exit with 0 to signal "true" and 1 to signal "false".
+Notably ones are:
 
-Elvish interprets the code chunk in 3 phases: it first **parse** the code into
-a syntax tree, **compile** the syntax tree code to an internal representation,
-and finally **evaluate** the just-generated internal representation.
+*   `test` aka `[`: testing file types, comparing numbers and strings;
 
-If any error happens during the first two phases, Elvish will reject the code
+*   `grep`: exits with 0 when there are matches, with 1 otherwise;
+
+*   `diff`: exits with 0 when files are the same, with 1 otherwise;
+
+*   `true` and `false`, always exit with 0 and 1 respectively.
+
+The `if` control structure in POSIX shell is designed to work with such
+predicate commands: it takes a pipeline, and executes the body if the last
+command in the pipeline exits with 0. Examples:
+
+```sh
+# command 1
+if true; then
+  echo 'always executes'
+fi
+
+# command 2
+n=10
+if test $n -gt 2; then
+  echo 'executes when $n > 2'
+fi
+
+# command 3
+if diff a.txt b.txt; then
+  echo 'a.txt and b.txt are the same'
+fi
+```
+
+Since Elvish treats non-zero exit status as a kind of exception, the way that
+predicate commands and `if` work in POSIX shell does not work well for Elvish.
+Instead, Elvish's `if` is like most non-shell programming languages: it takes
+a value, and executes the body if the value is booleanly true. The first
+command above is written in Elvish as:
+
+```elvish
+if $true {
+  echo 'always executes'
+}
+```
+
+The way to write the second command in Elvish warrants an explanation of how
+predicates work in Elvish first. Predicates in Elvish simply write a boolean
+output, either `$true` or `$false`:
+
+```elvish-transcript
+~> > 10 2
+▶ $true
+~> > 1 2
+▶ $false
+```
+
+To use predicates in `if`, you simply capture its output with `()`. So the
+second command is written in Elvish as:
+
+```elvish
+n = 10
+if (> $n 2) {
+  echo 'executes when $n > 2'
+}
+```
+
+The parentheses after `if` are different to those in C: In C it is a
+syntactical requirement to put them around the condition; in Elvish, it
+functions as output capture operator.
+
+Sometimes it can be useful to have a condition on whether an external commands
+exits with 0. In this case, you can use the exception capture operator `?()`:
+
+```elvish
+if ?(diff a.txt b.txt) {
+  echo 'a.txt and b.txt are the same'
+}
+```
+
+In Elvish, all exceptions are booleanly false, while the special `$ok` value
+is booleanly true. If the `diff` exits with 0, the `?(...)` construct
+evaluates to `$ok`, which is booleanly true. Otherwise, it evaluates to an
+exception, which is booleanly false. Overall, this leads to a similar
+semantics with the POSIX `if` command.
+
+Note that the following code does have a severe downside: `?()` will prevent
+any kind of exceptions from throwing. In this case, we only want to turn one
+sort of exception into a boolean: `diff` exits with 1. If `diff` exits with 2,
+it usually means that there was a genuine error (e.g. `a.txt` does not exist).
+Swallowing this error defeats Elvish's philosophy of erring on the side of
+caution; a more sophisticated system of handling exit status is still being
+considered.
+
+
+# Phases of Code Execution
+
+A piece of code that gets evaluated as a whole is called a **chunk** (a
+loanword from Lua). If you run `elvish some-script.elv` from the command line,
+the entire script is one chunk; in interactive mode, each time you hit Enter,
+the code you have written is one chunk.
+
+Elvish interprets a code chunk in 3 phases: it first **parse**s the code into
+a syntax tree, then **compile**s the syntax tree code to an internal
+representation, and finally **evaluate**s the just-generated internal
+representation.
+
+If any error happens during the first two phases, Elvish rejects the chunk
 without executing any of it. For instance, in Elvish unclosed parenthesis is a
 syntax error (error in the first parsing phase). The following code, when
 executed as a chunk, does nothing other than printing the parse error:
@@ -243,8 +349,8 @@ echo $nonexistent
 ```
 
 There seems to be no equivalency of compilation errors in other shells, but
-this extra compilation phase makes the language safer. (In future, optional
-type checking may be introduced, which will fit into the phase.)
+this extra compilation phase makes the language safer. In future, optional
+type checking may be introduced, which will fit into the compilation phase.
 
 
 # Assignment Semantics
@@ -260,10 +366,10 @@ m2['foo'] = 'quux'
 print(m['foo']) # prints "quux"
 ```
 
-This is because in such languages, variables do not hold the entire map, only
-a reference to the actual map. After the assignment `m2 = m`, both variables
-refer to the same map. The subsequent element assignment `m2['foo'] = 'quux'`
-mutates the underlying map, so `m['foo']`  is also changed.
+This is because in such languages, variables do not hold the "actual" map, but
+a reference to it. After the assignment `m2 = m`, both variables refer to the
+same map. The subsequent element assignment `m2['foo'] = 'quux'` mutates the
+underlying map, so `m['foo']`  is also changed.
 
 This is not the case for Elvish:
 
@@ -289,20 +395,21 @@ interested in how it is possible.
 
 ## Implementation Detail: Persistent Data Structures
 
-In Elvish, variables like `$m` and `$m2` also only hold a reference to the
-underlying map. However, that map is **immutable**, meaning that they never
-change after creation. That explains why `$m` did not change: because the map
-`$m` refers to never changes. But how is it possible to do `m2[foo] = quux` if
-the map is immutable?
+Like in Python and JavaScript, Elvish variables like `$m` and `$m2` also only
+hold a reference to the underlying map. However, that map is **immutable**,
+meaning that they never change after creation. That explains why `$m` did not
+change: because the map `$m` refers to never changes. But how is it possible
+to do `m2[foo] = quux` if the map is immutable?
 
 The map implementation of Elvish has another property: although the map is
 immutable, it is easy to create a slight variation of one map. Given a map, it
-is easy to create another map that is almost the same, just 1) with one more
-pair, or 2) with the value for one key changed, or 3) with one fewer pair.
-This operation is fast, even if the original map is very large.
+is easy to create another map that is almost the same, either 1) with one more
+key/value pair, or 2) with the value for one key changed, or 3) with one fewer
+key/value pair. This operation is fast, even if the original map is very
+large.
 
-This functionality is provided by the `assoc` (associate) and `dissoc`
-(dissociate) builtins:
+This low-level functionality is exposed by the `assoc` (associate) and
+`dissoc` (dissociate) builtins:
 
 ```elvish-transcript
 ~> assoc [&] foo quux # "add" one pair
@@ -327,4 +434,5 @@ The sort of immutable data structures that support cheap creation of "slight
 variations" are called [persistent data
 structures](https://en.wikipedia.org/wiki/Persistent_data_structure) and is
 used in functional programming languages. However, the way Elvish turns
-element assignment into a variable assignment seems to be a new approach.
+assignment to `$m2[foo]` into an assignment to `$m2` itself seems to be a new
+approach.
