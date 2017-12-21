@@ -45,6 +45,8 @@ fixed quickly when they don't).
       <a href="https://dl.elvish.io/elvish-darwin-amd64.tar.gz">elvish-darwin-amd64.tar.gz</a>
     </td>
     <td>
+      <a href="https://dl.elvish.io/elvish-windows-386.zip">elvish-windows-386.zip</a>
+      <br>
       <a href="https://dl.elvish.io/elvish-windows-amd64.zip">elvish-windows-amd64.zip</a>
     </td>
   </tr>
