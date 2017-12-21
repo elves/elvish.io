@@ -144,7 +144,7 @@ In most other shells, variables can map directly to environmental variables: `$P
 
 You will notice that variable names sometimes have a leading dollar sign, sometimes not. The tradition is that they do when they are used for their values, and do not otherwise (e.g. in assignment). Elvish is consistent with other shells in this aspect.
 
-## Assignment: Ordinary Assignment
+## Assignment
 
 A variable can be assigned by writing its name, followed by `=` and the value to assign. There **must** be spaces both before and after `=`. Example:
 
@@ -158,7 +158,7 @@ You can assign multiple values to multiple variables simultaneously, simply by w
 ~> x y = 3 4
 ```
 
-## Use: Simple Use
+## Referencing
 
 When using the value of a variable, add a `$` before its name:
 
@@ -184,7 +184,7 @@ Compilation error: variable $x not found
     { echo $x }
 ```
 
-## Use: Explosion
+## Explosion and Rest Variable
 
 When using a list variable, you can add `@` before the name to get all contained values. This is called **exploding** the variable:
 
@@ -201,9 +201,6 @@ When using a list variable, you can add `@` before the name to get all contained
 
 (This notation is restricted to exploding variables. To explode arbitrary values, use the builtin [explode](/ref/builtin.html#explode) command.)
 
-
-## Assignment: Rest Variable
-
 When assigning variables, if you prefix the name of the last variable with `@`, it becomes a list containing all remaining values. That variable is called a **rest variable**. Example:
 
 ```elvish-transcript
@@ -217,7 +214,7 @@ When assigning variables, if you prefix the name of the last variable with `@`, 
 Schematically this is an inversive operation to variable explosion, which is why they share the `@` sign.
 
 
-## Assignment: Temporary Assignment
+## Temporary Assignment
 
 You can prepend a command with **temporary assignments** like `x=1`. Rules:
 
@@ -251,7 +248,7 @@ Note that the behavior is different from that of bash or zsh in one important
 place. In either of them, temporary assignments to variables do not affect
 their direct use in the command:
 
-```sh
+```sh-transcript
 bash-4.4$ x=1
 bash-4.4$ x=100 echo $x
 1
@@ -348,8 +345,8 @@ b
 
 It is not possible to refer to a specific outer scope.
 
-You cannot create new variables in the `builtin:` namespace cannot be altered,
-although some existing variables in it can be assigned.
+You cannot create new variables in the `builtin:` namespace, although some
+existing variables in it can be assigned.
 
 
 # Lambda
@@ -512,7 +509,7 @@ Examples:
 ▶ [lorem ipsum]
 ```
 
-This feature is stolen from Python.
+(Negative indicies and slicing are borrowed from Python.)
 
 ## String indexing
 
@@ -534,7 +531,7 @@ there**.  This is best explained with examples:
 
 *   In the string `世界`, each codepoint is encoded with three bytes. The first
     codepoint occupies byte 0 through 2, and the second occupies byte 3 through
-    5. Hence valid indicies are 0 and 3:
+    5\. Hence valid indicies are 0 and 3:
 
     ```elvish-transcript
     ~> put 世界[0]
@@ -545,7 +542,8 @@ there**.  This is best explained with examples:
 
 Strings can also be indexed by slices.
 
-This idea of indexing codepoints by their byte positions is stolen from Julia.
+(This idea of indexing codepoints by their byte positions is borrowed from
+Julia.)
 
 ## Map indexing
 
@@ -657,7 +655,7 @@ if ?(test -d ./a) {
 Exception captures do not affect the output of the code chunk. You can combine
 output capture and exception capture:
 
-```
+```elvish
 output = (error = ?(commands-that-may-fail))
 ```
 
@@ -877,10 +875,15 @@ all filenames that end with `.txt` in the current directory; while `put
 # Ordinary Command
 
 The **command** is probably the most important syntax construct in shell
-languages, and Elvish is no exception. In the terminology of this document, the
-term **command** include scan several things: an ordinary assignment
-(introduced before), an ordinary command (which is being introduced here), or a
-special command.
+languages, and Elvish is no exception. The word **command** itself, is
+overloaded with meanings. In the terminology of this document, the term
+**command** include the following:
+
+*   An ordinary assignment, introduced above;
+
+*   An ordinary command, introduced in this section;
+
+*   A special command, introduced in the next section.
 
 An **ordinary command** consists of a compulsory head, and any number of
 arguments, options and redirections.
@@ -1007,10 +1010,17 @@ err
 
 ## Ordering
 
-The ordering of arguments, options and redirections is arbitrary: they can
-intermix each other. The only requirement is that the head must come first.
-This is different from POSIX shells, where redirections may appear before the
-head.
+Elvish does not impose any ordering of arguments, options and redirections:
+they can intermix each other. The only requirement is that the head must come
+first. This is different from POSIX shells, where redirections may appear
+before the head. For instance, the following two both work in POSIX shell, but
+only the former works in Elvish:
+
+
+```sh
+echo something > file
+> file echo something # mistaken for the comparison builtin ">" in Elvish
+```
 
 
 # Special Commands
@@ -1043,7 +1053,7 @@ value is obtained. When given no arguments, it outpus `$false`.
 
 ## Condition: `if`
 
-**TODO**: Document the syntax notation, and perhaps use another one.
+**TODO**: Document the syntax notation, and add more examples.
 
 Syntax:
 
