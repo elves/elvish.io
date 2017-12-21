@@ -39,15 +39,17 @@ fixed quickly when they don't).
     <td>
       <a href="https://dl.elvish.io/elvish-linux-amd64.tar.gz">elvish-linux-amd64.tar.gz</a>
       <br>
+      <a href="https://dl.elvish.io/elvish-linux-386.tar.gz">elvish-linux-386.tar.gz</a>
+      <br>
       <a href="https://dl.elvish.io/elvish-linux-arm64.tar.gz">elvish-linux-arm64.tar.gz</a>
     </td>
     <td>
       <a href="https://dl.elvish.io/elvish-darwin-amd64.tar.gz">elvish-darwin-amd64.tar.gz</a>
     </td>
     <td>
-      <a href="https://dl.elvish.io/elvish-windows-386.zip">elvish-windows-386.zip</a>
-      <br>
       <a href="https://dl.elvish.io/elvish-windows-amd64.zip">elvish-windows-amd64.zip</a>
+      <br>
+      <a href="https://dl.elvish.io/elvish-windows-386.zip">elvish-windows-386.zip</a>
     </td>
   </tr>
   <tr>
