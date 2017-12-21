@@ -53,9 +53,9 @@ fixed quickly when they don't).
     </td>
   </tr>
   <tr>
-    <td>0.10 (<a href="/blog/0.10-release-notes.html">Release Note</a>)</td>
-    <td><a href="https://dl.elvish.io/elvish-0.10-linux.tar.gz">elvish-0.10-linux.tar.gz</a></td>
-    <td><a href="https://dl.elvish.io/elvish-0.10-osx.tar.gz">elvish-0.10-osx.tar.gz</a></td>
+    <td>0.10.1 (<a href="/blog/0.10-release-notes.html">Release Note</a>)</td>
+    <td><a href="https://dl.elvish.io/elvish-0.10.1-linux.tar.gz">elvish-0.10.1-linux.tar.gz</a></td>
+    <td><a href="https://dl.elvish.io/elvish-0.10.1-osx.tar.gz">elvish-0.10.1-osx.tar.gz</a></td>
     <td>N/A</td>
   </tr>
   <tr>
