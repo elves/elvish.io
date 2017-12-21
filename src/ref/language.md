@@ -46,15 +46,34 @@ barewords:
     There is no interpolation in double quotes. For instance, `"$USER"` simply
     evaluates to the string `$USER`.
 
-*   **Barewords** are sequences of non-metacharacters and do not need quoting.
-    Examples are `a.txt`, `long-bareword`, and `/usr/local/bin`.
-    Eventually we will define formally what characters are meta and what are
-    not.
+*   **Barewords** are sequences of "bareword characters" and do not need
+    quoting. Examples are `a.txt`, `long-bareword`, and `/usr/local/bin`.
+
+    The following are valid bareword characters (or more accurately, Unicode
+    codepoints):
+
+    *   ASCII letters (a-z and A-Z) and numbers (0-9);
+
+    *   The symbols `-_:%+,./@!`;
+
+    *   Non-ASCII codepoints that are printable (as defined by
+        [unicode.IsPrint](https://godoc.org/unicode#IsPrint) in Go's standard
+        library).
+
+    The following two characters are "conditional" barewords:
+
+    *   `~`, as long as it does not appear in the beginning of a compound
+        expression (in which case it is used for home directory expansion);
+
+    *   `=`, as long as it does not appear all by itself (in which case it is
+        used for assignment).
 
     Unlike traditional shells, metacharacters cannot be escaped with ``\``;
     they must be quoted. For instance, to echo a star, write `echo "*"` or
-    `echo '*'`, **not** ``echo \*``.  (Currently ``\`` stands for itself, so
-    ``echo \*`` echoes ``\*``, but this is subject to change.)
+    `echo '*'`, **not** ``echo \*``.
+
+    Currently, ``\`` is a valid bareword character, so ``echo \*`` echoes
+    ``\*``, but this is subject to change.
 
 These three syntaxes all evaluate to strings: they are interchangeable. For instance, `xyz`, `'xyz'` and `"xyz"` are different syntaxes for the same string, and they are always equivalent.
 
@@ -110,7 +129,18 @@ An empty map is written as `[&]`.
 
 # Variable
 
-Variables are holders of values with names. In most other shells, variables can map directly to environmental variables: `$PATH` is almost always the `PATH` environment variable. This is not the case in Elvish. Instead, environment variables are put in a dedicated `E:` namespace. `$PATH` and `$E:PATH` are different variables, and only the latter maps to the environment variable called `PATH`. The `$PATH` variable only lives in the Elvish process (and possibly only on a local scope).
+Variables are holders of values with names. The characters allowed for
+variable names constitute a subset of that of barewords:
+
+*   ASCII letters (a-z and A-Z) and numbers (0-9);
+
+*   The symbols `-_:~` (`:` is used for separating namespaces);
+
+*   Non-ASCII codepoints that are printable (as defined by
+    [unicode.IsPrint](https://godoc.org/unicode#IsPrint) in Go's standard
+    library).
+
+In most other shells, variables can map directly to environmental variables: `$PATH` is almost always the `PATH` environment variable. This is not the case in Elvish. Instead, environment variables are put in a dedicated `E:` namespace. `$PATH` and `$E:PATH` are different variables, and only the latter maps to the environment variable called `PATH`. The `$PATH` variable only lives in the Elvish process (and possibly only on a local scope).
 
 You will notice that variable names sometimes have a leading dollar sign, sometimes not. The tradition is that they do when they are used for their values, and do not otherwise (e.g. in assignment). Elvish is consistent with other shells in this aspect.
 
