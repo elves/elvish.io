@@ -32,11 +32,20 @@ fixed quickly when they don't).
     <th>Version</th>
     <th>Linux</th>
     <th>macOS</th>
+    <th>Windows</th>
   </tr>
   <tr>
     <td>HEAD</td>
-    <td><a href="https://dl.elvish.io/elvish-linux.tar.gz">elvish-linux.tar.gz</a></td>
-    <td><a href="https://dl.elvish.io/elvish-darwin.tar.gz">elvish-darwin.tar.gz</a></td>
+    <td>
+      <a href="https://dl.elvish.io/elvish-linux-amd64.tar.gz">elvish-linux-amd64.tar.gz</a>
+      <a href="https://dl.elvish.io/elvish-linux-arm64.tar.gz">elvish-linux-arm64.tar.gz</a>
+    </td>
+    <td>
+      <a href="https://dl.elvish.io/elvish-darwin-amd64.tar.gz">elvish-darwin-amd64.tar.gz</a>
+    </td>
+    <td>
+      <a href="https://dl.elvish.io/elvish-windows-amd64.tar.gz">elvish-windows-amd64.tar.gz</a>
+    </td>
   </tr>
   <tr>
     <td>0.10 (<a href="/blog/0.10-release-notes.html">Release Note</a>)</td>
