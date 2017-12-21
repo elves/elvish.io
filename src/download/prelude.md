@@ -1,6 +1,6 @@
-Prebuilt binaries for Elvish are available for Linux and macOS on x86-64 CPUs.
-The binaries are statically linked and don't have any runtime dependencies.
-If you have other OS/CPU combinations, you may build Elvish from
+Prebuilt binaries for Elvish are available for some common platforms. The
+binaries are statically linked and don't have any runtime dependencies. If
+your platform is not listed, you may build Elvish from
 [source](https://github.com/elves/elvish).
 
 The download links might be too slow for users in China. Try using the
