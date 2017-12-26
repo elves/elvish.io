@@ -23,14 +23,14 @@ After that, modules in this package can be imported with `use
 github.com/elves/sample-pkg/...`. This package has a module named `sample-mod`
 containing a function `sample-fn`, and can be used like:
 
-```elvish
+```elvish-transcript
 ~> use github.com/elves/sample-pkg/sample-mod
 ~> sample-mod:sample-fn
 This is a sample function in a sample module in a sample package
 ```
 
-The rest of this article describes functions in the `epm` module. The notation
-of function usage is described in [the doc for the builtin
+The rest of this article describes functions in the `epm` module, using the
+same notation as the [doc for the builtin
 module](builtin.html#usage-notation).
 
 # add-installed
