@@ -19,5 +19,9 @@ name = "re"
 title = "The Regular Expression Module (re:)"
 
 [[articles]]
+name = "epm"
+title = "The Elvish Package Manager (epm:)"
+
+[[articles]]
 name = "bundled"
 title = "Bundled Modules"
