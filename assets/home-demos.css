@@ -1,6 +1,7 @@
 #demo-window {
   background-color: #f0ede2;
   margin-bottom: 16px;
+  border-radius: 5px;
   /* Graceful degrading: the demo window starts with a scrollbar, which gets
    * hiden only when the JavaScript code finishes adding demo switchers. */
   overflow: scroll;
