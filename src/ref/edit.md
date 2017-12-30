@@ -346,6 +346,16 @@ Contains the current position of the curosr, as a byte position within
 `$edit:current-command`.
 
 
+## $edit:max-height
+
+Maximum height the editor is allowed to use, defaults to `+Inf`.
+
+By default, the height of the editor is only restricted by the terminal
+height. Some modes like location mode can use a lot of lines; as a result, it
+can often occupy the entire terminal, and push up your scrollback buffer.
+Change this variable to a finite number to restrict the height of the editor.
+
+
 ## $edit:-matcher
 
 See [the Matcher section](#matcher).
