@@ -85,9 +85,9 @@ that a command can take its input in one of two ways above: this fact is not
 repeated below.
 
 **Note**: You should prefer the first form, unless using it requires explicit
-`put` commands. Avoid `count [(some-command)]` or `each some-func
+`put` commands. Avoid `count [(some-command)]` or `each $some-func
 [(some-command)]`; they are, most of the time, equivalent to `some-command |
-count` or `some-command | each some-func`.
+count` or `some-command | each $some-func`.
 
 **Rationale**: An alternative way to design this is to make (say) `count` take
 an arbitrary number of arguments, and count its arguments; when there is 0
