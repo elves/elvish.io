@@ -1567,6 +1567,23 @@ A blackhole variable.
 Values assigned to it will be discarded. Trying to use its value (like `put
 $_`) causes an exception.
 
+## $args
+
+A list containing command-line arguments. Examples:
+
+```elvish-transcript
+~> echo 'put $args' > args.elv
+~> elvish args.elv foo -bar
+▶ [foo -bar]
+~> elvish -c 'put $args' foo -bar
+▶ [foo -bar]
+```
+
+As demonstrated above, this variable does not contain the name of the script
+used to invoke it. For that information, use the `src` command.
+
+$cf src
+
 ## $false
 
 The boolean false value.
