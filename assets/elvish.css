@@ -45,6 +45,19 @@ a:visited {
   margin-left: -0.6em;
 }
 
+@media (min-width: 600px) and (max-width: 899px) {
+  #toc-list {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 900px) {
+  #toc-list {
+    column-count: 3;
+  }
+}
+
+
 #toc-list li {
   list-style: none;
 }
