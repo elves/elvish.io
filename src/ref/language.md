@@ -1041,6 +1041,38 @@ In the example, the `or` command first evaluates its first argument, which has t
 If `or` were a normal command, the code above is still syntactically correct. However, Elvish would then evaluate all its arguments, with the side effect of outputting `x`, `y` and `z`, before calling `or`.
 
 
+## Deleting variable or element: `del`
+
+The `del` special command can be used to either delete variables or elements
+of lists and maps. Operands should be specified without a leading dollar sign,
+like the left-hand side of assignments.
+
+Example of deleting variable:
+
+```elvish-transcript
+~> x = 2
+~> echo $x
+2
+~> del x
+~> echo $x
+Compilation error: variable $x not found
+[tty], line 1: echo $x
+```
+
+Example of deleting element:
+
+```elvish-transcript
+~> m = [&k=v &k2=v2]
+~> del m[k2]
+~> put $m
+▶ [&k=v]
+~> l = [[&k=v &k2=v2]]
+~> del l[0][k2]
+~> put $l
+▶ [[&k=v]]
+```
+
+
 ## Logics: `and` and `or`
 
 The `and` special command evaluates its arguments from left to right; as soon
