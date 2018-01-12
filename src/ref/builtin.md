@@ -1396,20 +1396,21 @@ Etymology: Haskell.
 ## tilde-abbr
 
 ```elvish
-tilde-abbr $pwd
+tilde-abbr $path
 ```
 
-Replace occurrences of the user's home directory in its argument with
-a tilde (`~`). Examples:
+If `$path` represents a path under the home directory, replace the
+home directory with `~`.  Examples:
 
 ```elvish-transcript
-~> tilde-abbr $pwd
+~> echo $E:HOME
+/Users/foo
+~> tilde-abbr /Users/foo
 ▶ '~'
-~> cd ~/Documents
-~/Documents> echo $pwd
-/Users/foo/Documents
-~/Documents> tilde-abbr $pwd
-▶ '~/Documents'
+~> tilde-abbr /Users/foobar
+▶ /Users/foobar
+~> tilde-abbr /Users/foo/a/b
+▶ '~/a/b'
 ```
 
 
