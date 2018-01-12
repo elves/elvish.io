@@ -1393,6 +1393,27 @@ input elements, the entire input is retained. Examples:
 Etymology: Haskell.
 
 
+## tilde-abbr
+
+```elvish
+tilde-abbr $path
+```
+
+If `$path` represents a path under the home directory, replace the
+home directory with `~`.  Examples:
+
+```elvish-transcript
+~> echo $E:HOME
+/Users/foo
+~> tilde-abbr /Users/foo
+▶ '~'
+~> tilde-abbr /Users/foobar
+▶ /Users/foobar
+~> tilde-abbr /Users/foo/a/b
+▶ '~/a/b'
+```
+
+
 ## to-json
 
 ```elvish
