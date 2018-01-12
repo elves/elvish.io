@@ -2,26 +2,25 @@
 
 # Introduction
 
-**Note to the reader**. This document is a work in progress. Some materials are
-missing, and some are documented in a handwavy way. If you found something that
-should be improved -- even if there is already a "TODO" for it -- please feel
-free to ask on any of the chat channels advertised on the [homepage](/). The
-developer will explain to you, **and update the document**. Question-driven
-documentation :)
+This document describes the Elvish programming language. It tries to be both a
+specification and a tutorial; if it turns out to be impossible to do so, this
+document will evolve to a formal specification, and more readable tutorials
+will be created.
 
-This is a reference manual for the Elvish programming language. It is written
-in a not-so-formal style, but nonetheless tries to be precise. When it becomes
-impossible to do both in the same doc, the informal explanations will spin
-into tutorials and this doc will be made more formal.
+Examples for one construct might use constructs that have not yet been
+introduced, so some familiarity with the language is assumed. If you are new
+to Elvish, start with the [learning materials](/learn), in which the article
+on the [unique semantics](/learn/unique-semantics.html) is especially worth
+reading, even if you have used Elvish for a while.
 
-Examples for one construct might use (the most familiar form of) another
-construct that will be introduced later in the text, so familiarity with the
-language is assumed. If you are new to Elvish, consider reading some of the
-[learning materials](/learn). Also, the article on the [semantics highlight
-semantics](/learn/semantics-highlight) of Elvish is worth reading, even if you
-have used Elvish for a while.
+**Note to the reader**. Like Elvish itself, this document is a work in
+progress. Some materials are missing, and some are documented sparingly. If
+you have found something should be improved -- even if there is already a
+"TODO" for it -- please feel free to ask on any of the chat channels
+advertised on the [homepage](/). Some developer will explain to you, **and
+update the document**. Question-driven documentation :)
 
-A little terminology:
+First, some syntax terms:
 
 *   An **inline whitespace** is a space or tab.
 
@@ -77,7 +76,16 @@ barewords:
 
 These three syntaxes all evaluate to strings: they are interchangeable. For instance, `xyz`, `'xyz'` and `"xyz"` are different syntaxes for the same string, and they are always equivalent.
 
-Note that Elvish does **not** have number types; this is partly a consequence of barewords being a syntax for strings. For instance, in the command `+ 1 2`, both `1` and `2` are strings, and it is the command `+` that knows to treat its arguments as numbers.
+Note that Elvish does **not** have a separate number type. For instance, in the
+command `+ 1 2`, both `1` and `2` are strings, and it is the command `+` that
+knows to treat its arguments as numbers.
+
+This design is driven by syntax -- Because barewords are always treated as
+strings, and digits are barewords, we cannot treat words like `1` as number
+literals. At some point the language may get a dedicated number type (or
+several number types), but they will likely need to be constructed explicitly,
+e.g. `(number 1)`.
+
 
 # List and Map
 
@@ -98,8 +106,8 @@ whitespaces. Examples:
 ▶ [lorem ipsum foo bar]
 ```
 
-Note that commas have no special meanings and just represent themselves, so
-don't use them to separate elements:
+Note that commas have no special meanings and are valid bareword characters,
+so don't use them to separate elements:
 
 ```elvish-transcript
 ~> li = [a, b]
@@ -111,9 +119,10 @@ don't use them to separate elements:
 
 ## Map
 
-Maps are also surrounded by square brackets; elements are written like
-`&key=value` (think HTTP query parameters) and separated by whitespaces.
-Whitespaces are allowed after `=`, but not before `=`. Examples:
+Maps are also surrounded by square brackets; a key/value pair is written
+`&key=value` (reminiscent to HTTP query parameters), and pairs are separated
+by whitespaces. Whitespaces are allowed after `=`, but not before `=`.
+Examples:
 
 ```elvish-transcript
 ~> put [&foo=bar &lorem=ipsum]
@@ -129,8 +138,8 @@ An empty map is written as `[&]`.
 
 # Variable
 
-Variables are holders of values with names. The characters allowed for
-variable names constitute a subset of that of barewords:
+Variables are named holders of values. The characters allowed for variable
+names constitute a subset of that of barewords:
 
 *   ASCII letters (a-z and A-Z) and numbers (0-9);
 
@@ -140,9 +149,17 @@ variable names constitute a subset of that of barewords:
     [unicode.IsPrint](https://godoc.org/unicode#IsPrint) in Go's standard
     library).
 
-In most other shells, variables can map directly to environmental variables: `$PATH` is almost always the `PATH` environment variable. This is not the case in Elvish. Instead, environment variables are put in a dedicated `E:` namespace. `$PATH` and `$E:PATH` are different variables, and only the latter maps to the environment variable called `PATH`. The `$PATH` variable only lives in the Elvish process (and possibly only on a local scope).
+In most other shells, variables can map directly to environmental variables:
+usually `$PATH` is the same as the `PATH` environment variable. This is not
+the case in Elvish. Instead, environment variables are put in a dedicated `E:`
+namespace. `$PATH` and `$E:PATH` are different variables, and only the latter
+maps to the environment variable called `PATH`. The `$PATH` variable only
+lives in the Elvish process (and possibly only on a local scope).
 
-You will notice that variable names sometimes have a leading dollar sign, sometimes not. The tradition is that they do when they are used for their values, and do not otherwise (e.g. in assignment). Elvish is consistent with other shells in this aspect.
+You will notice that variables do not have a leading dollar sign in some
+syntax constructs. The tradition is that they do when they are used for their
+values, and do not otherwise (e.g. in assignment). This is consistent with
+most other shells.
 
 ## Assignment
 
@@ -160,7 +177,7 @@ You can assign multiple values to multiple variables simultaneously, simply by w
 
 ## Referencing
 
-When using the value of a variable, add a `$` before its name:
+Use a variable by adding `$` before the name:
 
 ```elvish-transcript
 ~> foo = bar
@@ -171,22 +188,22 @@ When using the value of a variable, add a `$` before its name:
 ▶ 3
 ```
 
-Variables must be assigned before use. Attempting to use a variable before assigning will cause a compilation error:
+Variables must be assigned before use. Attempting to use an unassigned
+variable causes a compilation error:
 
 ```elvish-transcript
 ~> echo $x
 Compilation error: variable $x not found
-  [interactive], line 1:
-    echo $x
+[tty], line 1: echo $x
 ~> { echo $x }
 Compilation error: variable $x not found
-  [interactive], line 1:
-    { echo $x }
+[tty], line 1: { echo $x }
 ```
 
 ## Explosion and Rest Variable
 
-When using a list variable, you can add `@` before the name to get all contained values. This is called **exploding** the variable:
+If a variable contains a list value, you can add `@` before the variable name
+to get all its element values. This is called **exploding** the variable:
 
 ```elvish-transcript
 ~> li = [lorem ipsum foo bar]
@@ -201,7 +218,9 @@ When using a list variable, you can add `@` before the name to get all contained
 
 (This notation is restricted to exploding variables. To explode arbitrary values, use the builtin [explode](/ref/builtin.html#explode) command.)
 
-When assigning variables, if you prefix the name of the last variable with `@`, it becomes a list containing all remaining values. That variable is called a **rest variable**. Example:
+When assigning variables, if you prefix the name of the last variable with
+`@`, it gets assigned a list containing all remaining values. That variable is
+called a **rest variable**. Example:
 
 ```elvish-transcript
 ~> a b @rest = 1 2 3 4 5 6 7
@@ -211,7 +230,8 @@ When assigning variables, if you prefix the name of the last variable with `@`, 
 ▶ [3 4 5 6 7]
 ```
 
-Schematically this is an inversive operation to variable explosion, which is why they share the `@` sign.
+Schematically this is a reverse operation to variable explosion, which is why
+they share the `@` sign.
 
 
 ## Temporary Assignment
@@ -276,9 +296,9 @@ then its parent lexical scope and so forth, until the outermost scope:
 
 ```elvish-transcript
 ~> x = 12
-~> { echo $x } # $x is in the outermost scope
+~> { echo $x } # $x is in the global scope
 12
-~> { y = bar; { echo $y } } # $y is in the outer block
+~> { y = bar; { echo $y } } # $y is in the outer scope
 bar
 ```
 
@@ -296,23 +316,22 @@ Compilation error: variable $nonexistent not found
 ```
 
 When you assign a variable, Elvish does a similar searching. If the variable
-cannot found, it will be created on the current (innermost) scope:
+cannot be found, it will be created in the current scope:
 
 ```elvish-transcript
 ~> x = 12
-~> { x = 13 } # assigns to x in the root scope
+~> { x = 13 } # assigns to x in the global scope
 ~> echo $x
 13
-~> { z = foo } # creates z in the innermost scope
+~> { z = foo } # creates z in the inner scope
 ~> echo $z
 Compilation error: variable $z not found
-  [interactive], line 1:
-    echo $z
+[tty], line 1: echo $z
 ```
 
 This means that Elvish will not shadow your variable in outer scopes.
 
-There is a `local:` pseudo-namespace that always refers to the innermost scope,
+There is a `local:` pseudo-namespace that always refers to the current scope,
 and by using it it is possible to force Elvish to shadow variables:
 
 ```elvish-transcript
@@ -345,8 +364,8 @@ b
 
 It is not possible to refer to a specific outer scope.
 
-You cannot create new variables in the `builtin:` namespace, although some
-existing variables in it can be assigned.
+You cannot create new variables in the `builtin:` namespace, although existing
+variables in it can be assigned new values.
 
 
 # Lambda
