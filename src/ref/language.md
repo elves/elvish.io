@@ -372,8 +372,8 @@ variables in it can be assigned new values.
 
 Lambdas are first-class values in Elvish. They can be kept in variables, used
 as arguments, output on the value channel, and embedded in other data
-structures. Lambda literals is a [code chunk](#code-chunk) surrounded by curly
-braces:
+structures. A lambda literal is a [code chunk](#code-chunk) surrounded by
+curly braces:
 
 ```elvish-transcript
 ~> f = { echo "Inside a lambda" }
@@ -381,9 +381,10 @@ braces:
 ▶ <closure 0x18a1a340>
 ```
 
-One or more whitespace characters after the opening curly brace is required:
-Elvish relies on the presense of whitespace to disambiguates lambda literals
-and [braced lists](#braced-lists).
+One or more whitespace characters after `{` is required: Elvish relies on the
+presense of whitespace to disambiguates lambda literals and [braced
+lists](#braced-lists). It is good style to put some whitespace before `{` as
+well, but this is not required by the syntax.
 
 Lambdas can also be used as commands:
 
@@ -424,7 +425,8 @@ signature as a list, followed by a lambda without signature:
 ```
 
 Like in the left hand of assignments, if you prefix the last argument with
-`@`, it becomes a **rest argument**:
+`@`, it becomes a **rest argument**, and its value is a list containing all
+the remaining arguments:
 
 ```elvish-transcript
 ~> f = [a @rest]{ put $a $rest }
@@ -437,10 +439,11 @@ Like in the left hand of assignments, if you prefix the last argument with
 ```
 
 You can also declare options in the argument list. The syntax imitates map
-pairs, and is `&name=default`.
+pairs, and is `&name=default`, where `default` is the default value for the
+option.
 
 ```elvish-transcript
-~> f = [&opt=default]{ echo "Option value is "$opt }
+~> f = [&opt=default]{ echo "Value of $opt is "$opt }
 ~> $f
 Option value is default
 ~> $f &opt=foobar
