@@ -1224,7 +1224,7 @@ Syntax:
 ```elvish-transcript
 try {
     <try-block>
-} except [except-varname] {
+} except except-varname {
     <except-block>
 } else {
     <else-block>
@@ -1238,36 +1238,65 @@ Only `try` and `try-block` are required. This control structure behaves as follo
 1.  The `try-block` is always executed first.
 
 2.  If `except` is present and an exception occurs in `try-block`, it is
-    caught and stored in `except-varname`, and `except-block` is executed.
+    caught and stored in `except-varname`, and `except-block` is then
+    executed. Example:
+
+    ```elvish-transcript
+    ~> try { fail bad } except e { put $e }
+    ▶ ?(fail bad)
+    ```
+
+    Note that if `except` is not present, exceptions thrown from `try` are not
+    caught: for instance, `try { fail bad }` throws `bad`; it is equivalent to
+    a plain `fail bad`.
+
+    Note that the word after `except` names a variable, not a matching
+    condition. Exception matching is not supported yet. For instance, you may
+    want to only match exceptions that were created with `fail bad` with
+    `except bad`, but in fact this creates a variable `$bad` that contains
+    whatever exception was thrown.
 
 3.  If no exception occurs and `else` is present, `else-block` is executed.
+    Example:
 
-4.  In all cases, `finally-block` is executed.
+    ```elvish-transcript
+    ~> try { nop } else { echo well }
+    well
+    ```
+
+4.  If `finally-block` is present, it is executed. Examples:
+
+    ```elvish-transcript
+    ~> try { fail bad } finally { echo final }
+    final
+    Exception: bad
+    Traceback:
+      [tty], line 1:
+        try { fail bad } finally { echo final }
+    ~> try { echo good } finally { echo final }
+    good
+    final
+    ```
 
 5.  If the exception was not caught (i.e. `except` is not present), it is
-    rethrown after the execution of `finally-block`.
+    rethrown.
 
 Exceptions thrown in blocks other than `try-block` are not caught. If an
 exception was thrown and either `except-block` or `finally-block` throws
-another exception, the original exception is lost.
+another exception, the original exception is lost. Examples:
 
-Examples:
-
-1.  `try { fail bad }` throws `bad`; it is equivalent to a plain `fail bad`.
-
-2.  `try { fail bad } except e { echo $e }` prints out an exception constructed
-    from `haha` (the format is subject to change in future).
-
-3.  `try { nop } else { echo well }` prints out `well`.
-
-4.  `try { fail bad } finally { echo final }` prints out `final` and then
-    throws `bad`.
-
-5.  `try { echo good } finally { echo final }` prints out `good` and `final`.
-
-6.  `try { fail bad } except e { fail worse }` throws `worse`.
-
-7.  `try { fail bad } except e { fail worse } finally { fail worst }` throws `worst`.
+```elvish-transcript
+~> try { fail bad } except e { fail worse }
+Exception: worse
+Traceback:
+  [tty], line 1:
+    try { fail bad } except e { fail worse }
+~> try { fail bad } except e { fail worse } finally { fail worst }
+Exception: worst
+Traceback:
+  [tty], line 1:
+    try { fail bad } except e { fail worse } finally { fail worst }
+```
 
 
 ## Function Definition: `fn`
