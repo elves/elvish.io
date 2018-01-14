@@ -370,70 +370,61 @@ variables in it can be assigned new values.
 
 # Lambda
 
-Lambdas are first-class values in Elvish. When used as commands, they resemble
-code blocks in C-like languages in syntax:
-
-```elvish-transcript
-~> { echo "Inside a lambda" }
-Inside a lambda
-```
-
-Under the hood, the code above defines a lambda and calls it immediately. Since
-lambdas are first-class values, you can assign them to variables and use them
-as arguments:
+Lambdas are first-class values in Elvish. They can be kept in variables, used
+as arguments, output on the value channel, and embedded in other data
+structures. Lambda literals is a [code chunk](#code-chunk) surrounded by curly
+braces:
 
 ```elvish-transcript
 ~> f = { echo "Inside a lambda" }
 ~> put $f
 ▶ <closure 0x18a1a340>
+```
+
+One or more whitespace characters after the opening curly brace is required:
+Elvish relies on the presense of whitespace to disambiguates lambda literals
+and [braced lists](#braced-lists).
+
+Lambdas can also be used as commands:
+
+```elvish-transcript
 ~> $f
 Inside a lambda
+~> { echo "Inside a literal lambda" }
+Inside a literal lambda
 ```
 
-Lambdas can be either **signatureless** of **signatureful**.
+The last command resembles code blocks in C-like languages in syntax, but
+under the hood, it defines a lambda on the fly and calls it immediately.
 
-## Signatureless Lambda
+Lambdas defined using this basic syntax do not take any arguments or options.
+To do so, you need to define a signature for the lambda.
 
-Signatureless lambdas are written like `{ command ... }`. Example:
+## Signature
 
-```elvish-transcript
-~> f = { echo Hi }
-~> put $f
-▶ <closure 0xc420450540>
-~> $f
-Hi
-```
-
-(Some whitespace after `{` **is required**: without whitespace, Elvish will
-parse a braced list. A good style is to always put whitespaces around braces
-when you are using them for lambdas.)
-
-Signatureless lambdas accept no arguments. To accept arguments, you need to add
-a signature to this lambda.
-
-## Signatureful Lambda
-
-A signatureful lambda looks just like a signatureless one, just with an
-argument list in the front: `[a b]{ put $b $a }`. When calling a signatureful
-lambda, number of arguments must match the signature:
+In order for a lambda to accept arguments, you need to declare them in a
+**signature**:
 
 ```elvish-transcript
-~> [a b]{ put $b $a } lorem ipsum
+~> f = [a b]{ put $b $a }
+~> $f lorem ipsum
 ▶ ipsum
 ▶ lorem
-~> [a b]{ put $b $a } lorem
-Exception: arity mismatch
-Traceback:
-  [interactive], line 1:
-    [a b]{ put $b $a } lorem
 ```
 
-Note that in signatureful lambdas, there should be **no space** between
-`]` and `{`; otherwise Elvish parses a list and a lambda.
+There should be no space between `]` and `{`; otherwise Elvish will parses the
+signature as a list, followed by a lambda without signature:
 
-Analogous to rest variables in assignments, If the last argument in the list
-starts with `@`, it becomes a **rest argument** and its value is a list
-containing all remaining arguments:
+```elvish-transcript
+~> put [a]{ nop }
+▶ <closure 0xc420153d80>
+~> put [a] { nop }
+▶ [a]
+▶ <closure 0xc42004a480>
+```
+
+Like in the left hand of assignments, if you prefix the last argument with
+`@`, it becomes a **rest argument**:
 
 ```elvish-transcript
 ~> f = [a @rest]{ put $a $rest }
@@ -444,8 +435,6 @@ containing all remaining arguments:
 ▶ lorem
 ▶ [ipsum dolar sit]
 ```
-
-This is similar to `*rest` in Python, or `rest ...T` in Go.
 
 You can also declare options in the argument list. The syntax imitates map
 pairs, and is `&name=default`.
@@ -458,15 +447,39 @@ Option value is default
 Option value is foobar
 ```
 
-Options must have default values.
+Options must have default values: Options should be **option**al.
 
-(The idea is that options should always be **option**al when calling your
-function, so you must provide a default value.)
+If you call a lambda with too few arguments, too many arguments or unknown
+options, an exception is thrown:
+
+```elvish-transcript
+~> [a]{ echo $a } foo bar
+Exception: need 1 arguments, got 2
+[tty], line 1: [a]{ echo $a } foo bar
+~> [a b]{ echo $a $b } foo
+Exception: need 2 arguments, got 1
+[tty], line 1: [a b]{ echo $a $b } foo
+~> [a b @rest]{ echo $a $b $rest } foo
+Exception: need 2 or more arguments, got 1
+[tty], line 1: [a b @rest]{ echo $a $b $rest } foo
+~> [&k=v]{ echo $k } &k2=v2
+Exception: unknown option k2
+[tty], line 1: [&k=v]{ echo $k } &k2=v2
+```
 
 
-## Closure
+## Closure Semantics
 
-Lambdas have closure semantics:
+Lambdas have [closure
+semantics](https://en.wikipedia.org/wiki/Closure_(computer_programming)). In
+the following example, the `make-adder` function outputs two functions, both
+referring to a local variable `$n`. Closure semantics means that:
+
+1.  Both functions can continue to refer to the `$n` variable after
+    `make-adder` has returned.
+
+2.  Multiple calls to the `make-adder` function generates distinct instances
+    of the `$n` variables.
 
 ```elvish-transcript
 ~> fn make-adder {
@@ -474,17 +487,30 @@ Lambdas have closure semantics:
      put { put $n } { n = (+ $n 1) }
    }
 ~> getter adder = (make-adder)
-~> $getter
+~> $getter # $getter outputs $n
 ▶ 0
-~> $adder
-~> $getter
+~> $adder # $adder increments $n
+~> $getter # $getter and $setter refer to the same $n
 ▶ 1
 ~> getter2 adder2 = (make-adder)
-~> $getter2
+~> $getter2 # $getter2 and $getter refer to different $n
 ▶ 0
 ~> $getter
 ▶ 1
 ```
+
+Variables that get "captured" in closures are called **upvalues**; this is why
+the pseudo-namespace for variables in outer scopes is called `up:`. When
+capturing upvalues, Elvish only captures the variables that are used. In the
+following example, `$m` is not an upvalue of `$g` because it is not used:
+
+```elvish-transcript
+~> fn f { m = 2; n = 3; put { put $n } }
+~> g = (f)
+```
+
+This effect is not currently observable, but will become so when namespaces
+[become introspectable](https://github.com/elves/elvish/issues/492).
 
 
 # Indexing
@@ -494,14 +520,13 @@ a value.
 
 ## List Indexing
 
-Lists are zero-based (i.e. the first element has index 0). They can be indexed
-with any of the following three ways:
+Lists can be indexed with any of the following:
 
 *   A non-negative integer, an offset counting from the beginning of the list.
-    For example, `$li[0]` is the first element.
+    For example, `$li[0]` is the first element of `$li`.
 
 *   A negative integer, an offset counting from the back of the list. For
-    instance, `$li[-1]` is its last element.
+    instance, `$li[-1]` is the last element `$li`.
 
 *   A slice `$a:$b`, where both `$a` and `$b` are integers. The result is
     sublist of `$li[$a]` upto, but not including, `$li[$b]`. For instance,
@@ -509,12 +534,23 @@ with any of the following three ways:
     elements from `$li` except the first and last one.
 
     Both integers may be omitted; `$a` defaults to 0 while `$b` defaults to the
-    length of the list.
+    length of the list. For instance, `$li[:2]` is equivalent to `$li[0:2]`,
+    `$li[2:]` is equivalent to `$li[2:(count $li)]`, and `$li[:]` makes a copy
+    of `$li`. The last form is rarely useful, as lists are immutable.
 
-    Note that the slice needs to be a **single** string, meaning that both
-    integers must run together. For instance, `$li[2: 10]` is not the same as
-    `$li[2:10]`, but rather the same as `$li[2:] $li[10]` (see "multiple
-    indicies" below).
+    Note that the slice needs to be a **single** string, so there cannot be
+    any spaces within the slice. For instance, `$li[2:10]` cannot be written
+    as `$li[2: 10]`; the latter contains two indicies and is equivalent to
+    `$li[2:] $li[10]` (see [Multiple Indicies](#multiple-indicies)).
+
+*   Not yet implemented: The string `@`. The result is all the values in the
+    list. Note that this is not the same as `:`: if `$li` has 10 elements,
+    `$li[@]` evaluates to 10 values (all the elements in the list), while
+    `$li[:]` evaluates to just one value (a copy of the list).
+
+    When used on a variable like `$li`, it is equivalent to the explosion
+    construct `$li[@]`. It is useful, however, when used on other constructs,
+    like output capture or other
 
 Examples:
 
@@ -577,7 +613,7 @@ lorem
 haha
 ```
 
-## Multiple indices
+## Multiple Indices
 
 If you put multiple values in the index, you get multiple values: `$li[x y z]`
 is equivalent to `$li[x] $li[y] $li[z]`. This applies to all indexable values.
