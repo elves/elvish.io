@@ -953,18 +953,16 @@ The **head** must appear first. It is an arbitrary word that determines what wil
 ```elvish-transcript
 ~> ls -l # the string ls is the head
 (output omitted)
-~> (put ls) -l # (put ls) is the head
+~> (put [@a]{ ls $@a }) -l
 (same output)
 ```
 
 The head must evaluate to one value. For instance, the following does not work:
 
 ```elvish-transcript
-~> (put ls -l)
-Exception: head of command must be 1 value; got 2
-Traceback:
-  [interactive], line 1:
-    (put ls -l)
+~> (put [@a]{ ls $@a } -l)
+Exception: head of command must be a single value; got 2 values
+[tty], line 1: (put [@a]{ ls $@a } -l)
 ```
 
 The definition of barewords is relaxed for the head to include `<`, `>`, `*`
