@@ -595,6 +595,21 @@ Etymology: [PHP](http://php.net/manual/en/function.explode.php). PHP's
 the name too much to not use it.
 
 
+## external
+
+```elvish
+external $program
+```
+
+Construct a callable value for the external program `$program`. Example:
+
+```elvish-transcript
+~> x = (external man)
+~> $x ls # opens the manpage for ls
+```
+
+$cf has-external search-external
+
 ## fail
 
 ```elvish
@@ -703,7 +718,7 @@ might differ):
 ▶ $false
 ```
 
-$cf search-external
+$cf external search-external
 
 
 ## has-prefix
@@ -1263,7 +1278,7 @@ found. Example (your output might vary):
 ▶ /bin/cat
 ```
 
-$cf has-external
+$cf external has-external
 
 ## slurp
 
@@ -1433,6 +1448,21 @@ stdout.
 ```
 
 $cf from-json
+
+## to-string
+
+```elvish
+to-string $value...
+```
+
+Convert arguments to string values.
+
+```elvish-transcript
+~> to-string foo [a] [&k=v]
+▶ foo
+▶ '[a]'
+▶ '[&k=v]'
+```
 
 ## wcswidth
 

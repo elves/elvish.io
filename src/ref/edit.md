@@ -225,10 +225,11 @@ completion types:
 edit:-matcher[''] = [seed]{ each [cand]{ has-prefix $cand $seed } }
 ```
 
-Elvish provides two builtin matchers, `edit:match-prefix` and
-`edit:match-subseq`. In addition to conforming to the matcher protocol, they
-accept two options `&ignore-case` and `&smart-case`. For example, if you want
-completion of arguments to use prefix matching and ignore case, use:
+Elvish provides three builtin matchers, `edit:match-prefix`,
+`edit:match-substr` and `edit:match-subseq`. In addition to conforming to the
+matcher protocol, they accept two options `&ignore-case` and `&smart-case`.
+For example, if you want completion of arguments to use prefix matching and
+ignore case, use:
 
 ```elvish
 edit:-matcher[argument] = [seed]{ edit:match-prefix $seed &ignore-case=$true }
@@ -365,6 +366,13 @@ See [the Matcher section](#matcher).
 
 See [the Prompts section](#prompts).
 
+## $edit:-prompts-max-wait
+
+A time in seconds. If the execution of a prompt function exceeds this time,
+the editor does not wait for it to finish; instead, it shows the old value of
+the prompt with a marker, and updates the prompt again when the execution is
+finished. Defaults to `+Inf`, which causes Elvish to block on the prompt
+functions.
 
 ## $edit:rprompt
 
