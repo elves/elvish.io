@@ -53,6 +53,24 @@ fixed quickly when they don't).
     </td>
   </tr>
   <tr>
+    <td>0.11</td>
+    <td>
+      <a href="https://dl.elvish.io/elvish-linux-amd64-0.11.tar.gz">elvish-linux-amd64-0.11.tar.gz</a>
+      <br>
+      <a href="https://dl.elvish.io/elvish-linux-386-0.11.tar.gz">elvish-linux-386-0.11.tar.gz</a>
+      <br>
+      <a href="https://dl.elvish.io/elvish-linux-arm64-0.11.tar.gz">elvish-linux-arm64-0.11.tar.gz</a>
+    </td>
+    <td>
+      <a href="https://dl.elvish.io/elvish-darwin-amd64-0.11.tar.gz">elvish-darwin-amd64-0.11.tar.gz</a>
+    </td>
+    <td>
+      <a href="https://dl.elvish.io/elvish-windows-amd64-0.11.zip">elvish-windows-amd64-0.11.zip</a>
+      <br>
+      <a href="https://dl.elvish.io/elvish-windows-386-0.11.zip">elvish-windows-386-0.11.zip</a>
+    </td>
+  </tr>
+  <tr>
     <td>0.10.1 (<a href="/blog/0.10-release-notes.html">Release Note</a>)</td>
     <td><a href="https://dl.elvish.io/elvish-0.10.1-linux.tar.gz">elvish-0.10.1-linux.tar.gz</a></td>
     <td><a href="https://dl.elvish.io/elvish-0.10.1-osx.tar.gz">elvish-0.10.1-osx.tar.gz</a></td>
