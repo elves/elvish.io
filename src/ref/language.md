@@ -986,9 +986,8 @@ to commands. Arguments are arbitrary words, while options have the same
 syntax as map pairs. They are separated by inline whitespaces:
 
 ```elvish-transcript
-~> splits &sep=: /home:/root # &sep=: is an option; /home:/root is an argument
-▶ /home
-▶ /root
+~> echo &sep=, a b c # seq=, is an option; a b c are arguments
+a,b,c
 ```
 
 
