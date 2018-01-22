@@ -1,3 +1,5 @@
+<!-- toc -->
+
 # Introduction
 
 The Elvish package manager (`epm`) is a simple Elvishscript module for

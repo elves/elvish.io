@@ -1,3 +1,5 @@
+<!-- toc -->
+
 # Introduction
 
 The `re:` module wraps Go's `regexp` package. See the

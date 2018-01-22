@@ -1,3 +1,5 @@
+<!-- toc -->
+
 **This tutorial is quite incomplete, and it is being constantly expanded.**
 
 This tutorial introduces the fundamentals of shell programming with Elvish.

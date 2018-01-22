@@ -1,3 +1,5 @@
+<!-- toc -->
+
 The development of Elvish is driven by a set of ideas, a **design philosophy**.
 
 # The language

@@ -1,3 +1,5 @@
+<!-- toc -->
+
 If you come from other shells, hopefully the following recipes will get you started quickly:
 
 # UI Recipes
