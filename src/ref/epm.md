@@ -136,18 +136,22 @@ their name. For example, the package mentioned above is stored at
 
 Each domain must be configured with the following information:
 
-- The method to use to fetch packages from the domain. The two
+* The method to use to fetch packages from the domain. The two
   supported methods are `git` and `rsync`.
-- The number of directory levels under the domain directory in which
+
+* The number of directory levels under the domain directory in which
   the packages are found. For example, for `github.com` the number of
   levels is 2, since package paths have two levels
   (e.g. `elves/sample-pkg`). All packages from a given domain have the
   same number of levels.
-- Depending on the method, other attributes are needed:
-  - `git` needs a `protocol` attribute, which can be `https` or
-    `http`, and determines how the URL is constructed.
-  - `rsync` needs a `location` attribute, which must be a valid source
-    directory recognized by the `rsync` command.
+
+* Depending on the method, other attributes are needed:
+
+    - `git` needs a `protocol` attribute, which can be `https` or
+      `http`, and determines how the URL is constructed.
+
+    - `rsync` needs a `location` attribute, which must be a valid source
+      directory recognized by the `rsync` command.
 
 `epm` includes default domain configurations for `github.com`,
 `gitlab.com` and `bitbucket.org`. These three domains share the same
