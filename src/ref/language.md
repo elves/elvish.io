@@ -800,7 +800,10 @@ The following behaviors are default, although they can be altered by modifiers:
 
 ## Modifiers
 
-Wildcards can be **modified** using the same syntax as indexing. For instance, in `*[mod1 mod2]` the `*` wildcard is modified. There are two kinds of modifiers.
+Wildcards can be **modified** using the same syntax as indexing. For instance,
+in `*[match-hidden]` the `*` wildcard is modified with the `match-hidden`
+modifier. Multiple matchers can be chained like `*[set:abc][range:0-9]`. There
+are two kinds of modifiers:
 
 **Global modifiers** apply to the whole pattern and can be placed after any
 wildcard:
@@ -842,15 +845,17 @@ thing. (This will probably be fixed.)
 
     Note the following caveats:
 
-    *   If you have multiple matchers, they are OR'ed. For instance,
-        ?[set:aeoiu digit] matches `aeoiu` and digits.
+    *   Multiple matchers, they are OR'ed. For instance, ?[set:aeoiu][digit]
+        matches `aeoiu` and digits.
 
-    *   `.` at the beginning of filenames always require an explicit
-        `match-hidden`. For example, `?[set:.a]x.conf` does **not** match
-        `.x.conf`; use `?[set:.a match-hidden]x.conf`.
+    *   Dots at the beginning of filenames always require an explicit
+        `match-hidden`, even if the matcher includes `.`. For example,
+        `?[set:.a]x.conf` does **not** match `.x.conf`; you have to `?[set:.a
+        match-hidden]x.conf`.
 
-    *   `?` and `*` never matches slashes, and `**` always does. This behavior
-        is not affected by character matchers.
+    *   Likewise, you always need to use `**` to match slashes, even if the
+        matcher includes `/`. For example `*[set:abc/]` is the same as
+        `*[set:abc]`.
 
 
 # Compound Expression and Braced Lists
