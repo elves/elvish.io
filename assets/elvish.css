@@ -60,6 +60,11 @@ a:visited {
   list-style: none;
 }
 
+/* Keep first-level ToC within one column */
+#toc-list > li {
+  break-inside: avoid;
+}
+
 pre.ttyshot {
   font-size: 12pt;
   line-height: 1 !important;
