@@ -9,3 +9,7 @@ title = "Cookbook"
 [[articles]]
 name = "unique-semantics"
 title = "Some Unique Semantics"
+
+[[articles]]
+name = "effective-elvish"
+title = "Effective Elvish"
