@@ -62,9 +62,6 @@ a:visited {
   break-inside: avoid;
 }
 
-#toc-list > li {
-}
-
 pre.ttyshot {
   font-size: 12pt;
   line-height: 1 !important;
