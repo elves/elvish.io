@@ -273,6 +273,35 @@ given multiple arguments. Examples:
 ```
 
 
+## all
+
+```elvish
+all
+```
+
+Pass inputs, both bytes and values, to the output.
+
+This is an identity function in pipelines: `a | all | b` is equivalent to `a |
+b`. It is mainly useful for turning inputs into arguments, like:
+
+```elvish-transcript
+~> put 'lorem,ipsum' | splits , (all)
+▶ lorem
+▶ ipsum
+```
+
+Or capturing all inputs in a variable:
+
+```elvish-transcript
+~> x = [(all)]
+foo
+bar
+(Press ^D)
+~> put $x
+▶ [foo bar]
+```
+
+
 ## assoc
 
 ```elvish
@@ -1645,7 +1674,7 @@ The special value used by `?()` to signal absence of exceptions.
 
 ## $value-out-indicator
 
-A string put before value outputs (such as those of of `put`). Defaults to 
+A string put before value outputs (such as those of of `put`). Defaults to
 `'▶ '`. Example:
 
 ```elvish-transcript
