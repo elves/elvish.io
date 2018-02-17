@@ -1,3 +1,5 @@
+<!-- toc -->
+
 Elvish is not an entirely new language. Its programming techniques have two
 primary sources: traditional Unix shells and functional programming languages,
 both dating back to many decades ago. However, the way Elvish combines those
@@ -13,7 +15,13 @@ games](https://en.wikipedia.org/wiki/Roguelike), Elven items are known to be
 high-quality, artful and resilient. So is Elven code.
 
 
-# Data Pipeline
+# Style
+
+## Code Format
+
+## Naming
+
+# Using the Pipeline
 
 Elvish is equipped with a powerful tool for passing data: the pipeline. Like
 in traditional shells, it is an intuitive notation for data processing: data
@@ -70,8 +78,8 @@ like `splits`:
 
 User-defined functions behave in the same way: they "return" values by writing
 to structured stdout. Without realizing that return value and outputs are the
-same in Elvish, it is easy to think of `put` as a command to return values and
-write code like this:
+same in Elvish, it is easy to think of `put` as *the* command to "return"
+values and write code like this:
 
 ```elvish-transcript
 ~> fn split-by-comma [s]{ put (splits , $s) }
@@ -283,3 +291,8 @@ In the previous subsection, we remarked that commands like `splits` and `each`
 write multiple output values instead of one list. Why?
 
 (To be written)
+
+
+# Organizing Packages and Modules
+
+## Module Initialization
