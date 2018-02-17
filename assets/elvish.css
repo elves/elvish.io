@@ -58,6 +58,8 @@ a:visited {
 
 #toc-list li {
   list-style: none;
+  /* Keep first-level ToC within one column */
+  break-inside: avoid;
 }
 
 pre.ttyshot {
