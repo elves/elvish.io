@@ -75,8 +75,8 @@ if $true {
 ```
 
 This is because in Elvish, control structures like `if` follow the same syntax
-as normal commands, hence newlines can terminates them. To make the code block
-part of the `if` command, it must appear on the same line.
+as normal commands, hence newlines terminate them. To make the code block part
+of the `if` command, it must appear on the same line.
 
 
 # Using the Pipeline
@@ -341,9 +341,9 @@ OK but a bit more wordy:
 ▶ IPSUM
 ```
 
-However, not all commands supports taking input from the pipeline. For
-example, if we want to first join some values with space and then split at
-commas, this won't work:
+However, not all commands support taking input from the pipeline. For example,
+if we want to first join some values with space and then split at commas, this
+won't work:
 
 ```elvish-transcript
 ~> joins ' ' [a,b c,d] | splits ,
