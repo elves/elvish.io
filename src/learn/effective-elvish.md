@@ -17,9 +17,67 @@ high-quality, artful and resilient. So is Elven code.
 
 # Style
 
-## Code Format
-
 ## Naming
+
+Use `dash-delimited-words` for names of variables and functions. Underscores
+are allowed in variable and function names, but their use should be limited to
+environment variables (e.g. `$E:LC_ALL`) and external commands (e.g. `pkg_add`).
+
+When building a module, use a leading dash to communicate that a variable or
+function is subject to change in future and cannot be relied upon, either
+because it is an experimental feature or implementation detail.
+
+Elvish's core libraries follow the naming convention above.
+
+## Indentation
+
+Indent by two spaces.
+
+## Code Blocks
+
+In Elvish, code blocks in control structures are delimited by curly braces.
+This is perhaps the most visible difference of Elvish from most other shells
+like bash, zsh or fish. The following bash code:
+
+```bash
+if true; then
+  echo true
+fi
+```
+
+Is written like this in Elvish:
+
+```elvish
+if $true {
+  echo true
+}
+```
+
+If you have used lambdas in Elvish, you will notice that code blocks are
+syntactically just parameter-list-less lambdas.
+
+In Elvish, you cannot put opening braces of code blocks on the next line. This
+won't work:
+
+```elvish
+if $true
+{ # wrong!
+  echo true
+}
+```
+
+Instead, you must write:
+
+```elvish
+if $true {
+  echo true
+}
+```
+
+This is because in Elvish, control structures like `if` follow the same syntax
+as normal commands, hence newlines can terminates them. To make the code block
+part of the `if` command, it must appear on the same line.
+
 
 # Using the Pipeline
 
@@ -30,12 +88,13 @@ in traditional shells, it is not restricted to unstructured bytes: all Elvish
 values, including lists, maps and even closures, can flow in the pipeline.
 This section documents how to make the most use of pipelines.
 
-## Use Structured Outputs to "Return" Values
+## "Returning" Values with Structured Output
 
 Unlike functions in most other programming languages, Elvish commands do not
 have return values. Instead, they can write to *structured output*, which is
-similar to byte-based stdout, but preserves all internal structures of complex
-Elvish values. The most fundamental builtin command that does this is `put`:
+similar to the traditional byte-based stdout, but preserves all internal
+structures of aribitrary Elvish values. The most fundamental command that does
+this is `put`:
 
 ```elvish-transcript
 ~> put foo
@@ -46,7 +105,7 @@ Elvish values. The most fundamental builtin command that does this is `put`:
 ```
 
 This is hardly impressive - you can output and recover simple strings using
-the good old byte-based output as well. But let's try this:
+good old byte-based output as well. But let's try this:
 
 ```elvish-transcript
 ~> put "a\nb" [foo bar]
@@ -77,9 +136,9 @@ like `splits`:
 ```
 
 User-defined functions behave in the same way: they "return" values by writing
-to structured stdout. Without realizing that return value and outputs are the
-same in Elvish, it is easy to think of `put` as *the* command to "return"
-values and write code like this:
+to structured stdout. Without realizing that "return values" are just outputs
+in Elvish, it is easy to think of `put` as **the** command to "return" values
+and write code like this:
 
 ```elvish-transcript
 ~> fn split-by-comma [s]{ put (splits , $s) }
@@ -89,7 +148,7 @@ values and write code like this:
 ```
 
 The `split-by-comma` function works, but it can be written more concisely
-simply as:
+as:
 
 ```elvish-transcript
 ~> fn split-by-comma [s]{ splits , $s }
@@ -108,11 +167,12 @@ following function:
 ```elvish
 fn git-describe { echo (git describe --tags --always) }
 ```
+
 ## Mixing Bytes and Values
 
 Each pipe in Elvish comprises two components: one traditional byte pipe that
 carries unstructured bytes, and one value pipe that carries Elvish values. You
-can write to both at the same time, and output capture will capture both:
+can write to both, and output capture will capture both:
 
 ```elvish-transcript
 ~> fn f { echo bytes; put value }
@@ -148,10 +208,28 @@ example:
 ▶ IPSUM
 ```
 
-This line-oriented treatment of byte input is consistent with traditional Unix
-tools like `grep`, `sed` and `awk`. However, this behavior is not always
-desirable: not all Unix commands output newline-separated data. When you want
-to get the output as is, as one big string, you can use the `slurp` command:
+This line-oriented processing of byte input is consistent with traditional
+Unix tools like `grep`, `sed` and `awk`. In fact, it is easy to write your own
+`grep` in Elvish:
+
+```elvish-transcript
+~> fn mygrep [p]{ each [line]{ if (re:match $p $line) { echo $line } } }
+~> cat in.txt
+abc
+123
+lorem
+456
+~> cat in.txt | mygrep '[0-9]'
+123
+456
+```
+
+(Note that it is more concise to write `mygrep ... < in.txt`, but due to [a
+bug](https://github.com/elves/elvish/issues/600) this does not work.)
+
+However, this line-oriented behavior is not always desirable: not all Unix
+commands output newline-separated data. When you want to get the output as is,
+as a single string, you can use the `slurp` command:
 
 ```elvish-transcript
 ~> echo "a\nb\nc" | slurp
@@ -178,20 +256,23 @@ func main() {
 It is also useful, for example, when working with NUL-separated output:
 
 ```elvish-transcript
-~/tmp/go> touch "a\nb.go"
-~/tmp/go> mkdir d
-~/tmp/go> touch d/f.go
-~/tmp/go> find . -name '*.go' -print0 | splits "\000" (slurp)
+~> touch "a\nb.go"
+~> mkdir d
+~> touch d/f.go
+~> find . -name '*.go' -print0 | splits "\000" (slurp)
 ▶ "./a\nb.go"
 ▶ ./d/f.go
 ▶ ''
 ```
 
 In the above command, `slurp` turns the input into one string, which is then
-captured and used as an argument to `splits`. In Elvish, strings can contain
-NUL bytes (in fact, they can contain any byte). Note that the `find` command
-terminates its output with a NUL byte, hence we see a trailing empty string in
-the output.
+used as an argument to `splits`. The `splits` command then splits the whole
+input by NUL bytes.
+
+Note that in Elvish, strings can contain NUL bytes; in fact, they can contain
+any byte; this makes Elvish suitable for working with binary data. (Also, note
+that the `find` command terminates its output with a NUL byte, hence we see a
+trailing empty string in the output.)
 
 One side note: In the first example, we saw that `bytes` appeared before `value`.
 This is not guaranteed: byte output and value output are separate, it is
@@ -219,8 +300,8 @@ again in order to pass the output of `each` to `joins`. You might wonder why
 commands like `splits` and `each` do not simply output a list to make this
 easier.
 
-The answer to that particular question is answered in the next subsection, but
-for the program at hand, there is a much better way to write it:
+The answer to that particular question is in the next subsection, but for the
+program at hand, there is a much better way to write it:
 
 ```elvish-transcript
 ~> csv = a,b,foo,bar
@@ -290,7 +371,38 @@ an argument:
 In the previous subsection, we remarked that commands like `splits` and `each`
 write multiple output values instead of one list. Why?
 
-(To be written)
+This has to do with another advantage of passing data through the pipeline: in
+a pipeline, all commands are executed in parallel. A command in a pipeline
+does not need to wait for its previous command to finish running before it can
+start processing data. Try this in your terminal:
+
+```elvish-transcript
+~> each $str:to-upper~ | each [x]{ put $x$x }
+(Start typing)
+abc
+▶ ABCABC
+xyz
+▶ XYZXYZ
+(Press ^D)
+```
+
+You will notice that as soon as you press Enter after typing `abc`, the output
+`ABCABC` is shown. As soon as one input is available, it goes through the
+entire pipeline, each command doing its work. This gives you immediate
+feedback, and makes good use of multi-core CPUs on modern computers. Pipelines
+are like assembly lines in the manufacturing industry.
+
+If instead of passing multiple values, we pass a list through the pipeline:
+that means that each command will now be waiting for its previous command to
+do all the processing and pack the results in a list before it can start doing
+anything. Now, although the commands themselves are run in parallel, they all
+need to be waiting for their previous commands to finish before they can start
+doing real work.
+
+This is why commands like `each` and `splits` produce multiple values instead
+of one list. When writing your functions, try to make them produce multiple
+values as well: they will cooperate better with builtin commands, and they can
+benefit from the efficiency of parallel computations.
 
 
 # Organizing Packages and Modules
