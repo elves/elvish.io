@@ -407,4 +407,34 @@ benefit from the efficiency of parallel computations.
 
 # Organizing Packages and Modules
 
-## Module Initialization
+The extensive programming capability of Elvish means that Elvish is suitable
+for writing complex programs.
+
+(To be written)
+
+## Initialization
+
+(To be written)
+
+## Versioning
+
+(To be written)
+
+# To Be Continued...
+
+The material present above is what the lead developer of Elvish (@xiaq) has
+collected as best practices for writing Elvish code in early 2018, between
+the release of Elvish 0.11 and 0.12. They apply to aspects of the Elvish
+language that are relatively complete and stable.
+
+However, many aspects of Elvish are still unstable or incomplete. The builtin
+libraries still have missing pieces, the package manager is in its early days,
+and things like a type system and macros have been proposed and considered,
+but not yet worked on. There is no good support for testing and distributing
+complex Elvish libraries and programs, either.
+
+It is hard to say how an idiomatic Elvish programing should utilize feature
+*x* when that particular feature *x* is nonexistent, incomplete, or subject to
+change. Hence, this document will co-evolve with Elvish itself; as Elvish
+stablizes, best practices will also stablize. You are welcome to revisit this
+document once in a while!
