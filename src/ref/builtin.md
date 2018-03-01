@@ -1649,7 +1649,8 @@ $_`) causes an exception.
 
 ## $args
 
-A list containing command-line arguments. Examples:
+A list containing command-line arguments. Analogous to `argv` in some other
+languages. Examples:
 
 ```elvish-transcript
 ~> echo 'put $args' > args.elv
