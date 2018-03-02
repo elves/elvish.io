@@ -131,15 +131,15 @@ The latter, in turn, is what happens when you type e.g. `cat `<span
 class="key">Tab</span>. Elvish cannot provide completions for them without full
 knowledge of the command.
 
-Command argument completions are programmable via the `$edit:arg-completer`
+Command argument completions are programmable via the `$edit:completion:arg-completer`
 variable. When Elvish is completing an argument of command `$x`, it will call
-the value stored in `$edit:arg-completer[$x]`, with all the existing arguments,
+the value stored in `$edit:completion:arg-completer[$x]`, with all the existing arguments,
 plus the command name in the front.
 
 For example, if the user types `man 1`<span class="key">Tab</span>, Elvish will call:
 
 ```elvish
-$edit:arg-completer[man] man 1
+$edit:completion:arg-completer[man] man 1
 ```
 
 If the user is starting a new argument when hitting <span
@@ -148,7 +148,7 @@ string. For instance, if you do `man 1`<span class="key">Space</span><span
 class="key">Tab</span>, Elvish will call:
 
 ```elvish
-$edit:arg-completer[man] man 1 ""
+$edit:completion:arg-completer[man] man 1 ""
 ```
 
 The output of this call becomes candidates. There are several ways of
@@ -188,7 +188,7 @@ names after that:
 ```elvish
 all-packages = [(apt-cache search '' | eawk [0 1 @rest]{ put $1 })]
 
-edit:arg-completer[apt] = [@args]{
+edit:completion:arg-completer[apt] = [@args]{
     n = (count $args)
     if (== $n 2) {
         # apt x<Tab> -- complete a subcommand name
@@ -208,10 +208,10 @@ that is relevant to tab completion is called for the **seed** of the
 completion. For instance, in `echo x`<span class="key">Tab</span>, the seed is
 `x`.
 
-Elvish first indexes the matcher table -- `$edit:-matcher` -- with the
+Elvish first indexes the matcher table -- `$edit:completion:matcher` -- with the
 completion type to find a **matcher**. The **completion type** is currently one
 of `variable`, `index`, `command`, `redir` or `argument`. If the
-`$edit:-matcher` lacks the suitable key, `$edit:-matcher['']` is used.
+`$edit:completion:matcher` lacks the suitable key, `$edit:completion:matcher['']` is used.
 
 
 Elvish then calls the matcher with one argument -- the seed, and feeds
@@ -222,7 +222,7 @@ As an example, the following code configures a prefix matcher for all
 completion types:
 
 ```elvish
-edit:-matcher[''] = [seed]{ each [cand]{ has-prefix $cand $seed } }
+edit:completion:matcher[''] = [seed]{ each [cand]{ has-prefix $cand $seed } }
 ```
 
 Elvish provides three builtin matchers, `edit:match-prefix`,
@@ -232,10 +232,10 @@ For example, if you want completion of arguments to use prefix matching and
 ignore case, use:
 
 ```elvish
-edit:-matcher[argument] = [seed]{ edit:match-prefix $seed &ignore-case=$true }
+edit:completion:matcher[argument] = [seed]{ edit:match-prefix $seed &ignore-case=$true }
 ```
 
-The default value of `$edit:-matcher` is `[&''=$edit:match-prefix~]`, hence
+The default value of `$edit:completion:matcher` is `[&''=$edit:match-prefix~]`, hence
 that candidates for all completion types are matched by prefix.
 
 
@@ -357,7 +357,7 @@ can often occupy the entire terminal, and push up your scrollback buffer.
 Change this variable to a finite number to restrict the height of the editor.
 
 
-## $edit:-matcher
+## $edit:completion:matcher
 
 See [the Matcher section](#matcher).
 
