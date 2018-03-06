@@ -213,6 +213,7 @@ Unix tools like `grep`, `sed` and `awk`. In fact, it is easy to write your own
 `grep` in Elvish:
 
 ```elvish-transcript
+~> use re
 ~> fn mygrep [p]{ each [line]{ if (re:match $p $line) { echo $line } } }
 ~> cat in.txt
 abc
