@@ -22,7 +22,7 @@ $ttyshot completion-mode
 
 Each mode has its own submodule under `edit:`. For instance, builtin functions
 and configuration variables for the completion mode can be found in the
-`edit:navigation:` module.
+`edit:completion:` module.
 
 The primary modes supported now are `insert`, `completion`, `navigation`,
 `history`, `histlist`, `location`, and `lastcmd`. The last 4 are "listing
@@ -31,9 +31,10 @@ modes", and their particularity is documented below.
 
 # Prompts
 
-Elvish has two prompts: the normal prompt and the right-side prompt (rprompt).
-This section deals with the normal prompt; API for rprompt is the same other
-than the variable name.
+Elvish has two prompts: the (normal) left-hand prompt and the right-side
+prompt (rprompt). Most of this section only documents the left-hand prompt,
+but API for rprompt is the same other than the variable name: just replace
+`prompt` with `rprompt`.
 
 To customize the prompt, assign a function to `edit:prompt`. The function may
 write value outputs or byte outputs. Value outputs may be either strings or
@@ -97,6 +98,15 @@ after one second: this is when Elvish starts to consider the prompt as stale.
 The marker will then disappear after 5 seconds, and the counter in the prompt
 is updated: this is when the prompt function finishes.
 
+Another thing you will notice is that, if you type a few characters quickly
+(in less than 5 seconds, to be precise), the prompt is only updated twice.
+This is because Elvish never does two prompt updates in parallel: prompt
+updates are serialized. If a prompt update is required when the prompt
+function is still running, Elvish simply queues another update. If an update
+is already queued, Elvish does not queue another update. The reason why
+exactly two updates happen in this case, and how this algorithm ensures
+freshness of the prompt is left as an exercise to the reader.
+
 
 ## Prompt Eagerness
 
@@ -112,6 +122,17 @@ The occassions when the prompt should get updated can be controlled with
 *   If `$edit-prompt-eagerness` >= 10, it is updated on each keystroke.
 
 The default value is 5.
+
+
+## RPrompt Persistency
+
+By default, the rprompt is only shown while the editor is active: as soon as
+you press Enter, it is erased. If you want to keep it, simply set
+`$edit:rprompt-persistent` to `$true`:
+
+```elvish
+edit:rprompt-persistent = $true
+```
 
 
 # Keybindings
@@ -479,6 +500,11 @@ See [Prompts](#prompts).
 ## $edit:-rprompt-eagerness
 
 See [Prompt Eagerness](#prompt-eagerness).
+
+
+## $edit:rprompt-persistent
+
+See [RPrompt Persistency](#rprompt-persistency).
 
 
 ## $edit:rprompt-stale-threshold
