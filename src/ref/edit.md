@@ -31,8 +31,88 @@ modes", and their particularity is documented below.
 
 # Prompts
 
-The left and right prompts can be customized by assigning functions to
-`$edit:prompt` and `$edit:rprompt`. Their outputs are used as prompts.
+Elvish has two prompts: the normal prompt and the right-side prompt (rprompt).
+This section deals with the normal prompt; API for rprompt is the same other
+than the variable name.
+
+To customize the prompt, assign a function to `edit:prompt`. The function may
+write value outputs or byte outputs. Value outputs may be either strings or
+`edit:styled` values; they are joiend with no spaces in between. Byte outputs
+are output as-is, including any newlines, but may not contain escape sequences
+-- use `edit:styled` for styling. If you mix value and byte outputs, the order
+in which they appear is non-deterministic.
+
+The default prompt and rprompt are equivalent to:
+
+```elvish
+edit:prompt = { tilde-abbr $pwd; put '> ' }
+edit:rprompt = (constantly (edit:styled (whoami)@(hostname) inverse))
+```
+
+More examples of prompt function:
+
+```elvish-transcript
+~> edit:prompt = { tilde-abbr $pwd; edit:styled '> ' green }
+~> # ">" is now green
+~> edit:prompt = { echo '$' }
+$
+# Cursor will be on the next line as `echo` outputs a trailing newline
+```
+
+## Stale Prompt
+
+Elvish never waits for the prompt function to finish. Instead, the prompt
+function is always executed on a separate thread, and Elvish updates the
+screen when the function finishes.
+
+However, this can be misleading when the function is slow: this means that the
+prompt on the screen may not contain the latest information. To deal with
+this, if the prompt function does not finish within a certain threshold - by
+default 0.2 seconds, Elvish marks the prompt as **stale**: it still shows the
+old stale prompt content, but transforms it using a **stale transformer**. The
+default stale transformer applies reverse-video to the whole prompt.
+
+The threshold is customizable with `$edit:prompt-stale-threshold`; it
+specifies the threshold in seconds.
+
+The transformer is customizable with `$edit:prompt-stale-transform`. It is a
+function; the function is called with no arguments, and `styled` values as
+inputs, and the output is interpreted in the same way as prompt functions.
+Since `styled` values can be used as outputs in prompt functions, a function
+that simply passes all the input values through as outputs is a valid stale
+transformer.
+
+As an example, try running following code:
+
+```elvish
+n = 0
+edit:prompt = { sleep 5; put $n; n = (+ $n 1); put ': ' }
+edit:-prompt-eagerness = 10 # update prompt on each keystroke
+edit:prompt-stale-threshold = 1
+edit:prompt-stale-transform = { put '(stale) '; all }
+```
+
+And then start typing. Type one character; a `(stale)` marker will appear
+after one second: this is when Elvish starts to consider the prompt as stale.
+The marker will then disappear after 5 seconds, and the counter in the prompt
+is updated: this is when the prompt function finishes.
+
+
+## Prompt Eagerness
+
+The occassions when the prompt should get updated can be controlled with
+`$edit:-prompt-eagerness`:
+
+*   The prompt is always updated when the editor becomes active -- when Elvish
+    starts, or a command finishes execution, or when the user presses Enter.
+
+*   If `$edit-prompt-eagerness` >= 5, it is updated when the working directory
+    changes.
+
+*   If `$edit-prompt-eagerness` >= 10, it is updated on each keystroke.
+
+The default value is 5.
+
 
 # Keybindings
 
@@ -373,30 +453,39 @@ See [the Matcher section](#matcher).
 
 ## $edit:prompt
 
-See [the Prompts section](#prompts).
+See [Prompts](#prompts).
 
-## $edit:-prompts-eagerness
 
-A number for controlling how eager the prompt and rprompt are updated:
+## $edit:-prompt-eagerness
 
-*   The prompt and rprompt are always updated when the editor starts (e.g. by
-    pressing Enter).
+See [Prompt Eagerness](#prompt-eagerness).
 
-*   If `$edit-prompts-eagerness` >= 5, they are updated when the working
-    directory changes.
 
-*   If `$edit-prompts-eagerness` >= 10, they are updated on each keystroke.
+## $edit:prompt-stale-threshold
 
-The default value is 5.
+See [Stale Prompt](#stale-prompt).
 
-## $edit:-prompts-max-wait
 
-A time in seconds. If the execution of a prompt function exceeds this time,
-the editor does not wait for it to finish; instead, it shows the old value of
-the prompt with a marker, and updates the prompt again when the execution is
-finished. Defaults to `+Inf`, which causes Elvish to block on the prompt
-functions.
+## $edit:prompt-stale-transformer
+
+See [Stale Prompt](#stale-prompt).
+
 
 ## $edit:rprompt
 
-See [the Prompts section](#prompts).
+See [Prompts](#prompts).
+
+
+## $edit:-rprompt-eagerness
+
+See [Prompt Eagerness](#prompt-eagerness).
+
+
+## $edit:rprompt-stale-threshold
+
+See [Stale Prompt](#stale-prompt).
+
+
+## $edit:rprompt-stale-transformer
+
+See [Stale Prompt](#stale-prompt).
