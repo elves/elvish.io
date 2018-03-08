@@ -288,12 +288,12 @@ edit:insert:binding[Ctrl-X] = { edit:-dump-buf > $tty }
 ## edit:styled
 
 ```elvish
-edit:styled $text $style
+edit:styled $text $styles
 ```
 
-Construct an abstract "styled" text. The `$text` argument can be an arbitrary
-string, while the `$style` argument is a semicolon-delimited list of the
-following styles:
+Construct an abstract styled text. The `$text` argument can be an arbitrary
+string, while the `$styles` argument is a list or semicolon-delimited string
+of the following styles:
 
 * Text styles: `bold`, `dim`, `italic`, `underlined`, `blink`, `inverse`.
 
@@ -315,7 +315,7 @@ to convert it. To force a conversion, use `to-string`:
 
 ```elvish-transcript
 ~> edit:styled haha green
-▶ (le:styled haha 32)
+▶ (edit:styled haha [green])
 ~> echo (edit:styled haha green) # output is green
 haha
 ~> to-string (edit:styled haha green)
@@ -329,6 +329,15 @@ The forced conversion is useful when e.g. assigning to `$value-out-indicator`:
 ~> put lorem ipsum # leading '> ' is green
 > lorem
 > ipsum
+```
+
+The styled text can be inspected by indexing:
+
+```elvish-transcript
+~> s = (edit:styled haha green)
+~> put $s[text] $s[styles]
+▶ haha
+▶ [green]
 ```
 
 
@@ -365,6 +374,20 @@ See [the Matcher section](#matcher).
 ## $edit:prompt
 
 See [the Prompts section](#prompts).
+
+## $edit:-prompts-eagerness
+
+A number for controlling how eager the prompt and rprompt are updated:
+
+*   The prompt and rprompt are always updated when the editor starts (e.g. by
+    pressing Enter).
+
+*   If `$edit-prompts-eagerness` >= 5, they are updated when the working
+    directory changes.
+
+*   If `$edit-prompts-eagerness` >= 10, they are updated on each keystroke.
+
+The default value is 5.
 
 ## $edit:-prompts-max-wait
 
