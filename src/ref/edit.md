@@ -87,19 +87,18 @@ As an example, try running following code:
 
 ```elvish
 n = 0
-edit:prompt = { sleep 5; put $n; n = (+ $n 1); put ': ' }
+edit:prompt = { sleep 2; put $n; n = (+ $n 1); put ': ' }
 edit:-prompt-eagerness = 10 # update prompt on each keystroke
-edit:prompt-stale-threshold = 1
-edit:prompt-stale-transform = { put '(stale) '; all }
+edit:prompt-stale-threshold = 0.5
 ```
 
-And then start typing. Type one character; a `(stale)` marker will appear
-after one second: this is when Elvish starts to consider the prompt as stale.
-The marker will then disappear after 5 seconds, and the counter in the prompt
-is updated: this is when the prompt function finishes.
+And then start typing. Type one character; the prompt becomes inverse after
+0.5 second: this is when Elvish starts to consider the prompt as stale. The
+prompt will return normal after 2 seconds, and the counter in the prompt is
+updated: this is when the prompt function finishes.
 
 Another thing you will notice is that, if you type a few characters quickly
-(in less than 5 seconds, to be precise), the prompt is only updated twice.
+(in less than 2 seconds, to be precise), the prompt is only updated twice.
 This is because Elvish never does two prompt updates in parallel: prompt
 updates are serialized. If a prompt update is required when the prompt
 function is still running, Elvish simply queues another update. If an update
