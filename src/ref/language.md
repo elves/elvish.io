@@ -43,7 +43,8 @@ barewords:
     valid escape sequence.
 
     There is no interpolation in double quotes. For instance, `"$USER"` simply
-    evaluates to the string `$USER`.
+    evaluates to the string `$USER`. To get something like interpolation, use
+    a [compound expression](#compound-expression-and-braced-lists).
 
 *   **Barewords** are sequences of "bareword characters" and do not need
     quoting. Examples are `a.txt`, `long-bareword`, and `/usr/local/bin`.
