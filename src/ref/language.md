@@ -97,7 +97,7 @@ Unlike traditional shells, the backslash character ``\`` does not escape
 metacharacters; use quoted strings intead. For instance, to echo a star,
 write `echo "*"` or `echo '*'`, **not** ``echo \*``.
 
-# Notes
+## Notes
 
 The three syntaxes above all evaluate to strings, and they are
 interchangeable. For instance, `xyz`, `'xyz'` and `"xyz"` are different
