@@ -3,89 +3,113 @@
 # Introduction
 
 This document describes the Elvish programming language. It tries to be both a
-specification and a tutorial; if it turns out to be impossible to do so, this
-document will evolve to a formal specification, and more readable tutorials
-will be created.
+specification and an advanced. tutorial; if it turns out to be impossible to
+do these two things at the same time, this document will evolve to a formal
+specification, and more readable tutorials will be created.
 
 Examples for one construct might use constructs that have not yet been
 introduced, so some familiarity with the language is assumed. If you are new
-to Elvish, start with the [learning materials](/learn), in which the article
-on the [unique semantics](/learn/unique-semantics.html) is especially worth
-reading, even if you have used Elvish for a while.
+to Elvish, start with the [learning materials](/learn).
 
 **Note to the reader**. Like Elvish itself, this document is a work in
 progress. Some materials are missing, and some are documented sparingly. If
-you have found something should be improved -- even if there is already a
+you have found something that should be improved -- even if there is already a
 "TODO" for it -- please feel free to ask on any of the chat channels
-advertised on the [homepage](/). Some developer will explain to you, **and
-update the document**. Question-driven documentation :)
+advertised on the [homepage](/). Some developer will explain to you, and then
+update the document. Question-driven documentation :)
 
-First, some syntax terms:
 
-*   An **inline whitespace** is a space or tab.
+# Syntax Convention
 
-*   A **whitespace** is a newline or inline whitespace.
+Elvish, like most shells, has a syntax structure that can be divided into two
+levels: a **statement** level and an **expression** level. For instance, on
+the expression level, `"echo"` is a quoted string that evaluates to `echo`;
+but on the statement level, it is a command that outputs an empty line. This
+distinction is often clear from the context and sometime the verb used.
+A statements **executes** to produce side effects; an expression **evaluates**
+to some values. (The traditional terms for the two levels are "commands" and
+"words", but those terms are very ambiguous and avoided in this document.)
+
+Also like most shells, Elvish uses whitespaces -- instead of commas, periods
+or semicolons -- to separate constructs. The term **inline whitespace** in
+this document means a space (`"\x20"`) or tab (`"\t"`), or one of:
+
+*   Comments, starting with `#` and ending before the next newline or end of
+    file.
+
+*   Line continuation, a backslash followed by a newline.
+
+The term **whitespace** refers to an **inline whitespace** or newline (`"\n"`).
+
+Elvish source code must be UTF-8-encoded. In this document, the word
+**character** is a synonym of "Unicode codepoint".
 
 
 # String
 
-Let's start with the most common data structure in shells, the string. There
-are three possible syntaxes for strings, single-quoted, double-quoted and
-barewords:
+The most common data structure in shells is the string. There are three
+possible syntaxes for strings, single-quoted, double-quoted and barewords:
 
-*   Everything inside a pair of **single quotes** represent themselves. For
-    instance, ``'*\'`` evaluates to ``*\``. To write a single quote, double it:
-    ``'it''s'`` evaluates to ``it's``.
+## Quoted Strings
 
-*   Within **double quotes**, there are **C-like** escape sequences starting
-    with ``\``. For instance, ``"\n"`` evaluates to a newline; ``"\\"``
-    evaluates to a backslash; ``"\*"`` is a syntax error because ``\*`` is not a
-    valid escape sequence.
+There are two types of quoted strings in Elvish.
 
-    There is no interpolation in double quotes. For instance, `"$USER"` simply
-    evaluates to the string `$USER`. To get something like interpolation, use
-    a [compound expression](#compound-expression-and-braced-lists).
+Everything inside a pair of **single quotes** represent themselves. For
+instance, ``'*\'`` evaluates to ``*\``. To write a single quote, double it:
+``'it''s'`` evaluates to ``it's``.
 
-*   **Barewords** are sequences of "bareword characters" and do not need
-    quoting. Examples are `a.txt`, `long-bareword`, and `/usr/local/bin`.
+Within **double quotes**, **C-like** escape sequences that start with ``\``
+are supported. For instance, ``"\n"`` evaluates to a newline; ``"\\"``
+evaluates to a backslash; invalid escape sequences like ``"\*"`` result in a
+syntax error.
 
-    The following are valid bareword characters (or more accurately, Unicode
-    codepoints):
+Elvish's double-quoted strings do not support interpolation. For instance,
+`"$USER"` simply evaluates to the string `$USER`. To get something like
+interpolation, use a [compound
+expression](#compound-expression-and-braced-lists).
 
-    *   ASCII letters (a-z and A-Z) and numbers (0-9);
+## Barewords
 
-    *   The symbols `-_:%+,./@!`;
+**Barewords** are sequences of "bareword characters" and do not need
+quoting. Examples are `a.txt`, `long-bareword`, and `/usr/local/bin`.
 
-    *   Non-ASCII codepoints that are printable (as defined by
-        [unicode.IsPrint](https://godoc.org/unicode#IsPrint) in Go's standard
-        library).
+The following are valid bareword characters:
 
-    The following two characters are "conditional" barewords:
+*   ASCII letters (a-z and A-Z) and numbers (0-9);
 
-    *   `~`, as long as it does not appear in the beginning of a compound
-        expression (in which case it is used for home directory expansion);
+*   The symbols `-_:%+,./@!`;
 
-    *   `=`, as long as it does not appear all by itself (in which case it is
-        used for assignment).
+*   Non-ASCII codepoints that are printable, as defined by
+    [unicode.IsPrint](https://godoc.org/unicode#IsPrint) in Go's standard
+    library.
 
-    Unlike traditional shells, metacharacters cannot be escaped with ``\``;
-    they must be quoted. For instance, to echo a star, write `echo "*"` or
-    `echo '*'`, **not** ``echo \*``.
+The following two characters are "conditional" barewords:
 
-    Currently, ``\`` is a valid bareword character, so ``echo \*`` echoes
-    ``\*``, but this is subject to change.
+*   The tilde `~`, unless it appears at the beginning of a compound
+    expression, in which case it is subject to [tilde
+    expansion](#tilde-expansion);
 
-These three syntaxes all evaluate to strings: they are interchangeable. For instance, `xyz`, `'xyz'` and `"xyz"` are different syntaxes for the same string, and they are always equivalent.
+*   The equal sign `=`, unless it is used to delimite [map keys](#map),
+    [option keys](#arguments-and-options), or appear all by itself to
+    denote [assignments](#assignment).
 
-Note that Elvish does **not** have a separate number type. For instance, in the
-command `+ 1 2`, both `1` and `2` are strings, and it is the command `+` that
-knows to treat its arguments as numbers.
+Unlike traditional shells, the backslash character ``\`` does not escape
+metacharacters; use quoted strings intead. For instance, to echo a star,
+write `echo "*"` or `echo '*'`, **not** ``echo \*``.
 
-This design is driven by syntax -- Because barewords are always treated as
-strings, and digits are barewords, we cannot treat words like `1` as number
-literals. At some point the language may get a dedicated number type (or
-several number types), but they will likely need to be constructed explicitly,
-e.g. `(number 1)`.
+# Notes
+
+The three syntaxes above all evaluate to strings, and they are
+interchangeable. For instance, `xyz`, `'xyz'` and `"xyz"` are different
+syntaxes for the same string, and they are always equivalent.
+
+Elvish does **not** have a separate number type. For instance, in the command
+`+ 1 2`, both `1` and `2` are strings, and it is the command `+` that knows to
+treat its arguments as numbers. This design is driven by syntax -- because
+barewords are always treated as strings, and digits are barewords, we cannot
+treat words like `1` as number literals. At some point the language may get a
+dedicated number type (or several number types), but they will likely need to
+be constructed explicitly, e.g. `(number 1)`.
 
 
 # List and Map
@@ -144,11 +168,12 @@ names constitute a subset of that of barewords:
 
 *   ASCII letters (a-z and A-Z) and numbers (0-9);
 
-*   The symbols `-_:~` (`:` is used for separating namespaces);
+*   The symbols `-_:~`. The colon `:` is special; it is normally used for
+    separating namespaces or denoting namespace variables;
 
-*   Non-ASCII codepoints that are printable (as defined by
+*   Non-ASCII codepoints that are printable, as defined by
     [unicode.IsPrint](https://godoc.org/unicode#IsPrint) in Go's standard
-    library).
+    library.
 
 In most other shells, variables can map directly to environmental variables:
 usually `$PATH` is the same as the `PATH` environment variable. This is not
@@ -383,9 +408,9 @@ curly braces:
 ```
 
 One or more whitespace characters after `{` is required: Elvish relies on the
-presense of whitespace to disambiguates lambda literals and [braced
-lists](#braced-lists). It is good style to put some whitespace before `{` as
-well, but this is not required by the syntax.
+presense of whitespace to disambiguate lambda literals and [braced
+lists](#braced-lists). It is good style to put some whitespace before the
+closing `}` as well, but this is not required by the syntax.
 
 Lambdas can also be used as commands:
 
@@ -414,7 +439,7 @@ In order for a lambda to accept arguments, you need to declare them in a
 ▶ lorem
 ```
 
-There should be no space between `]` and `{`; otherwise Elvish will parses the
+There should be no space between `]` and `{`; otherwise Elvish will parse the
 signature as a list, followed by a lambda without signature:
 
 ```elvish-transcript
@@ -571,6 +596,8 @@ Examples:
 (Negative indicies and slicing are borrowed from Python.)
 
 ## String indexing
+
+**NOTE**: String indexing will likely change.
 
 Strings should always be UTF-8, and they can indexed by **byte indicies at
 which codepoints start**, and indexing results in **the codepoint that starts
@@ -1486,7 +1513,7 @@ remniscent to the syntax but is not syntactically valid.
 
 The following namespaces have special meanings to the language:
 
-*   `local` and `up:` refer to lexical scopes, and have been documented above.
+*   `local:` and `up:` refer to lexical scopes, and have been documented above.
 
 *   `e:` refers to externals. For instance, `e:ls` refers to the external
     command `ls`.
@@ -1584,10 +1611,10 @@ It is possible to import the module as `z`, `y:z`, or `x:y:z`:
 ~> use x/y/z # imports as "z"
 ~> z:f
 In a deeply nested module
-~> use x/y:z # impors as "y:z"
+~> use x/y:z # imports as "y:z"
 ~> y:z:f
 In a deeply nested module
-~> use x:y:z # impors as "x:y:z"
+~> use x:y:z # imports as "x:y:z"
 ~> x:y:z:f
 In a deeply nested module
 ```
