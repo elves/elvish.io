@@ -988,7 +988,11 @@ Example (your output will differ):
 ▶ 14
 ```
 
-$cf each
+This command is intended for homogenous processing of possibly unbound data.
+If you need to do a fixed number of heterogenous things in parallel, use
+`run-parallel`.
+
+$cf each run-parallel
 
 
 ## pipe
@@ -1291,6 +1295,12 @@ run-parallel {
   prclose $perr
 }
 ```
+
+This command is intended for doing a fixed number of heterogenous things in
+parallel. If you need homogenous parallel processing of possibly unbound data,
+use `peach` instead.
+
+$cf peach
 
 
 ## search-external
