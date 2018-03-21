@@ -1660,8 +1660,8 @@ $_`) causes an exception.
 ## $after-chdir
 
 A list of functions to run after changing directory. These functions are
-always called with the new working directory. The following example also shows
-`$before-chdir`:
+always called with directory to change it, which might be a relative path. The
+following example also shows `$before-chdir`:
 
 ```elvish-transcript
 ~> before-chdir = [[dir]{ echo "Going to change to "$dir", pwd is "$pwd }]
@@ -1669,6 +1669,10 @@ always called with the new working directory. The following example also shows
 ~> cd /usr
 Going to change to /usr, pwd is /Users/xiaq
 Changed to /usr, pwd is /usr
+/usr> cd local
+Going to change to local, pwd is /usr
+Changed to local, pwd is /usr/local
+/usr/local>
 ```
 
 $cf before-chdir
