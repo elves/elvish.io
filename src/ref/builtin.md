@@ -1671,7 +1671,7 @@ Going to change to /usr, pwd is /Users/xiaq
 Changed to /usr, pwd is /usr
 ```
 
-$cf before-readline
+$cf before-chdir
 
 ## $args
 
