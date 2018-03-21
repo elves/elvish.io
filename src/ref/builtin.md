@@ -1657,6 +1657,22 @@ A blackhole variable.
 Values assigned to it will be discarded. Trying to use its value (like `put
 $_`) causes an exception.
 
+## $after-chdir
+
+A list of functions to run after changing directory. These functions are
+always called with the new working directory. The following example also shows
+`$before-chdir`:
+
+```elvish-transcript
+~> before-chdir = [[dir]{ echo "Going to change to "$dir", pwd is "$pwd }]
+~> after-chdir = [[dir]{ echo "Changed to "$dir", pwd is "$pwd }]
+~> cd /usr
+Going to change to /usr, pwd is /Users/xiaq
+Changed to /usr, pwd is /usr
+```
+
+$cf before-readline
+
 ## $args
 
 A list containing command-line arguments. Analogous to `argv` in some other
@@ -1674,6 +1690,13 @@ As demonstrated above, this variable does not contain the name of the script
 used to invoke it. For that information, use the `src` command.
 
 $cf src
+
+## $before-chdir
+
+A list of functions to run before changing directory. These functions are
+always called with the new working directory.
+
+$cf after-chdir
 
 ## $false
 
