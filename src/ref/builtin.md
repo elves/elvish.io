@@ -425,6 +425,23 @@ Examples:
 ```
 
 
+## dir-history
+
+```elvish
+dir-history
+```
+
+Return a list containing the directory history. Each element is a map
+with two keys: `path` and `score`. The list is sorted by descending
+score.
+
+Example:
+
+```elvish-transcript
+~> dir-history | take 1
+▶ [&path=/Users/foo/.elvish &score=96.79928]
+```
+
 ## dissoc
 
 ```elvish
