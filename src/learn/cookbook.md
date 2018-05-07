@@ -62,7 +62,7 @@ If you come from other shells, hopefully the following recipes will get you star
     is entirely lower case it ignores case, otherwise it's case
     sensitive.
 
-*   Press <span class="key">Ctrl-N</span> to start the builtin filesystem
+*   <a name="navigation-mode"></a>Press <span class="key">Ctrl-N</span> to start the builtin filesystem
     navigator, aptly named "navigation mode." Use arrow keys to navigate.
     <span class="key">Enter</span> inserts the selected filename to your
     command line. If you want to insert the filename and stay in the mode
