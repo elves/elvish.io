@@ -88,7 +88,7 @@ in traditional shells, it is not restricted to unstructured bytes: all Elvish
 values, including lists, maps and even closures, can flow in the pipeline.
 This section documents how to make the most use of pipelines.
 
-## "Returning" Values with Structured Output
+## Returning Values with Structured Output
 
 Unlike functions in most other programming languages, Elvish commands do not
 have return values. Instead, they can write to *structured output*, which is
@@ -281,7 +281,7 @@ possible to get `value` before `bytes` in more complex cases. Writes to one
 component, however, always have their orders preserved, so in `put x; put y`,
 `x` will always appear before `y`.
 
-## Pipes Over Parentheses
+## Prefer Pipes Over Parentheses
 
 If you have experience with Lisp, you will discover that you can write Elvish
 code very similar to Lisp. For instance, to split a string containing
@@ -367,7 +367,7 @@ an argument:
 ▶ d
 ```
 
-## Multiple Output Values Over One List
+## Streaming Multiple Outputs
 
 In the previous subsection, we remarked that commands like `splits` and `each`
 write multiple output values instead of one list. Why?
@@ -404,6 +404,39 @@ This is why commands like `each` and `splits` produce multiple values instead
 of one list. When writing your functions, try to make them produce multiple
 values as well: they will cooperate better with builtin commands, and they can
 benefit from the efficiency of parallel computations.
+
+
+# Working with Multiple Values
+
+In Elvish, many constructs can evaluate to multiple values. This can be
+surprising if you are not familiar with it.
+
+To start with, output captures evaluate to all the captured values, instead of
+a list:
+
+```elvish-transcript
+~> splits , a,b,c
+▶ a
+▶ b
+▶ c
+~> li = (splits , a,b,c)
+Exception: arity mismatch
+[tty], line 1: li = (splits , a,b,c)
+```
+
+The assignment fails with "arity mismatch" because the right hand side
+evaluates to 3 values, but you are attempting to assign them to just one
+variable. If you want to capture the results into a list, you have to
+explicitly do so, either by constructing a list or using rest variables:
+
+```elvish-transcript
+~> li = [(splits , a,b,c)]
+~> put $li
+▶ [a b c]
+~> @li = (splits , a,b,c) # equivalent and slightly shorter
+```
+
+## Assigning Multiple Variables
 
 
 # To Be Continued...
